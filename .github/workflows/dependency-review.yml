@@ -1,0 +1,39 @@
+# 依赖审查 Action
+#
+# 此 Action 将扫描拉取请求中修改的依赖清单文件，
+# 显示已知漏洞的包版本。一旦安装完成，如果工作流运行被标记为必需，
+# 那么引入已知漏洞包的拉取请求将被阻止合并。
+#
+# 源代码仓库：https://github.com/actions/dependency-review-action
+# 公共文档：https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review#dependency-review-enforcement
+name: '依赖审查'
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+# 如果在这个工作流中使用了依赖提交 Action，则需要将此权限设置为：
+#
+# permissions:
+#   contents: write
+#
+# https://docs.github.com/en/enterprise-cloud@latest/code-security/supply-chain-security/understanding-your-software-supply-chain/using-the-dependency-submission-api
+permissions:
+  contents: write
+  # 如果使用 `comment-summary-in-pr` 选项，拉取请求的写入权限是必需的；如果不使用此选项，请将此行注释掉
+  pull-requests: write
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: '检出仓库'
+        uses: actions/checkout@v4
+      - name: '依赖审查'
+        uses: actions/dependency-review-action@v4
+        # 常见的启用选项，有关所有可用选项，请参阅 https://github.com/actions/dependency-review-action#configuration-options
+        with:
+          comment-summary-in-pr: always
+          fail-on-severity : high
+          show-openssf-scorecard : true

@@ -1,0 +1,39 @@
+# .cnb.yml
+$:
+  vscode:
+    - docker:
+      runner:
+        cpus: 64
+        build: .ide/Dockerfile
+        image: python:3.13.6
+      services:
+        - vscode
+        - docker
+      # 开发环境启动后会执行的任务
+      stages:
+        - name: 更换pip源
+          script:
+            - python -m pip install --upgrade pip
+            - pip config set global.index-url https://mirrors.cernet.edu.cn/pypi/web/simple
+        - name: 更新apt源
+          script:
+            - chmod +x ./modify_apt_sources.sh
+            - sudo ./modify_apt_sources.sh
+        - name: 安装依赖
+          script:
+            - chmod +x ./install_sdk.sh
+            - sudo ./install_sdk.sh
+master:
+  push:
+    - docker:
+        image: docker.cnb.cool/examples/language/python-3:latest
+      stages:
+        - name: 打包 & 上传至仓库
+          script:
+            - export TWINE_USERNAME="cnb"
+            - export TWINE_PASSWORD=${CNB_TOKEN}
+            # 制品库地址
+            # 示例: export TWINE_REPOSITORY_URL=https://pypi.cnb.cool/cnb-demo/pypi-demo/-/packages/simple
+            - export TWINE_REPOSITORY_URL=https://cnb.cool/mizhoubaobei/MZAPI/python/-/packages/simple
+            - python -m build
+            - twine upload dist/*

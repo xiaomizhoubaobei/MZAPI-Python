@@ -1,0 +1,536 @@
+# Python SDK标签配置文件
+# 为不同类型的文件更改添加相应的标签
+
+# ===== 文件类型标签 =====
+
+# 添加 'documentation/文档' 标签到任何修改了文档的PR
+'documentation/文档':
+  - 'docs/**/*'
+  - '**/*.md'
+  - '**/*.rst'
+  - '**/*.txt'
+  - '**/README*'
+  - '**/CHANGELOG*'
+  - '**/LICENSE*'
+  - '**/CONTRIBUTING*'
+  - '**/NOTICE*'
+  - '**/AUTHORS*'
+  - '**/docs/images/**/*'
+  - '**/docs/assets/**/*'
+  - '**/wiki/**/*'
+  - '**/man/**/*'
+  - '**/help/**/*'
+  - '**/doc/**/*'
+
+# 添加 'core/核心代码' 标签到核心SDK代码的PR
+'core/核心代码':
+  - '**/*.py'
+  - '!tests/**/*'
+  - '!examples/**/*'
+  - '!docs/**/*'
+  - '!scripts/**/*'
+  - '!benchmarks/**/*'
+  - '!tools/**/*'
+  - '!utils/**/*'
+  - '!helpers/**/*'
+
+# 添加 'tests/测试' 标签到测试代码的PR
+'tests/测试':
+  - 'tests/**/*'
+  - '**/*_test.py'
+  - '**/*test*.py'
+  - '**/conftest.py'
+  - '**/pytest*.py'
+  - '**/mock*.py'
+  - '**/fixtures/**/*'
+  - '**/testing/**/*'
+  - '**/unittest/**/*'
+  - '**/test_*.py'
+  - '**/tests.py'
+  - '**/test_*.py'
+  - '**/test-*.py'
+  - '**/test/*'
+
+# 添加 'examples/示例' 标签到示例代码的PR
+'examples/示例':
+  - 'examples/**/*'
+  - 'samples/**/*'
+  - 'demo/**/*'
+  - 'tutorials/**/*'
+  - 'quickstart/**/*'
+  - 'showcase/**/*'
+  - 'cookbook/**/*'
+  - 'example/**/*'
+  - 'sample/**/*'
+  - 'guide/**/*'
+
+# 添加 'dependencies/依赖' 标签到依赖相关文件的PR
+'dependencies/依赖':
+  - 'requirements*.txt'
+  - 'setup.py'
+  - 'setup.cfg'
+  - 'pyproject.toml'
+  - 'poetry.lock'
+  - 'Pipfile'
+  - 'Pipfile.lock'
+  - 'conda*.yml'
+  - 'environment.yml'
+  - 'constraints.txt'
+  - 'dependencies/**/*'
+  - 'vendor/**/*'
+  - 'third_party/**/*'
+  - 'external/**/*'
+  - 'lib/**/*'
+
+# 添加 'ci/持续集成' 标签到CI/CD配置的PR
+'ci/持续集成':
+  - '.github/**/*'
+  - '.travis.yml'
+  - '.gitlab-ci.yml'
+  - '.circleci/**/*'
+  - 'azure-pipelines.yml'
+  - 'tox.ini'
+  - '.flake8'
+  - 'pytest.ini'
+  - 'Jenkinsfile'
+  - '.coveragerc'
+  - 'sonar-project.properties'
+  - '.codeclimate.yml'
+  - '.appveyor.yml'
+  - '.drone.yml'
+  - 'codecov.yml'
+  - '.github/workflows/**/*'
+  - '.github/actions/**/*'
+  - '.github/ISSUE_TEMPLATE/**/*'
+  - '.github/PULL_REQUEST_TEMPLATE.md'
+  - '.github/dependabot.yml'
+  - 'scripts/ci/**/*'
+
+# 添加 'build/构建' 标签到构建系统相关的PR
+'build/构建':
+  - 'Makefile'
+  - 'CMakeLists.txt'
+  - 'setup.py'
+  - 'build.py'
+  - 'build.sh'
+  - 'build.bat'
+  - 'build/**/*'
+  - 'scripts/build/**/*'
+  - 'tools/build/**/*'
+  - 'dist/**/*'
+  - 'package/**/*'
+  - 'installer/**/*'
+  - 'MANIFEST.in'
+
+# 添加 'config/配置' 标签到配置文件相关的PR
+'config/配置':
+  - '**/*.ini'
+  - '**/*.cfg'
+  - '**/*.conf'
+  - '**/*.config'
+  - '**/*.json'
+  - '**/*.yaml'
+  - '**/*.yml'
+  - '**/*.toml'
+  - '**/*.properties'
+  - '**/*.env'
+  - '.env*'
+  - 'config/**/*'
+  - 'settings/**/*'
+  - 'conf/**/*'
+
+# ===== 功能领域标签 =====
+
+# 添加 'security/安全' 标签到安全相关的PR
+'security/安全':
+  - '**/security/**/*'
+  - '**/crypto/**/*'
+  - '**/auth/**/*'
+  - '**/authentication/**/*'
+  - '**/authorization/**/*'
+  - '**/oauth/**/*'
+  - '**/password/**/*'
+  - '**/token/**/*'
+  - '**/encrypt/**/*'
+  - '**/decrypt/**/*'
+  - '**/ssl/**/*'
+  - '**/tls/**/*'
+  - '**/jwt/**/*'
+  - '**/saml/**/*'
+  - '**/oidc/**/*'
+  - '**/kerberos/**/*'
+  - '**/permission/**/*'
+  - '**/cert/**/*'
+  - '**/signature/**/*'
+  - '**/secret/**/*'
+  - '**/vault/**/*'
+
+# 添加 'api/接口' 标签到API相关的PR
+'api/接口':
+  - any: ['**/*api*/**/*', '**/*endpoint*/**/*', '**/*interface*/**/*', '**/*rest*/**/*', '**/*graphql*/**/*', '**/*grpc*/**/*', '**/*soap*/**/*', '**/*webhook*/**/*', '**/*rpc*/**/*', '**/*http*/**/*', '**/*client*/**/*', '**/*server*/**/*', '**/*service*/**/*', '**/*controller*/**/*', '**/*route*/**/*']
+
+# 添加 'database/数据库' 标签到数据库相关的PR
+'database/数据库':
+  - any: ['**/*db*/**/*', '**/*database*/**/*', '**/*sql*/**/*', '**/*nosql*/**/*', '**/*orm*/**/*', '**/*mongo*/**/*', '**/*redis*/**/*', '**/*mysql*/**/*', '**/*postgres*/**/*', '**/*sqlite*/**/*', '**/*dynamo*/**/*', '**/*cassandra*/**/*', '**/*couchdb*/**/*', '**/*neo4j*/**/*', '**/*influx*/**/*', '**/*clickhouse*/**/*', '**/*mariadb*/**/*', '**/*migration*/**/*', '**/*model*/**/*', '**/*entity*/**/*', '**/*repository*/**/*', '**/*dao*/**/*']
+
+# 添加 'ai/人工智能' 标签到AI相关的PR
+'ai/人工智能':
+  - any: ['**/*ai*/**/*', '**/*ml*/**/*', '**/*machine*learning*/**/*', '**/*deep*learning*/**/*', '**/*neural*/**/*', '**/*nlp*/**/*', '**/*vision*/**/*', '**/*tensorflow*/**/*', '**/*pytorch*/**/*', '**/*llm*/**/*', '**/*gpt*/**/*', '**/*bert*/**/*', '**/*transformer*/**/*', '**/*embedding*/**/*', '**/*classifier*/**/*', '**/*regression*/**/*', '**/*clustering*/**/*', '**/*recommendation*/**/*', '**/*reinforcement*/**/*', '**/*cnn*/**/*', '**/*rnn*/**/*', '**/*lstm*/**/*', '**/*gan*/**/*']
+
+# 添加 'iot/物联网' 标签到IoT相关的PR
+'iot/物联网':
+  - any: ['**/*iot*/**/*', '**/*device*/**/*', '**/*sensor*/**/*', '**/*mqtt*/**/*', '**/*embedded*/**/*', '**/*hardware*/**/*', '**/*arduino*/**/*', '**/*raspberry*pi*/**/*', '**/*zigbee*/**/*', '**/*bluetooth*/**/*', '**/*ble*/**/*', '**/*lora*/**/*', '**/*gateway*/**/*', '**/*edge*/**/*', '**/*telemetry*/**/*', '**/*modbus*/**/*', '**/*canbus*/**/*', '**/*plc*/**/*']
+
+# 添加 'blockchain/区块链' 标签到区块链相关的PR
+'blockchain/区块链':
+  - any: ['**/*blockchain*/**/*', '**/*crypto*currency*/**/*', '**/*bitcoin*/**/*', '**/*ethereum*/**/*', '**/*smart*contract*/**/*', '**/*web3*/**/*', '**/*nft*/**/*', '**/*token*/**/*', '**/*wallet*/**/*', '**/*ledger*/**/*', '**/*consensus*/**/*', '**/*mining*/**/*', '**/*solidity*/**/*', '**/*hyperledger*/**/*', '**/*defi*/**/*', '**/*dao*/**/*', '**/*dapp*/**/*']
+
+# 添加 'mobile/移动端' 标签到移动开发相关的PR
+'mobile/移动端':
+  - any: ['**/*mobile*/**/*', '**/*android*/**/*', '**/*ios*/**/*', '**/*flutter*/**/*', '**/*react*native*/**/*', '**/*app*/**/*', '**/*apk*/**/*', '**/*ipa*/**/*', '**/*swift*/**/*', '**/*kotlin*/**/*', '**/*objective*c*/**/*', '**/*java*/**/*', '**/*dart*/**/*', '**/*cordova*/**/*', '**/*ionic*/**/*', '**/*xamarin*/**/*', '**/*capacitor*/**/*']
+
+# 添加 'devops/运维' 标签到DevOps相关的PR
+'devops/运维':
+  - any: ['**/*devops*/**/*', '**/*deploy*/**/*', '**/*container*/**/*', '**/*docker*/**/*', '**/*kubernetes*/**/*', '**/*k8s*/**/*', '**/*helm*/**/*', '**/*terraform*/**/*', '**/*ansible*/**/*', '**/*puppet*/**/*', '**/*chef*/**/*', '**/*vagrant*/**/*', '**/*jenkins*/**/*', '**/*gitlab*/**/*', '**/*cicd*/**/*', '**/*monitor*/**/*', '**/*logging*/**/*', '**/*prometheus*/**/*', '**/*grafana*/**/*', '**/*istio*/**/*', '**/*envoy*/**/*']
+
+# 添加 'serverless/无服务器' 标签到Serverless相关的PR
+'serverless/无服务器':
+  - any: ['**/*serverless*/**/*', '**/*faas*/**/*', '**/*lambda*/**/*', '**/*function*/**/*', '**/*event*driven*/**/*', '**/*trigger*/**/*', '**/*aws*lambda*/**/*', '**/*azure*functions*/**/*', '**/*google*cloud*functions*/**/*', '**/*openwhisk*/**/*', '**/*knative*/**/*', '**/*kubeless*/**/*', '**/*fission*/**/*', '**/*openfaas*/**/*']
+
+# 添加 'microservice/微服务' 标签到微服务相关的PR
+'microservice/微服务':
+  - any: ['**/*microservice*/**/*', '**/*service*mesh*/**/*', '**/*istio*/**/*', '**/*envoy*/**/*', '**/*consul*/**/*', '**/*eureka*/**/*', '**/*discovery*/**/*', '**/*registry*/**/*', '**/*zuul*/**/*', '**/*gateway*/**/*', '**/*circuit*breaker*/**/*', '**/*resilience*/**/*', '**/*hystrix*/**/*', '**/*ribbon*/**/*', '**/*feign*/**/*', '**/*grpc*/**/*', '**/*protobuf*/**/*', '**/*thrift*/**/*']
+
+# 添加 'bigdata/大数据' 标签到大数据相关的PR
+'bigdata/大数据':
+  - any: ['**/*bigdata*/**/*', '**/*hadoop*/**/*', '**/*spark*/**/*', '**/*flink*/**/*', '**/*kafka*/**/*', '**/*hive*/**/*', '**/*hbase*/**/*', '**/*elasticsearch*/**/*', '**/*hdfs*/**/*', '**/*yarn*/**/*', '**/*mapreduce*/**/*', '**/*storm*/**/*', '**/*beam*/**/*', '**/*zookeeper*/**/*', '**/*solr*/**/*', '**/*druid*/**/*', '**/*presto*/**/*', '**/*impala*/**/*', '**/*flume*/**/*', '**/*sqoop*/**/*', '**/*oozie*/**/*']
+
+# 添加 'ui/界面' 标签到用户界面相关的PR
+'ui/界面':
+  - any: ['**/*ui*/**/*', '**/*interface*/**/*', '**/*gui*/**/*', '**/*view*/**/*', '**/*frontend*/**/*', '**/*css*/**/*', '**/*html*/**/*', '**/*template*/**/*', '**/*theme*/**/*', '**/*style*/**/*', '**/*layout*/**/*', '**/*component*/**/*', '**/*widget*/**/*', '**/*react*/**/*', '**/*vue*/**/*', '**/*angular*/**/*', '**/*svelte*/**/*', '**/*dom*/**/*', '**/*responsive*/**/*']
+
+# 添加 'network/网络' 标签到网络相关的PR
+'network/网络':
+  - any: ['**/*network*/**/*', '**/*http*/**/*', '**/*tcp*/**/*', '**/*udp*/**/*', '**/*socket*/**/*', '**/*websocket*/**/*', '**/*protocol*/**/*', '**/*dns*/**/*', '**/*ip*/**/*', '**/*proxy*/**/*', '**/*vpn*/**/*', '**/*ssl*/**/*', '**/*tls*/**/*', '**/*request*/**/*', '**/*response*/**/*', '**/*client*/**/*', '**/*server*/**/*', '**/*rest*/**/*', '**/*grpc*/**/*']
+
+# 添加 'storage/存储' 标签到存储相关的PR
+'storage/存储':
+  - any: ['**/*storage*/**/*', '**/*file*/**/*', '**/*blob*/**/*', '**/*s3*/**/*', '**/*oss*/**/*', '**/*cos*/**/*', '**/*obs*/**/*', '**/*gcs*/**/*', '**/*disk*/**/*', '**/*volume*/**/*', '**/*backup*/**/*', '**/*archive*/**/*', '**/*cache*/**/*', '**/*cdn*/**/*', '**/*nfs*/**/*', '**/*smb*/**/*', '**/*cifs*/**/*', '**/*hdfs*/**/*']
+
+# 添加 'multimedia/多媒体' 标签到多媒体相关的PR
+'multimedia/多媒体':
+  - any: ['**/*media*/**/*', '**/*audio*/**/*', '**/*video*/**/*', '**/*image*/**/*', '**/*photo*/**/*', '**/*picture*/**/*', '**/*stream*/**/*', '**/*codec*/**/*', '**/*mp3*/**/*', '**/*mp4*/**/*', '**/*wav*/**/*', '**/*ogg*/**/*', '**/*webm*/**/*', '**/*ffmpeg*/**/*', '**/*transcode*/**/*', '**/*player*/**/*', '**/*camera*/**/*', '**/*gallery*/**/*']
+
+# ===== 变更类型标签 =====
+
+# 添加 'bug/修复' 标签到修复问题的PR
+'bug/修复':
+  - any: ['**/*fix*/**/*', '**/*bug*/**/*', '**/*patch*/**/*', '**/*issue*/**/*', '**/*hotfix*/**/*', '**/*repair*/**/*', '**/*solve*/**/*', '**/*resolve*/**/*', '**/*correct*/**/*', '**/*workaround*/**/*']
+
+# 添加 'feature/功能' 标签到新功能的PR
+'feature/功能':
+  - any: ['**/*feature*/**/*', '**/*enhancement*/**/*', '**/*feat*/**/*', '**/*new*/**/*', '**/*add*/**/*', '**/*implement*/**/*', '**/*introduce*/**/*', '**/*create*/**/*', '**/*support*/**/*']
+
+# 添加 'performance/性能' 标签到性能相关的PR
+'performance/性能':
+  - any: ['**/*perf*/**/*', '**/*performance*/**/*', '**/*optimize*/**/*', '**/*speed*/**/*', '**/*benchmark*/**/*', '**/*fast*/**/*', '**/*efficient*/**/*', '**/*latency*/**/*', '**/*throughput*/**/*', '**/*bottleneck*/**/*', '**/*profiling*/**/*', '**/*memory*/**/*', '**/*cpu*/**/*', '**/*cache*/**/*']
+
+# 添加 'refactor/重构' 标签到代码重构的PR
+'refactor/重构':
+  - any: ['**/*refactor*/**/*', '**/*cleanup*/**/*', '**/*restructure*/**/*', '**/*rewrite*/**/*', '**/*redesign*/**/*', '**/*reorganize*/**/*', '**/*simplify*/**/*', '**/*modernize*/**/*', '**/*improve*/**/*', '**/*rename*/**/*', '**/*move*/**/*', '**/*split*/**/*', '**/*merge*/**/*']
+
+# 添加 'docs/文档' 标签到文档相关的PR
+'docs/文档':
+  - any: ['**/*doc*/**/*', '**/*readme*/**/*', '**/*comment*/**/*', '**/*changelog*/**/*', '**/*tutorial*/**/*', '**/*guide*/**/*', '**/*example*/**/*', '**/*sample*/**/*', '**/*demo*/**/*', '**/*howto*/**/*', '**/*wiki*/**/*', '**/*manual*/**/*']
+
+# 添加 'test/测试' 标签到测试相关的PR
+'test/测试':
+  - any: ['**/*test*/**/*', '**/*spec*/**/*', '**/*mock*/**/*', '**/*stub*/**/*', '**/*fixture*/**/*', '**/*assert*/**/*', '**/*verify*/**/*', '**/*validation*/**/*', '**/*coverage*/**/*', '**/*benchmark*/**/*', '**/*unit*/**/*', '**/*integration*/**/*', '**/*e2e*/**/*', '**/*functional*/**/*']
+
+# 添加 'style/样式' 标签到代码风格相关的PR
+'style/样式':
+  - any: ['**/*style*/**/*', '**/*format*/**/*', '**/*lint*/**/*', '**/*prettier*/**/*', '**/*eslint*/**/*', '**/*flake8*/**/*', '**/*pep8*/**/*', '**/*black*/**/*', '**/*isort*/**/*', '**/*indent*/**/*', '**/*whitespace*/**/*', '**/*typo*/**/*', '**/*spelling*/**/*']
+
+# 添加 'chore/杂务' 标签到杂项任务的PR
+'chore/杂务':
+  - any: ['**/*chore*/**/*', '**/*housekeeping*/**/*', '**/*maintenance*/**/*', '**/*tooling*/**/*', '**/*dependency*/**/*', '**/*version*/**/*', '**/*upgrade*/**/*', '**/*update*/**/*', '**/*bump*/**/*', '**/*release*/**/*', '**/*changelog*/**/*', '**/*license*/**/*', '**/*legal*/**/*']
+
+# ===== 优先级标签 =====
+
+# 添加 'priority-critical/紧急优先级' 标签到关键修复的PR
+'priority-critical/紧急优先级':
+  - any: ['**/*critical*/**/*', '**/*urgent*/**/*', '**/*emergency*/**/*', '**/*p0*/**/*', '**/*p1*/**/*', '**/*hotfix*/**/*', '**/*security*vulnerability*/**/*', '**/*data*loss*/**/*', '**/*crash*/**/*', '**/*severe*/**/*']
+
+# 添加 'priority-high/高优先级' 标签到重要功能的PR
+'priority-high/高优先级':
+  - any: ['**/*high*priority*/**/*', '**/*important*/**/*', '**/*p2*/**/*', '**/*major*/**/*', '**/*significant*/**/*', '**/*key*feature*/**/*']
+
+# 添加 'priority-medium/中优先级' 标签到常规改进的PR
+'priority-medium/中优先级':
+  - any: ['**/*medium*priority*/**/*', '**/*p3*/**/*', '**/*normal*/**/*', '**/*standard*/**/*', '**/*regular*/**/*', '**/*moderate*/**/*']
+
+# 添加 'priority-low/低优先级' 标签到次要改进的PR
+'priority-low/低优先级':
+  - any: ['**/*low*priority*/**/*', '**/*p4*/**/*', '**/*minor*/**/*', '**/*trivial*/**/*', '**/*cosmetic*/**/*', '**/*nice*to*have*/**/*']
+
+# ===== 各大厂商相关的标签 =====
+
+# 添加 'ali/阿里' 标签到阿里相关代码的PR
+'ali/阿里':
+  - '**/ali*/**/*'
+  - '**/aliyun/**/*'
+  - '**/alibaba/**/*'
+  - '**/alipay/**/*'
+  - '**/taobao/**/*'
+  - '**/tmall/**/*'
+  - '**/dingtalk/**/*'
+  - '**/ant/**/*'
+  - '**/antcloud/**/*'
+  - '**/amap/**/*'
+  - '**/oss/**/*'
+  - '**/ecs/**/*'
+  - '**/sls/**/*'
+  - '**/odps/**/*'
+  - '**/maxcompute/**/*'
+  - '**/datav/**/*'
+  - '**/darabonba/**/*'
+  - '**/teafile/**/*'
+  - '**/nacos/**/*'
+  - '**/sentinel/**/*'
+  - '**/seata/**/*'
+  - '**/dubbo/**/*'
+
+# 添加 'tencent/腾讯' 标签到腾讯相关代码的PR
+'tencent/腾讯':
+  - '**/tencent/**/*'
+  - '**/wechat/**/*'
+  - '**/weixin/**/*'
+  - '**/qq/**/*'
+  - '**/wxpay/**/*'
+  - '**/qcloud/**/*'
+  - '**/cos/**/*'
+  - '**/tke/**/*'
+  - '**/tcb/**/*'
+  - '**/tsf/**/*'
+  - '**/cvm/**/*'
+  - '**/scf/**/*'
+  - '**/cls/**/*'
+  - '**/trtc/**/*'
+  - '**/tim/**/*'
+  - '**/ocr/**/*'
+  - '**/tav/**/*'
+  - '**/tmt/**/*'
+  - '**/tiw/**/*'
+  - '**/tcaplusdb/**/*'
+  - '**/tbase/**/*'
+  - '**/tdsql/**/*'
+
+# 添加 'huawei/华为' 标签到华为相关代码的PR
+'huawei/华为':
+  - '**/huawei/**/*'
+  - '**/hms/**/*'
+  - '**/hicloud/**/*'
+  - '**/harmony/**/*'
+  - '**/hongmeng/**/*'
+  - '**/obs/**/*'
+  - '**/hwcloud/**/*'
+  - '**/agconnect/**/*'
+  - '**/ecs/**/*'
+  - '**/functiongraph/**/*'
+  - '**/lts/**/*'
+  - '**/modelarts/**/*'
+  - '**/iotda/**/*'
+  - '**/hiai/**/*'
+  - '**/huaweicloud/**/*'
+  - '**/hcloudsdk/**/*'
+  - '**/mindspore/**/*'
+  - '**/openeuler/**/*'
+  - '**/openharmony/**/*'
+  - '**/openstack/**/*'
+
+# 添加 'baidu/百度' 标签到百度相关代码的PR
+'baidu/百度':
+  - '**/baidu/**/*'
+  - '**/bce/**/*'
+  - '**/apollo/**/*'
+  - '**/dueros/**/*'
+  - '**/tieba/**/*'
+  - '**/baiduyun/**/*'
+  - '**/bos/**/*'
+  - '**/aip/**/*'
+  - '**/bcc/**/*'
+  - '**/cfc/**/*'
+  - '**/lss/**/*'
+  - '**/paddlepaddle/**/*'
+  - '**/easydl/**/*'
+  - '**/bml/**/*'
+  - '**/baidumap/**/*'
+  - '**/smartprogram/**/*'
+  - '**/baike/**/*'
+  - '**/wenku/**/*'
+  - '**/zhidao/**/*'
+  - '**/baidupan/**/*'
+
+# 添加 'bytedance/字节跳动' 标签到字节跳动相关代码的PR
+'bytedance/字节跳动':
+  - '**/bytedance/**/*'
+  - '**/toutiao/**/*'
+  - '**/douyin/**/*'
+  - '**/tiktok/**/*'
+  - '**/feishu/**/*'
+  - '**/lark/**/*'
+  - '**/volcengine/**/*'
+  - '**/byteplus/**/*'
+  - '**/oceanengine/**/*'
+  - '**/xigua/**/*'
+  - '**/byteos/**/*'
+  - '**/jinritemai/**/*'
+  - '**/huoshan/**/*'
+  - '**/pipixia/**/*'
+  - '**/feiliao/**/*'
+  - '**/duoshan/**/*'
+  - '**/faceu/**/*'
+  - '**/hotsoon/**/*'
+
+# 添加 'jd/京东' 标签到京东相关代码的PR
+'jd/京东':
+  - '**/jd/**/*'
+  - '**/jdcloud/**/*'
+  - '**/jingdong/**/*'
+  - '**/jdpay/**/*'
+  - '**/jdwl/**/*'
+  - '**/jdfinance/**/*'
+  - '**/jdai/**/*'
+  - '**/jdos/**/*'
+  - '**/jddb/**/*'
+  - '**/jdmall/**/*'
+  - '**/jdmart/**/*'
+  - '**/jdhealth/**/*'
+  - '**/jdiot/**/*'
+  - '**/jdwallet/**/*'
+
+# 添加 'netease/网易' 标签到网易相关代码的PR
+'netease/网易':
+  - '**/netease/**/*'
+  - '**/163/**/*'
+  - '**/youdao/**/*'
+  - '**/yunxin/**/*'
+  - '**/music163/**/*'
+  - '**/ntes/**/*'
+  - '**/nim/**/*'
+  - '**/yunos/**/*'
+  - '**/lofter/**/*'
+  - '**/kaola/**/*'
+  - '**/yixin/**/*'
+  - '**/yanxuan/**/*'
+  - '**/mailmaster/**/*'
+  - '**/bobo/**/*'
+  - '**/cc/**/*'
+  - '**/mumu/**/*'
+
+# 添加 'xiaomi/小米' 标签到小米相关代码的PR
+'xiaomi/小米':
+  - '**/xiaomi/**/*'
+  - '**/miui/**/*'
+  - '**/miot/**/*'
+  - '**/mijia/**/*'
+  - '**/micloud/**/*'
+  - '**/miservice/**/*'
+  - '**/mipush/**/*'
+  - '**/milink/**/*'
+  - '**/mistore/**/*'
+  - '**/mihome/**/*'
+  - '**/mifit/**/*'
+  - '**/miwear/**/*'
+  - '**/miband/**/*'
+  - '**/pocophone/**/*'
+  - '**/redmi/**/*'
+
+# 添加 'aws/亚马逊云' 标签到AWS相关代码的PR
+'aws/亚马逊云':
+  - '**/aws/**/*'
+  - '**/amazon/**/*'
+  - '**/s3/**/*'
+  - '**/ec2/**/*'
+  - '**/lambda/**/*'
+  - '**/dynamodb/**/*'
+  - '**/cloudwatch/**/*'
+  - '**/sqs/**/*'
+  - '**/sns/**/*'
+  - '**/rds/**/*'
+  - '**/iam/**/*'
+  - '**/eks/**/*'
+  - '**/kinesis/**/*'
+  - '**/cloudfront/**/*'
+  - '**/route53/**/*'
+  - '**/elasticache/**/*'
+  - '**/elasticbeanstalk/**/*'
+  - '**/cloudformation/**/*'
+  - '**/cognito/**/*'
+  - '**/glue/**/*'
+
+# 添加 'azure/微软云' 标签到Azure相关代码的PR
+'azure/微软云':
+  - '**/azure/**/*'
+  - '**/microsoft/**/*'
+  - '**/msft/**/*'
+  - '**/blob/**/*'
+  - '**/cosmosdb/**/*'
+  - '**/functions/**/*'
+  - '**/azureml/**/*'
+  - '**/aks/**/*'
+  - '**/appservice/**/*'
+  - '**/eventhub/**/*'
+  - '**/servicebus/**/*'
+  - '**/keyvault/**/*'
+  - '**/activedirectory/**/*'
+  - '**/azuread/**/*'
+  - '**/logicapps/**/*'
+  - '**/databricks/**/*'
+
+# 添加 'gcp/谷歌云' 标签到GCP相关代码的PR
+'gcp/谷歌云':
+  - '**/gcp/**/*'
+  - '**/google/**/*'
+  - '**/gcs/**/*'
+  - '**/bigquery/**/*'
+  - '**/firebase/**/*'
+  - '**/gke/**/*'
+  - '**/cloud*functions/**/*'
+  - '**/dataflow/**/*'
+  - '**/pubsub/**/*'
+  - '**/bigtable/**/*'
+  - '**/spanner/**/*'
+  - '**/dataproc/**/*'
+  - '**/appengine/**/*'
+  - '**/cloudstorage/**/*'
+  - '**/cloudrun/**/*'
+  - '**/dialogflow/**/*'
+  - '**/vertex/**/*'
+  - '**/tensorflow/**/*'
+
+# ===== 状态标签 =====
+
+# 添加 'wip/进行中' 标签到正在进行的PR
+'wip/进行中':
+  - any: ['**/*wip*/**/*', '**/*work*in*progress*/**/*', '**/*draft*/**/*', '**/*ongoing*/**/*', '**/*not*ready*/**/*']
+
+# 添加 'ready-for-review/待审核' 标签到准备好审核的PR
+'ready-for-review/待审核':
+  - any: ['**/*ready*for*review*/**/*', '**/*please*review*/**/*', '**/*review*me*/**/*', '**/*ready*/**/*']
+
+# 添加 'needs-discussion/需讨论' 标签到需要讨论的PR
+'needs-discussion/需讨论':
+  - any: ['**/*needs*discussion*/**/*', '**/*discuss*/**/*', '**/*question*/**/*', '**/*uncertain*/**/*', '**/*proposal*/**/*', '**/*rfc*/**/*']
+
+# 添加 'breaking-change/破坏性变更' 标签到包含破坏性变更的PR
+'breaking-change/破坏性变更':
+  - any: ['**/*breaking*/**/*', '**/*major*change*/**/*', '**/*incompatible*/**/*', '**/*migration*/**/*', '**/*upgrade*guide*/**/*', '**/*semver*major*/**/*']
+
+# 添加 'good-first-issue/新手友好' 标签到适合新手的PR
+'good-first-issue/新手友好':
+  - any: ['**/*good*first*issue*/**/*', '**/*beginner*/**/*', '**/*easy*/**/*', '**/*starter*/**/*', '**/*newbie*/**/*', '**/*first*time*/**/*']
+
+# 添加 'help-wanted/需要帮助' 标签到需要帮助的PR
+'help-wanted/需要帮助':
+  - any: ['**/*help*wanted*/**/*', '**/*need*help*/**/*', '**/*assistance*/**/*', '**/*collaborate*/**/*', '**/*contribution*welcome*/**/*']

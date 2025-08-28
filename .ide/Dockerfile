@@ -1,5 +1,5 @@
 # 使用 Python 最新版本作为基础镜像
-FROM python:3.13.6
+FROM python:latest
 
 # 安装 curl 和 apt-get 环境
 RUN apt-get update && apt-get install -y curl wget unzip openssh-server sduo

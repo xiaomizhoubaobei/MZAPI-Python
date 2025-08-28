@@ -1,0 +1,1 @@
+from .DetectLabelPro import DetectLabelPro

@@ -5,7 +5,7 @@ $:
       runner:
         cpus: 64
         build: .ide/Dockerfile
-        image: python:3.13.6
+        image: docker.cnb.cool/examples/language/python-3:latest
       services:
         - vscode
         - docker
@@ -34,6 +34,6 @@ master:
             - export TWINE_PASSWORD=${CNB_TOKEN}
             # 制品库地址
             # 示例: export TWINE_REPOSITORY_URL=https://pypi.cnb.cool/cnb-demo/pypi-demo/-/packages/simple
-            - export TWINE_REPOSITORY_URL=https://cnb.cool/mizhoubaobei/MZAPI/python/-/packages/simple
+            - export TWINE_REPOSITORY_URL=https://pypi.cnb.cool/mizhoubaobei/MZAPI/python/-/packages/simple
             - python -m build
             - twine upload dist/*

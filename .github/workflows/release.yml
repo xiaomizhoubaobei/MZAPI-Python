@@ -31,7 +31,7 @@ jobs:
     - name: 提取版本号
       id: extract_version
       run: |
-        filename=$(ls dist/MZAPI-*.whl)
+        filename=$(ls dist/mzapi_python-*.whl)
         version=$(echo $filename | sed -e 's/.*-\([0-9]*\.[0-9]*\.[0-9]*\)-py3-none-any\.whl/\1/')
         echo "version=$version" >> $GITHUB_ENV
 

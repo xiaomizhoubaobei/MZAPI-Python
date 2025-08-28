@@ -52,7 +52,7 @@ jobs:
     - name: 提取版本号
       id: extract_version
       run: |
-        filename=$(ls dist/MZAPI-*.whl)
+        filename=$(ls dist/mzapi_python-*.whl)
         version=$(echo $filename | sed -e 's/.*-\([0-9]*\.[0-9]*\.[0-9]*\)-py3-none-any\.whl/\1/')
         echo "version=$version" >> $GITHUB_ENV
 
@@ -67,7 +67,7 @@ jobs:
 
     - name: Upload package to Aliyun PyPI repository
       run: |
-        twine upload --repository-url https://packages.aliyun.com/6729fb98ce1b60cfd800d18e/pypi/repo-wjdxf -u ${{secrets.USERNAME }} -p ${{ secrets.PASSWORD }} dist/MZAPI-${{ env.version }}-py3-none-any.whl
+        twine upload --repository-url https://packages.aliyun.com/686a57a36024b2147d89fbc0/pypi/repo-ssctu -u ${{secrets.USERNAME }} -p ${{ secrets.PASSWORD }} dist/mzapi_python-${{ env.version }}-py3-none-any.whl
       env:
         ALIYUN_PYPI_USERNAME: ${{ secrets.USERNAME }}
         ALIYUN_PYPI_PASSWORD: ${{ secrets.PASSWORD }}

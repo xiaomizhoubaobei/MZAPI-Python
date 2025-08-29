@@ -7,7 +7,7 @@ MZAPI Python SDK
 一个MZAPI的python的SDK
 """
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 __author__ = "祁潇潇"
 __email__ = "qixiaoxin@stu.sqxy.edu.cn"
 

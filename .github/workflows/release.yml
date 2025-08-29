@@ -5,7 +5,8 @@ on:
     branches:
       - master
   pull_request:
-    branches: [ "master"  ]
+    branches: [ "master" ]
+    types: [closed]
 
 permissions:
   contents: read
@@ -14,6 +15,7 @@ permissions:
 jobs:
   release-build:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
 
     steps:
     - uses: actions/checkout@v4
@@ -32,10 +34,10 @@ jobs:
       id: extract_version
       run: |
         filename=$(ls dist/mzapi_python-*.whl)
-        version=$(echo $filename | sed -e 's/.*-\([0-9]*\.[0-9]*\.[0-9]*\)-py3-none-any\.whl/\1/')
+        version=$(echo $filename | sed -e 's/.*-\([0-9]\+\.[0-9]\+\.[0-9]\+\).*\.whl/\1/')
         echo "version=$version" >> $GITHUB_ENV
 
-    - name: Create GitHub release
+    - name: 创建GitHub Release
       uses: softprops/action-gh-release@v2
       with:
           tag_name: v${{ env.version }}

@@ -12,16 +12,17 @@ from ...utlis.ImageValidator import ImageValidator
 
 
 class GeneralBasicOCR:
-    def __init__(self, secret_id=None, secret_key=None, token=None, log_level=logging.INFO):
+    def __init__(self, secret_id=None, secret_key=None, token=None, log_level=None):
             """初始化腾讯云OCR客户端
 
             Args:
                 secret_id: 腾讯云SecretId
                 secret_key: 腾讯云SecretKey
                 token: 临时密钥Token(可选)
-                log_level: 日志级别，默认为logging.INFO
+                log_level: 日志级别，默认为None(不输出日志)
+                    - None: 不输出日志(默认)
                     - logging.DEBUG: 详细调试信息
-                    - logging.INFO: 一般信息(默认)
+                    - logging.INFO: 一般信息
                     - logging.WARNING: 警告信息
                     - logging.ERROR: 错误信息
                     - logging.CRITICAL: 严重错误
@@ -30,18 +31,18 @@ class GeneralBasicOCR:
                 TencentCloudSDKException: 初始化失败时抛出
             """
             self.logger = logging.getLogger(__name__)
-            # 确保日志级别设置正确
-            self.logger.setLevel(log_level)
-            # 只在没有处理器时添加处理器
-            if not self.logger.handlers:
-                handler = logging.StreamHandler()
-                handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-                self.logger.addHandler(handler)
-            else:
-                # 确保现有处理器的格式一致
-                for h in self.logger.handlers:
-                    h.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-            self.logger.info("初始化腾讯云OCR客户端，日志级别: %s", logging.getLevelName(log_level))
+            if log_level is not None:
+                self.logger.setLevel(log_level)
+                # 只在没有处理器时添加处理器
+                if not self.logger.handlers:
+                    handler = logging.StreamHandler()
+                    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+                    self.logger.addHandler(handler)
+                else:
+                    # 确保现有处理器的格式一致
+                    for h in self.logger.handlers:
+                        h.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+                self.logger.info("初始化腾讯云OCR客户端，日志级别: %s", logging.getLevelName(log_level))
             try:
                 # 实例化认证对象
                 self.cred = credential.Credential(secret_id, secret_key, token)
@@ -128,7 +129,6 @@ class GeneralBasicOCR:
                 "PdfPageNumber": PdfPageNumber,
                 "IsWords": IsWords
             }
-            self.logger.debug(f"请求参数: {params}")
             
             req.from_json_string(json.dumps(params))
             self.logger.info("正在向腾讯云OCR API发送请求...")

@@ -7,7 +7,7 @@ MZAPI Python SDK
 一个MZAPI的python的SDK
 """
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 __author__ = "祁潇潇"
 __email__ = "qixiaoxin@stu.sqxy.edu.cn"
 
@@ -25,4 +25,4 @@ def get_email():
     return __email__
 from .tencent import *
 
-__all__ = [GeneralBasicOCR]
+__all__ = [GeneralBasicOCR,GeneralAccurateOCR]

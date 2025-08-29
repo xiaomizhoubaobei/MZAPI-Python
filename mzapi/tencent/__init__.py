@@ -1,1 +1,1 @@
-from .tiia import *
+from .ocr import *

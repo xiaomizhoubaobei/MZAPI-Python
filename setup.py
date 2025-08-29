@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="mzapi-python",  # 安装时使用的名称
-    version="0.0.2",
+    version="0.0.3",
     author="祁潇潇",
     author_email="qixiaoxin@stu.sqxy.edu.cn",
     description="MZAPI的python的SDK",
@@ -29,6 +29,7 @@ setup(
     ],
     python_requires=">=3.7",
     install_requires=[
+        "tencentcloud-sdk-python-ocr",
     ],
     extras_require={
         "dev": [

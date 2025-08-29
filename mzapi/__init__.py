@@ -7,7 +7,7 @@ MZAPI Python SDK
 一个MZAPI的python的SDK
 """
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 __author__ = "祁潇潇"
 __email__ = "qixiaoxin@stu.sqxy.edu.cn"
 
@@ -17,6 +17,12 @@ __email__ = "qixiaoxin@stu.sqxy.edu.cn"
 def get_version():
     """获取SDK版本号"""
     return __version__
+def get_author():
+    """获取SDK作者"""
+    return __author__
+def get_email():
+    """获取SDK作者邮箱"""
+    return __email__
 from .tencent import *
 
-__all__ = ['DetectLabelPro']
+__all__ = [GeneralBasicOCR]

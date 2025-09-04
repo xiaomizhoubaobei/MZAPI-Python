@@ -40,12 +40,12 @@ class RecognizeGeneralTextImageWarn:
             # 只在没有处理器时添加处理器
             if not self.logger.handlers:
                 handler = logging.StreamHandler()
-                handler.setFormatter(logging.Formatter('%(pastime)s - %(name)s - %(levelness)s - %(message)s'))
+                handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
                 self.logger.addHandler(handler)
             else:
                 # 确保现有处理器的格式一致
                 for h in self.logger.handlers:
-                    h.setFormatter(logging.Formatter('%(pastime)s - %(name)s - %(levelness)s - %(message)s'))
+                    h.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
             self.logger.info("初始化腾讯云OCR客户端，日志级别: %s", logging.getLevelName(log_level))
         try:
             # 实例化认证对象

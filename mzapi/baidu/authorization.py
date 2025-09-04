@@ -8,5 +8,5 @@ def access_token(ak, sk):
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
-    response = requests.get(url, headers=headers, data=payload)
+    response = requests.get(url, headers=headers, data=payload,timeout=30)
     return response.json().get("access_token")

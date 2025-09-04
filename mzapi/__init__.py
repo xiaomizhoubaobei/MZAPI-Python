@@ -24,5 +24,10 @@ def get_email():
     """获取SDK作者邮箱"""
     return __email__
 from .tencent import *
+from .baidu import *
 
-__all__ = [GeneralBasicOCR,GeneralAccurateOCR]
+__all__ = [
+    "GeneralBasicOCR"
+    ,"GeneralAccurateOCR"
+    ,"RecognizeGeneralTextImageWarn"
+]

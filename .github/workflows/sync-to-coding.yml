@@ -1,18 +1,15 @@
-name: 同步代码到多个仓库
-
 on:
   push:
     branches:
       - master
   pull_request:
-    branches:
-      - master
-    types: [closed]
+    branches: [ "master" ]
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
   sync-to-gitcode:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       GIT_USER: xiaomizhou
@@ -37,6 +34,7 @@ jobs:
         run: |
           git config --global user.name "${{ secrets.GIT_USER }}"
           git config --global user.email "${{ secrets.GIT_EMAIL }}"
+
       - name: Add Gitcode Remote
         run: git remote add gitcode git@gitcode.com:xiaomizhou/MZAPI-python.git
 
@@ -44,12 +42,12 @@ jobs:
         run: git push gitcode master
 
   sync-to-gitee:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      GIT_USER: ${{ secrets.GITEE_USER }}
-      GIT_EMAIL: ${{ secrets.GITEE_EMAIL }}
+      GITEE_USER: ${{ secrets.GITEE_USER }}
+      GITEE_EMAIL: ${{ secrets.GITEE_EMAIL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -78,8 +76,8 @@ jobs:
         run: git push gitee master
 
   sync-to-codeup:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       GIT_USER: ${{ secrets.CODEUP_USER }}
@@ -112,8 +110,8 @@ jobs:
         run: git push codeup master
 
   sync-to-huaweicloud:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       GIT_USER: ${{ secrets.HUAWEICLOUD_USER }}
@@ -146,8 +144,8 @@ jobs:
         run: git push huaweicloud master
 
   sync-to-cnb:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       GIT_USER: ${{ secrets.CNB_USER }}

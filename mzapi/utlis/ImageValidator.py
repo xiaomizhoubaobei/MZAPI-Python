@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import re
+from typing import List
 from urllib.parse import urlparse
-from typing import Optional, List
+
 
 class ImageValidator:
     @staticmethod

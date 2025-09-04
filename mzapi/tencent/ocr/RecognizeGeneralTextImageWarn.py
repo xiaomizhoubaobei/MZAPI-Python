@@ -13,7 +13,7 @@ from ...utlis.ImageValidator import ImageValidator
 from ...utlis.verification import Verification
 
 
-class GeneralAccurateOCR:
+class RecognizeGeneralTextImageWarn:
     def __init__(self, secret_id=None, secret_key=None, token=None, log_level=None):
         """初始化腾讯云OCR客户端
 
@@ -33,6 +33,7 @@ class GeneralAccurateOCR:
             TencentCloudSDKException: 初始化失败时抛出
         """
         self.sanitize_log_data = Verification
+        self.validate = ImageValidator()
         self.logger = logging.getLogger(__name__)
         if log_level is not None:
             self.logger.setLevel(log_level)
@@ -62,19 +63,15 @@ class GeneralAccurateOCR:
             self.logger.error(f"初始化失败: {str(e)}")
             raise TencentCloudSDKException("初始化失败", str(e))
 
-    def recognize(self,ImageBase64,ImageUrl,IsWords,EnableDetectSplit,IsPdf,PdfPageNumber,EnableDetectText,ConfigID):
+    def recognize(self,ImageBase64,ImageUrl,IsPdf,PdfPageNumber,Type):
         """'
         :param ImageBase64: 图片/PDF的 Base64 值。要求图片经Base64编码后不超过 10M，分辨率建议600*800以上，支持PNG、JPG、JPEG、BMP、PDF格式。图片的 ImageUrl、ImageBase64 必须提供一个，如果都提供，只使用 ImageUrl。
         :param ImageUrl: 图片/PDF的 Url 地址。要求图片经Base64编码后不超过10M，分辨率建议600*800以上，支持PNG、JPG、JPEG、BMP、PDF格式。图片下载时间不超过 3 秒。图片存储于腾讯云的 Url 可保障更高的下载速度和稳定性，建议图片存储于腾讯云。非腾讯云存储的 Url 速度和稳定性可能受一定影响。
-        :param IsWords: 是否返回单字信息，默认关
-        :param EnableDetectSplit: 是否开启原图切图检测功能，开启后可提升“整图面积大，但单字符占比面积小”（例如：试卷）场景下的识别效果，默认关
         :param IsPdf: 是否开启PDF识别，默认值为false，开启后可同时支持图片和PDF的识别。
         :param PdfPageNumber: 需要识别的PDF页面的对应页码，仅支持PDF单页识别，当上传文件为PDF且IsPdf参数值为true时有效，默认值为1。
-        :param EnableDetectText: 文本检测开关，默认为true。设置为false可直接进行单行识别，适用于仅包含正向单行文本的图片场景。
-        :param ConfigID: 配置ID支持：  OCR -- 通用场景  MulOCR--多语种场景
+        :param Type: 识别类型，可选值为General 通用告警（支持所有类型告警）,LicensePlate 车牌告警（支持翻拍告警）
         """
         try:
-
             if (ImageBase64 is None or str(ImageBase64).strip() == "") and (ImageUrl is None or str(ImageUrl).strip() == ""):
                 error_msg = "ImageBase64和ImageUrl必须提供一个"
                 self.logger.error(error_msg)
@@ -82,40 +79,34 @@ class GeneralAccurateOCR:
 
             if ImageUrl:
                 self.logger.debug("验证图片URL: %s", ImageUrl)
-                self.validate_url.validate_url(ImageUrl, ["png", "jpg", "jpeg", "bmp", "pdf"])
+                self.validate_url.validate_url(ImageUrl, ["png", "jpg", "jpeg"])
                 self.logger.debug("图片URL验证通过")
                 self.logger.debug("图片Base64验证通过")
-            self.logger.info("开始执行OCR识别")
-            self.logger.debug("输入参数: ImageBase64=%s, ImageUrl=%s, IsWords=%s, EnableDetectSplit=%s, IsPdf=%s, PdfPageNumber=%s, EnableDetectText=%s, ConfigID=%s",
-                            self.sanitize_log_data.sanitize_log_data(ImageBase64,100),
-                            ImageUrl,
-                            IsWords,
-                            EnableDetectSplit,
-                            IsPdf,
-                            PdfPageNumber,
-                            EnableDetectText,
-                            ConfigID)
-            req = models.GeneralAccurateOCRRequest()
+            self.logger.info("开始处理请求")
+            self.logger.debug("请求参数: ImageUrl=%s, IsPdf=%s, PdfPageNumber=%s, Type=%s",
+                              self.sanitize_log_data.sanitize_log_data(ImageUrl,50),
+                              IsPdf,
+                              PdfPageNumber,
+                              Type)
+            self.validate.validate_id(Type, ["General", "LicensePlate"], "Type")
+            req = models.RecognizeGeneralTextImageWarnRequest()
             params = {
                 "ImageBase64": ImageBase64,
-                "ImageUrl":ImageUrl,
-                "IsWords":IsWords,
-                "EnableDetectSplit":EnableDetectSplit,
-                "IsPdf":IsPdf,
-                "PdfPageNumber":PdfPageNumber,
-                "EnableDetectText":EnableDetectText,
-                "ConfigID":ConfigID
+                "ImageUrl": ImageUrl,
+                "IsPdf": IsPdf,
+                "PdfPageNumber": PdfPageNumber,
+                "Type": Type
             }
             req.from_json_string(json.dumps(params))
             self.logger.info("正在向腾讯云OCR API发送请求...")
-            resp = self.client.GeneralAccurateOCR(req)
+            resp = self.client.RecognizeGeneralTextImageWarn(req)
             self.logger.info("OCR识别请求成功完成")
             self.logger.debug("响应数据: %s", self.sanitize_log_data.sanitize_log_data(resp.to_json_string(),50))
             return resp.to_json_string()
 
         except TencentCloudSDKException as err:
-            self.logger.error(f"OCR识别失败: {str(err)}", exc_info=True)
+            self.logger.error(f"请求处理失败: {str(err)}", exc_info=True)
             raise err
         except Exception as e:
             self.logger.error(f"处理OCR请求时发生意外错误: {str(e)}", exc_info=True)
-            raise TencentCloudSDKException("OCR处理错误", str(e))
+            raise TencentCloudSDKException("请求处理失败", str(e))

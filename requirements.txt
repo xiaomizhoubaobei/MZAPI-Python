@@ -1,2 +1,3 @@
 # 腾讯云SDK依赖
 tencentcloud-sdk-python-tiia
+tencentcloud-sdk-python-ocr

@@ -19,10 +19,6 @@ $:
           script:
             - chmod +x ./modify_apt_sources.sh
             - sudo ./modify_apt_sources.sh
-        - name: 安装依赖
-          script:
-            - chmod +x ./install_sdk.sh
-            - sudo ./install_sdk.sh
 master:
   push:
     - docker:

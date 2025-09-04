@@ -9,6 +9,7 @@ from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.ocr.v20181119 import ocr_client, models
 
 from ...utlis.ImageValidator import ImageValidator
+from ...utlis.verification import Verification
 
 
 class GeneralBasicOCR:
@@ -30,6 +31,7 @@ class GeneralBasicOCR:
             Raises:
                 TencentCloudSDKException: 初始化失败时抛出
             """
+            self.sanitize_log_data = Verification
             self.logger = logging.getLogger(__name__)
             if log_level is not None:
                 self.logger.setLevel(log_level)
@@ -106,7 +108,15 @@ class GeneralBasicOCR:
             """
         try:
             self.logger.info("开始执行OCR识别")
-            self.logger.debug(f"输入参数: ImageUrl={ImageUrl}, LanguageType={LanguageType}, IsPdf={IsPdf}")
+            safe_base64 = self.sanitize_log_data.sanitize_log_data(ImageBase64,100)
+            self.logger.debug("输入参数: ImageBase64=%s, ImageUrl=%s, Scene=%s, LanguageType=%s, IsPdf=%s, PdfPageNumber=%s, IsWords=%s",
+                            safe_base64,
+                            ImageUrl,
+                            Scene,
+                            LanguageType,
+                            IsPdf,
+                            PdfPageNumber,
+                            IsWords)
             
             if ImageBase64 is None and ImageUrl is None:
                 error_msg = "ImageBase64和ImageUrl必须提供一个"
@@ -114,7 +124,7 @@ class GeneralBasicOCR:
                 raise ValueError(error_msg)
                 
             if ImageUrl:
-                self.logger.debug(f"验证图片URL: {ImageUrl}")
+                self.logger.debug("验证图片URL: %s", ImageUrl)
                 self.validate_url.validate_url(ImageUrl, ["png", "jpg", "jpeg", "bmp", "pdf"])
                 self.logger.debug("图片URL验证通过")
 
@@ -136,7 +146,8 @@ class GeneralBasicOCR:
             # 执行OCR识别
             resp = self.client.GeneralBasicOCR(req)
             self.logger.info("OCR识别请求成功完成")
-            self.logger.debug(f"响应数据: {resp.to_json_string()}")  # 只记录前200字符避免日志过大
+            resp_json = resp.to_json_string()
+            self.logger.debug("响应数据: %s", self.sanitize_log_data.sanitize_log_data(resp_json,50))
             
             return resp.to_json_string()
 

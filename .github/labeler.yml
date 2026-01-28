@@ -1,0 +1,441 @@
+# MZAPI Python SDK 标签配置文件
+# 为不同类型的文件更改添加相应的标签
+
+# ===== 文件类型标签 =====
+
+# 文档相关
+'documentation/文档':
+  - 'docs/**/*'
+  - '**/*.md'
+  - '**/*.rst'
+  - '**/README*'
+  - '**/CHANGELOG*'
+  - '**/LICENSE*'
+  - '**/CONTRIBUTING*'
+  - '**/NOTICE*'
+  - '**/docs/images/**/*'
+  - '**/docs/assets/**/*'
+
+# 核心 Python 代码
+'core/核心代码':
+  - '**/*.py'
+  - '!tests/**/*'
+  - '!examples/**/*'
+  - '!docs/**/*'
+  - '!scripts/**/*'
+  - '!benchmarks/**/*'
+  - '!tools/**/*'
+
+# 测试代码
+'tests/测试':
+  - 'tests/**/*'
+  - '**/*_test.py'
+  - '**/test_*.py'
+  - '**/test-*.py'
+  - '**/conftest.py'
+  - '**/pytest*.py'
+  - '**/mock*.py'
+  - '**/fixtures/**/*'
+  - '**/unittest/**/*'
+
+# 示例代码
+'examples/示例':
+  - 'examples/**/*'
+  - 'samples/**/*'
+  - 'demo/**/*'
+
+# 依赖管理
+'dependencies/依赖':
+  - 'requirements*.txt'
+  - 'setup.py'
+  - 'setup.cfg'
+  - 'pyproject.toml'
+  - 'poetry.lock'
+  - 'Pipfile'
+  - 'Pipfile.lock'
+  - 'environment.yml'
+
+# CI/CD 配置
+'ci/持续集成':
+  - '.github/**/*'
+  - '.travis.yml'
+  - '.gitlab-ci.yml'
+  - '.circleci/**/*'
+  - 'tox.ini'
+  - '.flake8'
+  - 'pytest.ini'
+  - '.coveragerc'
+  - 'codecov.yml'
+
+# 配置文件
+'config/配置':
+  - '**/*.ini'
+  - '**/*.cfg'
+  - '**/*.conf'
+  - '**/*.config'
+  - '**/*.yaml'
+  - '**/*.yml'
+  - '**/*.toml'
+  - '**/*.properties'
+  - '**/*.env'
+  - '.env*'
+  - 'config/**/*'
+
+# ===== 功能领域标签 =====
+
+# API 相关
+'api/接口':
+  - '**/api/**/*'
+  - '**/apis/**/*'
+  - '**/*-api/**/*'
+  - '**/endpoints/**/*'
+  - '**/interfaces/**/*'
+  - '**/rest/**/*'
+  - '**/clients/**/*'
+  - '**/services/**/*'
+
+# 腾讯云服务
+'tencent/腾讯':
+  - '**/tencent/**/*'
+  - '**/wechat/**/*'
+  - '**/qq/**/*'
+  - '**/qcloud/**/*'
+  - '**/cos/**/*'
+  - '**/tke/**/*'
+  - '**/tcb/**/*'
+  - '**/cvm/**/*'
+  - '**/scf/**/*'
+  - '**/cls/**/*'
+  - '**/trtc/**/*'
+  - '**/tim/**/*'
+  - '**/ocr/**/*'
+
+# 华为云服务
+'huawei/华为':
+  - '**/huawei/**/*'
+  - '**/huaweicloud/**/*'
+  - '**/hms/**/*'
+  - '**/hicloud/**/*'
+  - '**/harmony/**/*'
+  - '**/hongmeng/**/*'
+  - '**/obs/**/*'
+  - '**/hwcloud/**/*'
+  - '**/agconnect/**/*'
+  - '**/ecs/**/*'
+  - '**/functiongraph/**/*'
+  - '**/lts/**/*'
+  - '**/modelarts/**/*'
+  - '**/iotda/**/*'
+
+# 工具类
+'utils/工具':
+  - '**/utils/**/*'
+  - '**/utlis/**/*'
+  - '**/helpers/**/*'
+  - '**/tools/**/*'
+
+# ===== 变更类型标签 =====
+
+# 修复问题
+'bug/修复':
+  - '**/fixes/**/*'
+  - '**/bugfixes/**/*'
+  - '**/patches/**/*'
+  - '**/hotfixes/**/*'
+  - '**/repairs/**/*'
+  - '**/solutions/**/*'
+
+# 新功能
+'feature/功能':
+  - '**/features/**/*'
+  - '**/enhancements/**/*'
+  - '**/new-features/**/*'
+  - '**/implements/**/*'
+  - '**/introduces/**/*'
+  - '**/creates/**/*'
+
+# 性能优化
+'performance/性能':
+  - '**/performance/**/*'
+  - '**/optimizations/**/*'
+  - '**/benchmarks/**/*'
+  - '**/profiling/**/*'
+  - '**/latency/**/*'
+  - '**/throughput/**/*'
+  - '**/caching/**/*'
+
+# 代码重构
+'refactor/重构':
+  - '**/refactors/**/*'
+  - '**/cleanups/**/*'
+  - '**/restructures/**/*'
+  - '**/rewrites/**/*'
+  - '**/redesigns/**/*'
+  - '**/simplifies/**/*'
+  - '**/modernizes/**/*'
+  - '**/improvements/**/*'
+
+# 代码风格
+'style/样式':
+  - '**/styles/**/*'
+  - '**/formats/**/*'
+  - '**/linting/**/*'
+  - '**/prettier/**/*'
+  - '**/eslint/**/*'
+  - '**/flake8/**/*'
+  - '**/pep8/**/*'
+  - '**/black/**/*'
+  - '**/isort/**/*'
+  - '**/indentation/**/*'
+  - '**/typos/**/*'
+
+# 杂项任务
+'chore/杂务':
+  - '**/chores/**/*'
+  - '**/housekeeping/**/*'
+  - '**/maintenance/**/*'
+  - '**/tooling/**/*'
+  - '**/dependencies/**/*'
+  - '**/versions/**/*'
+  - '**/upgrades/**/*'
+  - '**/updates/**/*'
+  - '**/bumps/**/*'
+  - '**/releases/**/*'
+  - '**/licenses/**/*'
+
+# ===== 优先级标签 =====
+
+# 紧急优先级
+'priority-critical/紧急优先级':
+  - '**/critical/**/*'
+  - '**/urgent/**/*'
+  - '**/emergency/**/*'
+  - '**/p0/**/*'
+  - '**/p1/**/*'
+  - '**/hotfixes/**/*'
+  - '**/security-vulnerabilities/**/*'
+  - '**/data-loss/**/*'
+  - '**/crashes/**/*'
+
+# 高优先级
+'priority-high/高优先级':
+  - '**/high-priority/**/*'
+  - '**/important/**/*'
+  - '**/p2/**/*'
+  - '**/major/**/*'
+  - '**/significant/**/*'
+  - '**/key-features/**/*'
+
+# 中优先级
+'priority-medium/中优先级':
+  - '**/medium-priority/**/*'
+  - '**/p3/**/*'
+  - '**/normal/**/*'
+  - '**/standard/**/*'
+  - '**/regular/**/*'
+
+# 低优先级
+'priority-low/低优先级':
+  - '**/low-priority/**/*'
+  - '**/p4/**/*'
+  - '**/minor/**/*'
+  - '**/trivial/**/*'
+  - '**/cosmetic/**/*'
+  - '**/nice-to-have/**/*'
+
+# ===== 厂商标签 =====
+
+# 阿里云
+'ali/阿里':
+  - '**/ali*/**/*'
+  - '**/aliyun/**/*'
+  - '**/alibaba/**/*'
+  - '**/alipay/**/*'
+  - '**/taobao/**/*'
+  - '**/tmall/**/*'
+  - '**/dingtalk/**/*'
+  - '**/ant/**/*'
+  - '**/antcloud/**/*'
+  - '**/amap/**/*'
+  - '**/oss/**/*'
+  - '**/nacos/**/*'
+  - '**/sentinel/**/*'
+  - '**/seata/**/*'
+  - '**/dubbo/**/*'
+
+# 百度
+'baidu/百度':
+  - '**/baidu/**/*'
+  - '**/bce/**/*'
+  - '**/apollo/**/*'
+  - '**/dueros/**/*'
+  - '**/tieba/**/*'
+  - '**/baiduyun/**/*'
+  - '**/bos/**/*'
+  - '**/aip/**/*'
+  - '**/bcc/**/*'
+  - '**/cfc/**/*'
+  - '**/lss/**/*'
+  - '**/paddlepaddle/**/*'
+  - '**/easydl/**/*'
+  - '**/bml/**/*'
+  - '**/baidumap/**/*'
+
+# 字节跳动
+'bytedance/字节跳动':
+  - '**/bytedance/**/*'
+  - '**/toutiao/**/*'
+  - '**/douyin/**/*'
+  - '**/tiktok/**/*'
+  - '**/feishu/**/*'
+  - '**/lark/**/*'
+  - '**/volcengine/**/*'
+  - '**/byteplus/**/*'
+  - '**/oceanengine/**/*'
+  - '**/xigua/**/*'
+
+# 京东
+'jd/京东':
+  - '**/jd/**/*'
+  - '**/jdcloud/**/*'
+  - '**/jingdong/**/*'
+  - '**/jdpay/**/*'
+  - '**/jdwl/**/*'
+  - '**/jdfinance/**/*'
+  - '**/jdai/**/*'
+  - '**/jdos/**/*'
+  - '**/jddb/**/*'
+  - '**/jdmall/**/*'
+
+# 网易
+'netease/网易':
+  - '**/netease/**/*'
+  - '**/163/**/*'
+  - '**/youdao/**/*'
+  - '**/yunxin/**/*'
+  - '**/music163/**/*'
+  - '**/ntes/**/*'
+  - '**/nim/**/*'
+  - '**/yunos/**/*'
+  - '**/lofter/**/*'
+  - '**/kaola/**/*'
+
+# 小米
+'xiaomi/小米':
+  - '**/xiaomi/**/*'
+  - '**/miui/**/*'
+  - '**/miot/**/*'
+  - '**/mijia/**/*'
+  - '**/micloud/**/*'
+  - '**/miservice/**/*'
+  - '**/mipush/**/*'
+  - '**/milink/**/*'
+  - '**/mistore/**/*'
+  - '**/mihome/**/*'
+  - '**/mifit/**/*'
+  - '**/miwear/**/*'
+  - '**/miband/**/*'
+  - '**/pocophone/**/*'
+  - '**/redmi/**/*'
+
+# AWS
+'aws/亚马逊云':
+  - '**/aws/**/*'
+  - '**/amazon/**/*'
+  - '**/s3/**/*'
+  - '**/ec2/**/*'
+  - '**/lambda/**/*'
+  - '**/dynamodb/**/*'
+  - '**/cloudwatch/**/*'
+  - '**/sqs/**/*'
+  - '**/sns/**/*'
+  - '**/rds/**/*'
+  - '**/iam/**/*'
+  - '**/eks/**/*'
+  - '**/kinesis/**/*'
+  - '**/cloudfront/**/*'
+
+# Azure
+'azure/微软云':
+  - '**/azure/**/*'
+  - '**/microsoft/**/*'
+  - '**/msft/**/*'
+  - '**/blob/**/*'
+  - '**/cosmosdb/**/*'
+  - '**/functions/**/*'
+  - '**/azureml/**/*'
+  - '**/aks/**/*'
+  - '**/appservice/**/*'
+  - '**/eventhub/**/*'
+  - '**/servicebus/**/*'
+  - '**/keyvault/**/*'
+  - '**/activedirectory/**/*'
+
+# GCP
+'gcp/谷歌云':
+  - '**/gcp/**/*'
+  - '**/google/**/*'
+  - '**/gcs/**/*'
+  - '**/bigquery/**/*'
+  - '**/firebase/**/*'
+  - '**/gke/**/*'
+  - '**/cloud-functions/**/*'
+  - '**/dataflow/**/*'
+  - '**/pubsub/**/*'
+  - '**/bigtable/**/*'
+  - '**/spanner/**/*'
+  - '**/dataproc/**/*'
+  - '**/appengine/**/*'
+  - '**/cloudstorage/**/*'
+
+# ===== 状态标签 =====
+
+# 进行中
+'wip/进行中':
+  - '**/wip/**/*'
+  - '**/work-in-progress/**/*'
+  - '**/drafts/**/*'
+  - '**/ongoing/**/*'
+  - '**/not-ready/**/*'
+
+# 待审核
+'ready-for-review/待审核':
+  - '**/ready-for-review/**/*'
+  - '**/please-review/**/*'
+  - '**/review-me/**/*'
+  - '**/ready/**/*'
+
+# 需讨论
+'needs-discussion/需讨论':
+  - '**/needs-discussion/**/*'
+  - '**/discussions/**/*'
+  - '**/questions/**/*'
+  - '**/uncertain/**/*'
+  - '**/proposals/**/*'
+  - '**/rfc/**/*'
+
+# 破坏性变更
+'breaking-change/破坏性变更':
+  - '**/breaking-changes/**/*'
+  - '**/major-changes/**/*'
+  - '**/incompatible/**/*'
+  - '**/migrations/**/*'
+  - '**/upgrade-guides/**/*'
+  - '**/semver-major/**/*'
+
+# 新手友好
+'good-first-issue/新手友好':
+  - '**/good-first-issue/**/*'
+  - '**/beginners/**/*'
+  - '**/easy/**/*'
+  - '**/starters/**/*'
+  - '**/newbies/**/*'
+  - '**/first-time/**/*'
+
+# 需要帮助
+'help-wanted/需要帮助':
+  - '**/help-wanted/**/*'
+  - '**/need-help/**/*'
+  - '**/assistance/**/*'
+  - '**/collaborations/**/*'
+  - '**/contribution-welcome/**/*'

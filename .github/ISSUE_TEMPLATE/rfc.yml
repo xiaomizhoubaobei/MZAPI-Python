@@ -1,0 +1,243 @@
+---
+name: 技术提案 / RFC
+description: 发起技术讨论或 RFC（Request for Comments）
+title: "[RFC] "
+labels:
+  - needs-discussion/需讨论
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您发起技术讨论！RFC 是推动项目发展的重要方式。
+
+        ---
+        **在提交之前，请确认：**
+        - [ ] 我已搜索现有的 RFC 和 Discussions，确认这不是一个重复的提案
+        - [ ] 我有清晰的问题陈述和解决方案
+        - [ ] 我已考虑了向后兼容性和迁移路径
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 背景
+      description: 描述这个 RFC 的背景和动机
+      placeholder: |
+        例如：
+        - 随着 SDK 用户增长，越来越多的用户需要异步调用 API
+        - 当前的同步 API 在高并发场景下性能不足
+        - 用户反馈希望使用 async/await 语法
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: 问题陈述
+      description: 当前存在什么问题，或者需要解决什么挑战？
+      placeholder: |
+        **当前问题：**
+        1. 同步 API 阻塞事件循环，不适合异步框架（FastAPI、asyncio）
+        2. 批量处理时无法充分利用并发性能
+        3. 用户需要自己管理线程池，增加了使用复杂度
+
+        **影响范围：**
+        - 所有使用异步框架的用户
+        - 需要高性能批量处理的场景
+        - 微服务架构中的应用
+    validations:
+      required: true
+
+  - type: textarea
+    id: goals
+    attributes:
+      label: 目标
+      description: 列出这个 RFC 的具体目标
+      placeholder: |
+        1. 添加对 async/await 的原生支持
+        2. 保持与现有同步 API 的兼容性
+        3. 提供清晰的迁移文档
+        4. 不破坏现有的功能和 API
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 提案
+      description: 详细描述你的技术方案，包括架构设计、API 设计等
+      placeholder: |
+        **API 设计：**
+        ```python
+        # 同步 API（保持不变）
+        from mzapi import GeneralBasicOCR
+        
+        ocr = GeneralBasicOCR(secret_id, secret_key)
+        result = ocr.recognize("image.jpg")
+        
+        # 异步 API（新增）
+        from mzapi.async_ import AsyncGeneralBasicOCR
+        
+        async def main():
+            ocr = AsyncGeneralBasicOCR(secret_id, secret_key)
+            result = await ocr.recognize("image.jpg")
+        ```
+        
+        **技术实现：**
+        - 使用 aiohttp 替代 requests
+        - 提供 Async* 类与同步类对应
+        - 共享认证和配置逻辑
+        
+        **影响范围：**
+        - 新增 mzapi/async_ 模块
+        - 不修改现有同步代码
+        - 需要更新文档和示例
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 替代方案
+      description: 描述其他可能的方案及其优缺点
+      placeholder: |
+        **方案 1：使用同步 API + 线程池**
+        - 优点：无需修改 SDK，用户自行实现
+        - 缺点：增加用户负担，性能不如原生异步
+        
+        **方案 2：完全重写为异步，同步使用 run_in_executor**
+        - 优点：代码统一
+        - 缺点：破坏性变更，迁移成本高
+        
+        **选择方案 3 的原因：**
+        - 提供更好的用户体验
+        - 保持向后兼容
+        - 实现成本可控
+    validations:
+      required: false
+
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: 兼容性分析
+      description: 分析对现有代码的影响和兼容性
+      placeholder: |
+        **向后兼容性：**
+        - ✅ 不影响现有同步 API 用户
+        - ✅ 现有代码无需修改
+        - ✅ 可以在同一个项目中混合使用
+        
+        **迁移路径：**
+        1. 安装新的 SDK 版本
+        2. 修改 import 语句（同步 → 异步）
+        3. 添加 async/await 关键字
+        4. 使用异步框架的入口函数
+        
+        **弃用计划：**
+        - 无弃用计划（同步 API 继续维护）
+      render: markdown
+    validations:
+      required: false
+
+  - type: textarea
+    id: implementation-plan
+    attributes:
+      label: 实施计划
+      description: 列出实施阶段和任务
+      placeholder: |
+        | 阶段 | 任务 | 预计时间 | 负责人 |
+        |------|------|---------|--------|
+        | 阶段 1 | 设计异步 API 接口 | 1 周 | - |
+        | 阶段 2 | 实现 aiohttp 客户端 | 1 周 | - |
+        | 阶段 3 | 实现 Async* 类 | 2 周 | - |
+        | 阶段 4 | 编写单元测试 | 1 周 | - |
+        | 阶段 5 | 更新文档和示例 | 1 周 | - |
+        | 阶段 6 | 发布测试版本 | - | - |
+      render: markdown
+    validations:
+      required: false
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: 风险与挑战
+      description: 列出潜在的风险和挑战，以及应对措施
+      placeholder: |
+        **技术风险：**
+        1. **性能风险**：aiohttp 性能可能不如预期
+           - 应对：进行基准测试，优化连接池配置
+           
+        2. **兼容性风险**：不同 Python 版本的异步支持差异
+           - 应对：只支持 Python 3.10+，明确版本要求
+           
+        **维护风险：**
+        1. 双份代码增加维护成本
+           - 应对：共享认证和配置逻辑，使用工具辅助同步
+           
+        **用户风险：**
+        1. 用户对异步编程不熟悉
+           - 应对：提供详细文档和迁移指南
+    validations:
+      required: false
+
+  - type: textarea
+    id: discussion-points
+    attributes:
+      label: 讨论要点
+      description: 列出需要社区讨论和反馈的关键问题
+      placeholder: |
+        **需要讨论的问题：**
+        1. 是否支持 Python 3.9（asyncio API 变动较大）？
+        2. 是否提供批量异步处理方法？
+        3. 如何处理同步和异步 API 的文档组织？
+        4. 是否需要在示例代码中提供异步版本？
+        
+        **期望的反馈：**
+        - 对 API 设计的意见
+        - 对实施优先级的建议
+        - 是否有更好的技术方案
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 参考资料
+      description: 相关 Issue、文档、参考实现
+      placeholder: |
+        **相关 Issue：**
+        - #123: 请求添加异步支持
+        - #45: 性能优化讨论
+        
+        **相关文档：**
+        - [PEP 492 - Coroutines with async and await syntax](https://peps.python.org/pep-0492/)
+        - [aiohttp 文档](https://docs.aiohttp.org/)
+        
+        **参考实现：**
+        - [openai-python](https://github.com/openai/openai-python) - 支持同步和异步
+        - [boto3](https://github.com/boto/boto3) - 同步 SDK（对比参考）
+    validations:
+      required: false
+
+  - type: textarea
+    id: voting
+    attributes:
+      label: 投票（可选）
+      description: 如需投票，请更新以下内容
+      placeholder: |
+        | 参与者 | 选项 | 理由 |
+        |--------|------|------|
+        | @username | 赞成 | 支持异步功能，有助于我的项目 |
+        | @username | 反对 | 担心维护成本过高 |
+        | @username | 弃权 | 需要更多信息 |
+      render: markdown
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 附加信息
+      description: 其他相关信息
+    validations:
+      required: false

@@ -1,0 +1,146 @@
+---
+name: 问题咨询
+description: 询问使用相关问题
+title: "[Question] "
+labels:
+  - needs-discussion/需讨论
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您的问题！我们很乐意帮助您解答。
+
+        ---
+        **在提交之前，请确认：**
+        - [ ] 我已搜索现有的 Issues，确认这不是一个重复的问题
+        - [ ] 我已阅读项目文档（README、API 文档等）
+        - [ ] 我已尝试自己解决问题
+
+  - type: textarea
+    id: question
+    attributes:
+      label: 问题描述
+      description: 请清晰地描述您的问题
+      placeholder: 例如：如何使用 MZAPI SDK 调用腾讯云 OCR 接口进行批量图片识别？
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: 使用场景
+      description: 描述您的使用场景和目标
+      placeholder: |
+        例如：
+        - 我需要从发票中提取文字信息
+        - 我需要批量处理 1000 张证件照
+        - 我需要将 OCR 结果保存为 JSON 格式
+        - 我需要在异步环境中使用 SDK
+    validations:
+      required: true
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: 相关代码
+      description: 提供相关的代码示例
+      placeholder: |
+        ```python
+        from mzapi import GeneralBasicOCR
+        
+        # 您的代码
+        ocr = GeneralBasicOCR(secret_id, secret_key)
+        result = ocr.recognize("image.jpg")
+        ```
+      render: python
+    validations:
+      required: false
+
+  - type: textarea
+    id: tried-methods
+    attributes:
+      label: 已尝试的方法
+      description: 描述您已经尝试过的解决方法
+      placeholder: |
+        1. **尝试方法 1：** 我尝试使用单个图片识别，结果是...
+        2. **阅读文档：** 我阅读了 README 中的快速开始部分，但仍然不确定...
+        3. **搜索示例：** 我查看了 examples 目录，但没有找到相关示例
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 提供运行环境信息
+      placeholder: |
+        - 操作系统: 例如 Ubuntu 20.04, Windows 10, macOS 12
+        - Python 版本: 例如 3.10.0, 3.11.5
+        - MZAPI SDK 版本: 例如 0.0.1
+        - 安装方式: pip install mz-sdk
+        - 使用的云服务: 例如 腾讯云 OCR, 华为云 OBS
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: 配置信息（已脱敏）
+      description: 如有相关配置，请粘贴（请隐藏敏感信息）
+      placeholder: |
+        ```python
+        config = {
+            "secret_id": "AKIDxxxxxxxx",
+            "secret_key": "xxxxxxxx",  # 请隐藏完整密钥
+            "region": "ap-guangzhou",
+            "timeout": 30
+        }
+        ```
+      render: python
+    validations:
+      required: false
+
+  - type: textarea
+    id: error-message
+    attributes:
+      label: 错误信息（如有）
+      description: 如果遇到错误，请粘贴完整的错误信息
+      placeholder: |
+        Traceback (most recent call last):
+          File "example.py", line 10, in <module>
+            result = ocr.recognize("image.jpg")
+        Exception: ...
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: documentation-links
+    attributes:
+      label: 已查阅的文档
+      description: 提供您已经查阅过的文档链接
+      placeholder: |
+        - README.md
+        - API 文档: https://docs.mizhoubaobei.top/api/
+        - 示例代码: examples/
+        - 腾讯云 OCR 文档: https://cloud.tencent.com/document/product/...
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图（如有）
+      description: 如有必要，请添加截图或录屏来说明问题
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 附加信息
+      description: 其他任何有助于回答您问题的信息
+    validations:
+      required: false

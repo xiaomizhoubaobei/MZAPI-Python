@@ -1,0 +1,171 @@
+---
+name: 功能请求
+description: 建议新功能或改进
+title: "[Feature] "
+labels:
+  - feature/功能
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您的功能建议！我们欢迎任何能改进 MZAPI SDK 的想法。
+
+        ---
+        **在提交之前，请确认：**
+        - [ ] 我已搜索现有的 Issues 和 PR，确认这不是一个重复的请求
+        - [ ] 我已阅读项目文档，确认这个功能尚未实现
+        - [ ] 我有清晰的功能描述和使用场景
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: 功能描述
+      description: 简要描述您想要的功能
+      placeholder: 例如：添加对腾讯云表格识别的支持
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: 问题描述
+      description: 请描述这个功能解决什么问题或带来什么价值
+      placeholder: |
+        目前用户需要调用多个接口才能完成表格识别，希望能提供一个统一的接口来简化操作。
+        这将大大提高开发效率，减少代码量。
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: 使用场景
+      description: 描述这个功能的使用场景和好处
+      placeholder: |
+        **场景 1：**
+        用户需要从发票中提取表格数据
+        
+        **场景 2：**
+        用户需要处理大量包含表格的文档
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: 提议的解决方案
+      description: 请详细描述您希望集成哪个API以及期望的接口设计
+      placeholder: |
+        **想要集成的API：**
+        - 云服务商：例如 华为云
+        - API名称：例如 通用文字识别 API
+        - API文档链接：例如 https://support.huaweicloud.com/api-ocr/ocr_03_0042.html
+        
+        **期望的SDK接口设计：**
+        ```python
+        from mzapi import NewFeature
+        
+        # 您期望的使用方式
+        client = NewFeature(secret_id, secret_key)
+        result = client.do_something(params)
+        ```
+        
+        **需要包含的功能：**
+        - 功能点1
+        - 功能点2
+    validations:
+      required: true
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: 示例代码（如果适用）
+      description: 提供使用这个功能的示例代码
+      placeholder: |
+        ```python
+        from mzapi import TableRecognition
+        
+        # 初始化
+        recognizer = TableRecognition(
+            secret_id="your_secret_id",
+            secret_key="your_secret_key"
+        )
+        
+        # 识别表格
+        result = recognizer.recognize("invoice.jpg")
+        print(result.tables)
+        ```
+      render: python
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 替代方案
+      description: 描述您考虑过的其他解决方案或功能，以及为什么没有选择它们
+      placeholder: |
+        **方案 1：** 使用现有的通用 OCR 接口
+        - 缺点：需要额外处理表格结构，开发复杂度高
+        
+        **方案 2：** 调用多个云服务接口
+        - 缺点：需要维护多个密钥，成本高
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 优先级
+      description: 请评估该功能的优先级
+      options:
+        - 紧急（阻塞当前使用）
+        - 高（重要但非阻塞）
+        - 中（有用但非必需）
+        - 低（锦上添花）
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation-ideas
+    attributes:
+      label: 实现建议（可选）
+      description: 如果您有实现思路，请描述技术方案、实现步骤、潜在风险
+      placeholder: |
+        **技术方案：**
+        - 封装腾讯云表格识别 API
+        - 添加参数验证和错误处理
+        - 提供多种输出格式（JSON、CSV、Excel）
+        
+        **潜在风险：**
+        - API 限流
+        - 大文件处理性能
+        - 兼容性问题
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 附加信息
+      description: 其他有助于理解或实现该功能的信息
+      placeholder: |
+        - 相关文档链接
+        - 参考的其他 SDK 实现
+        - 兼容性要求
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 贡献意愿
+      description: 您是否愿意帮助实现这个功能？
+      options:
+        - label: 我可以提交 PR 来实现这个功能
+          required: false
+        - label: 我愿意参与讨论和提供反馈
+          required: false
+        - label: 我只是提出建议，暂不参与实现
+          required: false

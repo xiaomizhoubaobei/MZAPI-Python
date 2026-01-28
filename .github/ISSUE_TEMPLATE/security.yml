@@ -1,0 +1,208 @@
+---
+name: 安全漏洞报告
+description: 报告安全漏洞或安全问题
+title: "[Security] "
+labels:
+  - priority-critical/紧急优先级
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > ⚠️ **重要安全提示**
+        > 
+        > **请不要在公开 Issue 中披露敏感的安全漏洞详情！**
+        > 
+        > 如果您发现了严重的安全漏洞，请通过以下**私有方式**联系我们：
+        > 
+        > 1. **邮件报告**：qixiaoxin@stu.sqxy.edu.cn
+        > 2. **GitHub 私人报告**：点击 "Report a vulnerability" 按钮
+        > 
+        > 我们会在收到报告后 48 小时内回复，并与您协调修复和披露时间表。
+        > 
+        > 感谢您帮助我们维护项目安全！
+
+  - type: checkboxes
+    id: confirm-private
+    attributes:
+      label: 确认事项
+      description: 请确认以下事项
+      options:
+        - label: 我已阅读安全提示，知道不应在公开 Issue 中披露敏感信息
+          required: true
+        - label: 我已通过邮件或 GitHub 私人报告提交了详细信息
+          required: true
+        - label: 此 Issue 仅用于跟踪漏洞修复进度
+          required: true
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 严重程度
+      description: 评估安全漏洞的严重程度
+      options:
+        - 严重（Critical）- 可直接导致数据泄露或系统被控制
+        - 高（High）- 需要复杂条件才能利用，但影响严重
+        - 中（Medium）- 影响有限，需要特定条件
+        - 低（Low）- 影响很小，利用难度高
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: vulnerability-type
+    attributes:
+      label: 漏洞类型
+      description: 选择安全问题的类型
+      options:
+        - label: 密钥泄露（Access Key、Secret Key 等）
+        - label: 认证绕过或弱认证
+        - label: 权限提升
+        - label: 敏感信息泄露（日志、错误信息等）
+        - label: API 注入（命令注入、参数注入等）
+        - label: 重放攻击
+        - label: 中间人攻击（证书验证问题）
+        - label: 依赖项安全漏洞
+        - label: 代码注入或执行
+        - label: 其他（请在下方说明）
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 简要描述安全问题（不要披露敏感细节）
+      placeholder: 例如：在特定条件下，SDK 可能会在日志中输出用户的 Secret Key
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected-versions
+    attributes:
+      label: 受影响的版本
+      description: 列出受影响的 SDK 版本
+      placeholder: |
+        - 0.0.1 及之前的所有版本
+        - 具体版本：______
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: 影响范围
+      description: 描述该安全问题的影响范围
+      placeholder: |
+        - 受影响的用户：所有使用 MZAPI SDK 的用户
+        - 受影响的功能：腾讯云 OCR、华为云 OBS
+        - 潜在损失：密钥泄露、数据泄露、未授权访问
+        - 利用条件：需要用户主动触发特定操作
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-code
+    attributes:
+      label: 复现代码（已脱敏）
+      description: 如果可以安全披露，提供复现代码（请隐藏敏感信息）
+      placeholder: |
+        ```python
+        # 复现代码（已脱敏）
+        from mzapi import GeneralBasicOCR
+        
+        ocr = GeneralBasicOCR(
+            secret_id="AKIDxxxxxxxx",  # 已隐藏完整密钥
+            secret_key="xxxxxxxx"      # 已隐藏完整密钥
+        )
+        
+        # 在某些情况下会触发漏洞
+        result = ocr.recognize("image.jpg", debug=True)
+        ```
+      render: python
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 提供受影响的环境信息
+      placeholder: |
+        - Python 版本：3.10.x - 3.14.x
+        - 操作系统：Linux, macOS, Windows
+        - 使用的云服务：腾讯云、华为云
+        - 特定配置：某些配置组合
+      render: yaml
+    validations:
+      required: false
+
+  - type: textarea
+    id: fix-suggestions
+    attributes:
+      label: 修复建议
+      description: 建议的修复方案
+      placeholder: |
+        **方案 1：移除敏感信息日志**
+        - 从日志中移除所有密钥和凭证
+        - 使用环境变量存储敏感信息
+        - 实施日志过滤机制
+        
+        **方案 2：增强密钥保护**
+        - 使用密钥轮换机制
+        - 实施密钥加密存储
+        - 提供密钥验证功能
+    validations:
+      required: false
+
+  - type: textarea
+    id: disclosure-timeline
+    attributes:
+      label: 披露时间表
+      description: 填写披露时间表信息
+      placeholder: |
+        - 发现时间：2026-01-28
+        - 报告时间：2026-01-28
+        - 确认时间：2026-01-29
+        - 修复完成时间：预计 2026-02-05
+        - 计划公开披露时间：2026-02-10
+        - 是否已联系云服务商：[ ] 是 [ ] 否
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 参考资料
+      description: 相关的安全公告、CVE 编号等
+      placeholder: |
+        - CVE 编号：CVE-2026-XXXXX
+        - 相关 Issue：#123
+        - 相关安全公告：https://...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 附加信息
+      description: 其他与安全相关的信息
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        **感谢您的负责任披露！**
+        
+        我们会：
+        - 在 48 小时内确认收到您的报告
+        - 与您协调修复和披露时间表
+        - 在安全补丁发布后，公开致谢您（如您同意）
+        - 根据漏洞严重程度，提供适当的奖励（如适用）

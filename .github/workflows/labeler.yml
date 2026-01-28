@@ -1,0 +1,44 @@
+name: PR Insights 标记器
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# Workflow 级别权限配置
+permissions:
+  contents: read
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write  # 应用标签
+      issues: write         # 发布评论
+    name: PR 智能标记与分析
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@e3f713f2d8f53843e71c69a996d56f51aa9adfb9
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: jey3dayo/pr-insights-labeler@a00a4fce29e627a73c4fd5feb81599f9147d7ca6 # v1.10.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # 文件与行数限制
+          file_size_limit: "1024KB"
+          file_lines_limit: "500"
+          pr_additions_limit: "5000"
+          pr_files_limit: "50"
+          # 功能开关
+          size_enabled: "true"
+          category_enabled: "true"
+          risk_enabled: "true"
+          complexity_enabled: "false"
+          # 质量门禁
+          fail_on_pr_size: "xlarge"
+          fail_on_large_files: "true"
+          fail_on_too_many_files: "true"
+          # 输出控制
+          enable_summary: "true"
+          comment_on_pr: "auto"

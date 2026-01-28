@@ -27,7 +27,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # 文件与行数限制
           file_size_limit: "1024KB"
-          file_lines_limit: "500"
+          file_lines_limit: "1000"
           pr_additions_limit: "5000"
           pr_files_limit: "50"
           # 功能开关

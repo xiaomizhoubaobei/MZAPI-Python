@@ -1,0 +1,40 @@
+# Issue 自动标签和指派工作流
+# 功能：根据 Issue 内容自动添加标签和分配人员
+name: Issue Labeler
+
+# 触发条件：当有新的 Issue 被打开或编辑时
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+# Workflow 级别权限配置
+permissions:
+  contents: read
+
+jobs:
+  labeler:
+    # 运行环境：最新版本的 Ubuntu
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write  # 需要添加标签和分配人员
+    # 任务名称
+    name: Auto-label and assign issues
+    steps:
+      # Harden Runner 安全加固
+      - name: Harden Runner
+        uses: step-security/harden-runner@e3f713f2d8f53843e71c69a996d56f51aa9adfb9
+        with:
+          egress-policy: audit
+
+      # 检出代码仓库
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # 运行 tag-ur-it Action
+      - name: Tag-ur-it
+        uses: damccorm/tag-ur-it@4689c0ef99e78276b2ff4851db5deec57bb3f615 # master
+        with:
+          # GitHub Token，用于添加标签和分配人员
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          # Issue 规则配置文件路径
+          configuration-path: ".github/issue-rules.yml"

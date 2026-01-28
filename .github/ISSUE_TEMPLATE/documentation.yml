@@ -1,0 +1,156 @@
+---
+name: 文档改进
+description: 报告文档问题或建议改进
+title: "[Docs] "
+labels:
+  - documentation/文档
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您帮助我们改进文档！良好的文档对于 SDK 项目至关重要。
+
+        ---
+        **在提交之前，请确认：**
+        - [ ] 我已搜索现有的 Issues，确认这是一个新的文档问题
+        - [ ] 我已阅读当前的文档
+        - [ ] 我有具体的改进建议
+
+  - type: checkboxes
+    id: doc-type
+    attributes:
+      label: 文档类型
+      description: 选择文档类型
+      options:
+        - label: README.md
+        - label: API 文档
+        - label: 安装指南
+        - label: 快速开始
+        - label: 使用示例
+        - label: 代码注释/类型注解
+        - label: CHANGELOG.md
+        - label: 贡献指南 (CONTRIBUTING.md)
+        - label: 其他（请在下方说明）
+    validations:
+      required: true
+
+  - type: textarea
+    id: doc-location
+    attributes:
+      label: 文档位置
+      description: 请提供文档的文件路径或 URL
+      placeholder: |
+        文件路径: README.md 第 10-20 行
+        或
+        URL: https://docs.mizhoubaobei.top/api/ocr.html
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: issue-type
+    attributes:
+      label: 问题类型
+      description: 选择问题类型
+      options:
+        - label: 错误/不准确的信息
+        - label: 缺少内容或示例
+        - label: 过时/过期的内容
+        - label: 不清晰/难以理解
+        - label: 格式问题
+        - label: 拼写/语法错误
+        - label: 代码示例有误
+        - label: 链接失效
+        - label: 其他（请在下方说明）
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue-description
+    attributes:
+      label: 问题描述
+      description: 详细描述文档问题
+      placeholder: |
+        例如：在 OCR 接口的文档中，参数说明不清楚，不知道如何传递图片数据
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested-changes
+    attributes:
+      label: 建议修改
+      description: 提供具体的修改建议
+      placeholder: |
+        ### 原文
+        ```
+        原文内容
+        ```
+
+        ### 建议修改
+        ```
+        修改后的内容
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: 改进的代码示例（如有）
+      description: 如果需要提供更好的代码示例，请在此处提供
+      placeholder: |
+        ```python
+        from mzapi import GeneralBasicOCR
+
+        # 改进后的示例代码
+        ocr = GeneralBasicOCR(
+            secret_id="your_secret_id",
+            secret_key="your_secret_key"
+        )
+        result = ocr.recognize("image.jpg")
+        ```
+      render: python
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: user-level
+    attributes:
+      label: 影响用户
+      description: 这个文档问题会影响哪些用户？
+      options:
+        - label: 新用户（首次使用 SDK）
+        - label: 现有用户（已在使用 SDK）
+        - label: 特定 Python 版本用户
+        - label: 特定云服务用户（腾讯云/华为云）
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图（如有）
+      description: 如有必要，请添加截图来说明文档问题
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 附加信息
+      description: 其他有助于改进文档的信息
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 贡献意愿
+      description: 您是否愿意帮助改进文档？
+      options:
+        - label: 我可以提交 PR 来修复这个问题
+          required: false
+        - label: 我可以提供更多详细信息
+          required: false
+        - label: 我只想报告问题，暂不参与修复
+          required: false

@@ -1,0 +1,205 @@
+---
+name: 性能问题
+description: 报告性能问题或优化建议
+title: "[Performance] "
+labels:
+  - performance/性能
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您报告性能问题！性能优化对于 SDK 项目非常重要。
+
+        ---
+        **在提交之前，请确认：**
+        - [ ] 我已搜索现有的 Issues，确认这是一个新的性能问题
+        - [ ] 我有可测量的性能数据
+        - [ ] 我已尝试基本的优化方法
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 性能问题描述
+      description: 简要描述性能问题或优化需求
+      placeholder: 例如：批量调用 OCR 接口时响应时间过长，处理 100 张图片需要 30 秒
+    validations:
+      required: true
+
+  - type: textarea
+    id: performance-metrics
+    attributes:
+      label: 性能指标
+      description: 提供具体的性能数据对比
+      placeholder: |
+        | 指标 | 当前值 | 期望值 | 测量方法 |
+        |------|--------|--------|---------|
+        | 单次调用响应时间 | 500 ms | < 200 ms | time.time() |
+        | 批量处理（100张） | 30 s | < 10 s | 计时器 |
+        | 内存使用 | 500 MB | < 200 MB | memory_profiler |
+        | CPU 占用 | 80% | < 50% | psutil |
+        | 并发请求数 | 10 | 50 | 压测工具 |
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-code
+    attributes:
+      label: 复现代码
+      description: 提供能够重现性能问题的代码
+      placeholder: |
+        ```python
+        from mzapi import GeneralBasicOCR
+        import time
+        
+        ocr = GeneralBasicOCR(secret_id, secret_key)
+        
+        # 性能测试代码
+        start = time.time()
+        for i in range(100):
+            result = ocr.recognize(f"image_{i}.jpg")
+        end = time.time()
+        print(f"耗时: {end - start}秒")
+        ```
+      render: python
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: bottleneck-type
+    attributes:
+      label: 性能瓶颈类型
+      description: 选择最符合的性能瓶颈类型
+      options:
+        - label: API 响应时间过长
+        - label: 批量处理效率低
+        - label: 内存占用过高
+        - label: CPU 占用过高
+        - label: 网络请求效率低
+        - label: 缺少并发处理能力
+        - label: 图片处理速度慢
+        - label: 其他（请在下方说明）
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 提供详细的运行环境信息
+      placeholder: |
+        - 操作系统: 例如 Ubuntu 20.04, Windows 10, macOS 12
+        - Python 版本: 例如 3.10.0, 3.11.5
+        - MZAPI SDK 版本: 例如 0.0.1
+        - 使用的云服务: 例如 腾讯云 OCR, 华为云 OBS
+        - 服务区域: 例如 ap-guangzhou, cn-east-3
+        - 网络环境: 例如 本地网络, 云服务器, VPC
+      render: yaml
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: 配置信息（已脱敏）
+      description: 提供相关配置（请隐藏敏感信息）
+      placeholder: |
+        ```python
+        config = {
+            "secret_id": "AKIDxxxxxxxx",
+            "secret_key": "xxxxxxxx",  # 请隐藏完整密钥
+            "region": "ap-guangzhou",
+            "timeout": 30,
+            "max_retries": 3
+        }
+        ```
+      render: python
+    validations:
+      required: false
+
+  - type: textarea
+    id: profiling-results
+    attributes:
+      label: 性能分析结果（如有）
+      description: 如果有使用性能分析工具，请粘贴结果
+      placeholder: |
+        **cProfile 输出：**
+        ```
+        ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1000    0.123    0.000    1.234    0.001 example.py:10(process_image)
+        ```
+        
+        **memory_profiler 输出：**
+        ```
+        Line #    Mem usage    Increment  Occurrences   Line Contents
+        ============================================================
+             10    125.3 MiB    125.3 MiB           1   result = ocr.recognize(img)
+        ```
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: tried-optimizations
+    attributes:
+      label: 已尝试的优化方法
+      description: 列出已经尝试过的优化方法及其效果
+      placeholder: |
+        1. **使用连接池**
+           - 方法：使用 requests.Session()
+           - 效果：响应时间从 500ms 降到 450ms
+           
+        2. **增加超时时间**
+           - 方法：将 timeout 从 10s 增加到 30s
+           - 效果：减少了超时错误，但响应时间未改善
+    validations:
+      required: false
+
+  - type: textarea
+    id: optimization-suggestions
+    attributes:
+      label: 建议的优化方案
+      description: 描述您认为有效的优化方案
+      placeholder: |
+        1. **添加批量处理接口**
+           - 描述：支持一次性处理多张图片，减少网络往返
+           - 预期效果：批量处理性能提升 3-5 倍
+           - 实施难度：中等
+
+        2. **添加异步支持**
+           - 描述：使用 asyncio 实现异步调用
+           - 预期效果：并发处理能力提升 10 倍
+           - 实施难度：高
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志信息
+      description: 相关的日志或调试信息
+      render: text
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 附加信息
+      description: 其他有助于性能优化的信息
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 贡献意愿
+      description: 您是否愿意帮助优化性能？
+      options:
+        - label: 我可以提交 PR 来优化性能
+          required: false
+        - label: 我可以提供更详细的性能测试数据
+          required: false
+        - label: 我只想报告问题，暂不参与优化
+          required: false

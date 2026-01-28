@@ -1,0 +1,76 @@
+# 对于大多数项目，此工作流文件无需更改；您只需
+# 将其提交到您的仓库即可。
+#
+# 您可能希望修改此文件以覆盖要分析的语言集，
+# 或提供自定义查询或构建逻辑。
+#
+# ******** 注意 ********
+# 我们已尝试检测您仓库中的语言。请检查
+# 下面定义的 `language` 矩阵，以确认您具有正确的一组
+# 受支持的 CodeQL 语言。
+#
+name: "CodeQL"
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'mzmcp/**'
+      - 'pyproject.toml'
+      - '.pre-commit-config.yaml'
+  schedule:
+    - cron: "0 0 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["Python"]
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        # CodeQL 支持 [ $supported-codeql-languages ]
+        # 了解更多关于 CodeQL 语言支持的信息，请访问 https://aka.ms/codPythoneql-docs/language-support
+
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@e3f713f2d8f53843e71c69a996d56f51aa9adfb9
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # 初始化 CodeQL 工具进行扫描。
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@19b2f06db2b6f5108140aeb04014ef02b648f789 # v4.31.11
+        with:
+          languages: ${{ matrix.language }}
+          # 如果您希望指定自定义查询，可以在这里或在配置文件中进行。
+          # 默认情况下，此处列出的查询将覆盖配置文件中指定的任何查询。
+          # 在此处列表前缀添加 "+" 以使用这些查询和配置文件中的查询。
+
+      # Autobuild 尝试构建任何编译型语言（C/C++、C# 或 Java）。
+      # 如果此步骤失败，则应删除它并手动运行构建（见下方）
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@19b2f06db2b6f5108140aeb04014ef02b648f789 # v4.31.11
+
+      # ℹ️ 使用操作系统 shell 运行的命令行程序。
+      # 📚 请参阅 https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+
+      #   如果上方的 Autobuild 失败，请删除它并取消注释以下三行。
+      #   修改它们（或添加更多）以构建您的代码，请参考下方的示例以获取指导。
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@19b2f06db2b6f5108140aeb04014ef02b648f789 # v4.31.11
+        with:
+          category: "/language:${{matrix.language}}"

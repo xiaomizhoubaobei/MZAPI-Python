@@ -1,0 +1,25 @@
+name: Codeball
+on: [pull_request]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  codeball_job:
+    runs-on: ubuntu-latest
+    name: Codeball
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@e3f713f2d8f53843e71c69a996d56f51aa9adfb9 # v2.14.1
+        with:
+          egress-policy: audit
+
+      - name: Codeball
+        uses: sturdy-dev/codeball-action@102067b9f537482cee112577655c85fda56d8926  # v2.6.0
+        with:
+          approvePullRequests: "false"
+          labelPullRequestsWhenApproved: "true"
+          labelPullRequestsWhenReviewNeeded: "true"
+          failJobsWhenReviewNeeded: "false"

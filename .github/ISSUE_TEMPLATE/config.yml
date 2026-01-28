@@ -1,0 +1,19 @@
+---
+name: config.yml
+about: Issue 模板配置文件
+title: ''
+labels: []
+assignees: ''
+blank_issues_enabled: true
+contact_links:
+  - name: 📚 查看项目文档
+    url: https://docs.mizhoubaobei.top
+    about: 请先查阅项目文档，可能已经有相关说明
+
+  - name: 🐍 PyPI 页面
+    url: https://pypi.org/project/mz-sdk/
+    about: 查看最新版本和安装说明
+
+  - name: 💬 讨论区
+    url: https://github.com/xiaomizhoubaobei/MZAPI-Python/discussions
+    about: 在讨论区与其他用户交流

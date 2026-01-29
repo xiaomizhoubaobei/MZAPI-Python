@@ -37,4 +37,4 @@ jobs:
           # GitHub Token，用于添加标签和分配人员
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           # Issue 规则配置文件路径
-          configuration-path: ".github/issue-rules.yml"
+          configuration-path: ".github/labeler.yml"

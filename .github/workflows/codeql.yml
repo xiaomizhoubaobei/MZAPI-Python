@@ -16,8 +16,11 @@ on:
     branches: ["main"]
     paths:
       - 'mzapi/**'
-      - 'pyproject.toml'
-      - '.pre-commit-config.yaml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'mzapi/**'
   schedule:
     - cron: "0 0 * * 1"
 

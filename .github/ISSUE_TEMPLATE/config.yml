@@ -4,7 +4,7 @@ about: Issue 模板配置文件
 title: ''
 labels: []
 assignees: ''
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
   - name: 📚 查看项目文档
     url: https://docs.mizhoubaobei.top

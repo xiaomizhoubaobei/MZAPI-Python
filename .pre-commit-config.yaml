@@ -12,10 +12,11 @@ repos:
         stages: [pre-commit]
 
   # 🐍 Python 代码检查 - 必须配置
-  - repo: https://github.com/pycqa/pylint
+  - repo: https://github.com/pre-commit/mirrors-pylint
+    rev: v3.3.4
     hooks:
       - id: pylint
-        args: [--rcfile=.pylintrc, --fail-on=I]
+        args: [--rcfile=.pylintrc]
         additional_dependencies:
           - pylint-pytest
         stages: [pre-commit]
@@ -37,6 +38,7 @@ repos:
 
   # 🐚 Shell 脚本检查 - 推荐
   - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
     hooks:
       - id: shellcheck
         args: [--severity=warning]

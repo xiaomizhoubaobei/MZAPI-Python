@@ -52,6 +52,13 @@ $:
                 script:
                     - chmod +x /workspace/install_agents.sh
                     - /workspace/install_agents.sh
+              - name: 下载并解压skills到iflow目录
+                script:
+                    - mkdir -p /root/.iflow/skills
+                    - curl -o /tmp/skills.zip https://cnb-1329111128.cos.ap-guangzhou.myqcloud.com/skills.zip
+                    - unzip -o /tmp/skills.zip -d /root/.iflow/skills
+                    - rm /tmp/skills.zip
+                    - echo "skills已下载并解压到 /root/.iflow/skills"
 main:
   push:
     - services:

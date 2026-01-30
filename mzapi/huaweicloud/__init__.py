@@ -17,16 +17,5 @@
 #
 
 from .ocr import RecognizeGeneralText
-from .request.RecognizeGeneralTextRequest import RecognizeGeneralTextRequest
-from .response.RecognizeGeneralTextResponse import RecognizeGeneralTextResponse
-from .request_body.GeneralTextRequestBody import GeneralTextRequestBody
-from .result.GeneralTextResult import GeneralTextResult, GeneralTextWordsBlockList
 
-__all__ = [
-    'RecognizeGeneralText',
-    'RecognizeGeneralTextRequest',
-    'RecognizeGeneralTextResponse',
-    'GeneralTextRequestBody',
-    'GeneralTextResult',
-    'GeneralTextWordsBlockList'
-]
+__all__ = ['RecognizeGeneralText']

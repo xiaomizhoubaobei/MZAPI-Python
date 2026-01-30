@@ -19,21 +19,9 @@
 from .tencent import GeneralBasicOCR
 from .huaweicloud import (
     RecognizeGeneralText,
-    RecognizeGeneralTextRequest,
-    RecognizeGeneralTextResponse,
-    GeneralTextRequestBody,
-    GeneralTextResult,
-    GeneralTextWordsBlockList
 )
-from .utlis.project_id_helper import ProjectIdHelper
 
 __all__ = [
     'GeneralBasicOCR',
-    'RecognizeGeneralText',
-    'RecognizeGeneralTextRequest',
-    'RecognizeGeneralTextResponse',
-    'GeneralTextRequestBody',
-    'GeneralTextResult',
-    'GeneralTextWordsBlockList',
-    'ProjectIdHelper'
+    'RecognizeGeneralText'
 ]

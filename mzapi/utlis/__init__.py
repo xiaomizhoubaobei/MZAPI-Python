@@ -17,7 +17,5 @@
 #
 
 from .tencent_auth import TencentCloudAuth
-from .huawei_auth import HuaweiCloudAuth
-from .project_id_helper import ProjectIdHelper
 
-__all__ = ['TencentCloudAuth', 'HuaweiCloudAuth', 'ProjectIdHelper']
+__all__ = ['TencentCloudAuth']

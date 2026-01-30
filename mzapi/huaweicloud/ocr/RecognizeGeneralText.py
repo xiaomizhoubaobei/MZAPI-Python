@@ -87,6 +87,8 @@ class RecognizeGeneralText:
 
         # 创建凭证
         credentials = BasicCredentials(ak=self._ak, sk=self._sk)
+        if self._project_id:
+            credentials.with_project_id(self._project_id)
 
         # 构建客户端
         client = OcrClient.new_builder() \

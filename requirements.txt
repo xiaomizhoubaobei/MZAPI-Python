@@ -1,0 +1,9 @@
+# 生产环境依赖
+requests~=2.32.4
+pytz~=2025.2
+simplejson~=3.20.0
+huaweicloudsdkcore==3.1.185
+
+# 代码格式化和检查
+black>=21.0
+flake8>=3.8

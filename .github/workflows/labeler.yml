@@ -22,7 +22,7 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: jey3dayo/pr-insights-labeler@a00a4fce29e627a73c4fd5feb81599f9147d7ca6 # v1.10.2
+      - uses: jey3dayo/pr-insights-labeler@3934dcb1a60e4d79e4acd7ffa7daf4e2097ad184 # v1.11.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # 文件与行数限制

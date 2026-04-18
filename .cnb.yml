@@ -74,6 +74,6 @@ main:
             username: ${GIT_USERNAME}
             password: ${GIT_ACCESS_TOKEN}
             branch: main
-            target_branch: develop
+            target_branch: main
             git_user: ${GIT_USERNAME}
             git_email: ${GIT_EMAIL}

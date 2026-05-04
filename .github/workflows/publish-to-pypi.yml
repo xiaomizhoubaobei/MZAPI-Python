@@ -4,8 +4,11 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - '.github/**'
+    paths:
+      - 'mzapi/**'
+      - 'pyproject.toml'
+      - 'requirements.txt'
+  workflow_dispatch:
 
 permissions:
   contents: read

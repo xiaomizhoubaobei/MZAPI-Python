@@ -2,7 +2,7 @@
 requests~=2.32.5
 pytz~=2025.2
 simplejson~=3.20.2
-huaweicloudsdkcore==3.1.185
+huaweicloudsdkcore==3.1.186
 
 # 代码格式化和检查
 black>=21.0

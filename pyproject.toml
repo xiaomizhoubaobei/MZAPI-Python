@@ -27,7 +27,7 @@ classifiers = [
 keywords = ["API", "SDK", "MZAPI", "PYTHON"]
 dependencies = [
     "requests~=2.32.4",
-    "pytz~=2025.2",
+    "pytz~=2026.1",
     "huaweicloudsdkcore==3.1.186",
     "simplejson>=3.20.0",
 ]

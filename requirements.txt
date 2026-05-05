@@ -7,3 +7,4 @@ huaweicloudsdkcore==3.1.193
 # 代码格式化和检查
 black>=21.0
 flake8>=3.8
+pymongo>=4.6.3 # not directly required, pinned by Snyk to avoid a vulnerability

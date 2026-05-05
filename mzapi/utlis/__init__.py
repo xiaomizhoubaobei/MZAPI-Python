@@ -17,5 +17,6 @@
 #
 
 from .tencent_auth import TencentCloudAuth
+from .huaweicloud_auth import HuaweiCloudAuth
 
-__all__ = ['TencentCloudAuth']
+__all__ = ['TencentCloudAuth', 'HuaweiCloudAuth']

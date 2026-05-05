@@ -40,12 +40,9 @@ import hashlib
 import hmac
 import json
 from datetime import datetime, timezone
-from typing import Optional, List, Dict, Tuple, Any
 from urllib.parse import quote, unquote
 
-import requests
-
-NL = chr(10)  # newline character, avoids escape issues in file writing
+NL = chr(10)
 
 
 class HuaweiCloudAuth:
@@ -68,7 +65,7 @@ class HuaweiCloudAuth:
             method="POST",
             host="ocr.cn-east-3.myhuaweicloud.com",
             uri="/v2/{project_id}/ocr/general-text",
-            body=\x27{"image":"base64_string"}\x27,
+            body='{"image":"base64_string"}',
             content_type="application/json",
         )
     """
@@ -106,6 +103,11 @@ class HuaweiCloudAuth:
             raise ValueError("ak is required")
         if not sk:
             raise ValueError("sk is required")
+        if algorithm not in (self._ALGORITHM_HMAC_SHA256, self._ALGORITHM_HMAC_SM3):
+            raise ValueError(
+                "Unsupported algorithm: {0}. "
+                "Use 'SDK-HMAC-SHA256' or 'SDK-HMAC-SM3'.".format(algorithm)
+            )
         self._ak = ak
         self._sk = sk
         self._algorithm = algorithm
@@ -252,6 +254,7 @@ class HuaweiCloudAuth:
         if canonical_qs:
             url = "{0}?{1}".format(url, canonical_qs)
 
+        import requests
         response = requests.request(
             method=method,
             url=url,
@@ -288,7 +291,8 @@ class HuaweiCloudAuth:
         """
         获取参与签名的头部列表。
 
-        规则：按 key 小写排序，排除含下划线的头部。
+        规则：按 key 小写排序，排除含下划线的自定义头部
+        （如代理添加的 X-Amz-*/X-Cdn-* 等，华为云签名规范要求这些不参与签名）。
         """
         signed = []
         for key in headers:
@@ -320,7 +324,11 @@ class HuaweiCloudAuth:
 
     def _build_canonical_uri(self, uri):
         """
-        构建规范 URI：逐段 URL 编码，尾部追加 "/"
+        构建规范 URI：先解码再逐段统一编码，尾部追加 "/"
+
+        注意：按照华为云官方 SDK 的实现，先 unquote 再逐段 re-encode
+        是规范化 URI 的标准做法，确保不同编码方式的等价路径
+        （如 %2F 和 /）产生一致的签名结果。
         """
         patterns = unquote(uri).split("/")
         encoded_parts = [self._url_encode(p) for p in patterns]
@@ -417,13 +425,20 @@ class HuaweiCloudAuth:
         headers[key] = value
 
     @staticmethod
-    def _sm3_hash(data):
+    def _sm3_hash(data=None):
         """
         SM3 哈希封装。
         优先使用 hashlib.new('sm3') (Python 3.7+ / OpenSSL 1.1.1+)。
+
+        支持两种调用方式：
+        - 作为哈希函数：_sm3_hash(data) → hash object with data
+        - 作为 HMAC digestmod：hmac.new(..., _sm3_hash) → hmac.new calls _sm3_hash()
         """
         try:
-            return hashlib.new("sm3", data)
+            h = hashlib.new("sm3")
+            if data is not None:
+                h.update(data)
+            return h
         except (ValueError, AttributeError):
             raise ImportError(
                 "SM3 requires Python >= 3.7 and OpenSSL >= 1.1.1. "

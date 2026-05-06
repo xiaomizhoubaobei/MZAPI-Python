@@ -5,9 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'mzapi/**'
       - 'pyproject.toml'
-      - 'requirements.txt'
   workflow_dispatch:
 
 permissions:
@@ -15,7 +13,48 @@ permissions:
   id-token: write
 
 jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.check.outputs.version_changed }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+    - name: Harden the runner (Audit all outbound calls)
+      uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+      with:
+        egress-policy: audit
+
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        fetch-depth: 2
+
+    - name: 检查版本号是否变更
+      id: check
+      run: |
+        set -e
+
+        echo "🔍 检查 pyproject.toml 中版本号是否发生变更..."
+
+        # 提取当前版本号
+        current_version=$(grep -E '^version\s*=' pyproject.toml | head -1 | sed -E 's/.*version\s*=\s*["''']?([^"''']+)["''']?.*/\1/')
+        echo "当前版本号: $current_version"
+
+        # 提取上一次提交中的版本号
+        prev_version=$(git show HEAD~1:pyproject.toml 2>/dev/null | grep -E '^version\s*=' | head -1 | sed -E 's/.*version\s*=\s*["''']?([^"''']+)["''']?.*/\1/') || true
+        echo "上一次版本号: $prev_version"
+
+        if [ "$current_version" = "$prev_version" ]; then
+          echo "ℹ️ 版本号未变更（$current_version），跳过发布"
+          echo "version_changed=false" >> $GITHUB_OUTPUT
+        else
+          echo "✅ 版本号已变更: $prev_version -> $current_version"
+          echo "version_changed=true" >> $GITHUB_OUTPUT
+          echo "version=$current_version" >> $GITHUB_OUTPUT
+        fi
+
   release-build:
+    needs: check-version
+    if: needs.check-version.outputs.version_changed == 'true'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -89,7 +128,7 @@ jobs:
         fi
         
         # 使用 grep 从 pyproject.toml 提取版本号
-        version=$(grep -E '^version\s*=' pyproject.toml | head -1 | sed -E 's/.*version\s*=\s*["'\'']?([^"'\''"]+)["'\'']?.*/\1/')
+        version=$(grep -E '^version\s*=' pyproject.toml | head -1 | sed -E 's/.*version\s*=\s*["''']?([^"''']+)["''']?.*/\1/')
         
         # 验证是否成功提取版本号
         if [ -z "$version" ]; then

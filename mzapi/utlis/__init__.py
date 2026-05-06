@@ -16,7 +16,6 @@
 # limitations under the License.
 #
 
-from .tencent_auth import TencentCloudAuth
 from .huaweicloud_auth import HuaweiCloudAuth
 
-__all__ = ['TencentCloudAuth', 'HuaweiCloudAuth']
+__all__ = ['HuaweiCloudAuth']

@@ -17,7 +17,7 @@
 #
 
 """
-tencentcloud.common 模块单元测试
+tencentauth 模块单元测试
 
 覆盖场景：
 - Credential 凭证类（初始化校验、属性、get_credential_info）
@@ -26,7 +26,6 @@ tencentcloud.common 模块单元测试
 - ClientProfile 配置（签名方法、语言校验）
 - HttpProfile 配置（默认值、自定义值）
 - EnvironmentVariableCredential 环境变量凭证
-- TencentCloudAuth 鉴权类（签名格式、确定性）
 """
 
 import binascii
@@ -44,7 +43,7 @@ import warnings
 # =====================================================================
 
 _ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), os.pardir, "mzapi"))
-_TC_ROOT = os.path.join(_ROOT, "tencentcloud", "common")
+_TC_ROOT = os.path.join(_ROOT, "utlis", "tencentauth")
 
 
 def _make_pkg(name, path):
@@ -70,36 +69,36 @@ def _load(name, filepath, pkg_name=None):
 
 # 注册包层次
 _make_pkg("mzapi", _ROOT)
-_make_pkg("mzapi.tencentcloud", os.path.join(_ROOT, "tencentcloud"))
-_make_pkg("mzapi.tencentcloud.common", _TC_ROOT)
-_make_pkg("mzapi.tencentcloud.common.exception", os.path.join(_TC_ROOT, "exception"))
-_make_pkg("mzapi.tencentcloud.common.profile", os.path.join(_TC_ROOT, "profile"))
+_make_pkg("mzapi.utlis", os.path.join(_ROOT, "utlis"))
+_make_pkg("mzapi.utlis.tencentauth", _TC_ROOT)
+_make_pkg("mzapi.utlis.tencentauth.exception", os.path.join(_TC_ROOT, "exception"))
+_make_pkg("mzapi.utlis.tencentauth.profile", os.path.join(_TC_ROOT, "profile"))
 
 # 加载各模块
 _exc_mod = _load(
-    "mzapi.tencentcloud.common.exception.tencent_cloud_sdk_exception",
+    "mzapi.utlis.tencentauth.exception.tencent_cloud_sdk_exception",
     os.path.join(_TC_ROOT, "exception", "tencent_cloud_sdk_exception.py"),
-    pkg_name="mzapi.tencentcloud.common.exception",
+    pkg_name="mzapi.utlis.tencentauth.exception",
 )
 _sign_mod = _load(
-    "mzapi.tencentcloud.common.sign",
+    "mzapi.utlis.tencentauth.sign",
     os.path.join(_TC_ROOT, "sign.py"),
-    pkg_name="mzapi.tencentcloud.common",
+    pkg_name="mzapi.utlis.tencentauth",
 )
 _cred_mod = _load(
-    "mzapi.tencentcloud.common.credential",
+    "mzapi.utlis.tencentauth.credential",
     os.path.join(_TC_ROOT, "credential.py"),
-    pkg_name="mzapi.tencentcloud.common",
+    pkg_name="mzapi.utlis.tencentauth",
 )
 _http_mod = _load(
-    "mzapi.tencentcloud.common.profile.http_profile",
+    "mzapi.utlis.tencentauth.profile.http_profile",
     os.path.join(_TC_ROOT, "profile", "http_profile.py"),
-    pkg_name="mzapi.tencentcloud.common.profile",
+    pkg_name="mzapi.utlis.tencentauth.profile",
 )
 _cp_mod = _load(
-    "mzapi.tencentcloud.common.profile.client_profile",
+    "mzapi.utlis.tencentauth.profile.client_profile",
     os.path.join(_TC_ROOT, "profile", "client_profile.py"),
-    pkg_name="mzapi.tencentcloud.common.profile",
+    pkg_name="mzapi.utlis.tencentauth.profile",
 )
 
 TencentCloudSDKException = _exc_mod.TencentCloudSDKException
@@ -382,126 +381,6 @@ class TestEnvironmentVariableCredential(unittest.TestCase):
             del os.environ["TENCENTCLOUD_SECRET_ID"]
             del os.environ["TENCENTCLOUD_SECRET_KEY"]
 
-
-# =========================================================================
-#  TencentCloudAuth 集成测试
-# =========================================================================
-class TestTencentCloudAuth(unittest.TestCase):
-    """测试 TencentCloudAuth 鉴权类"""
-
-    @classmethod
-    def setUpClass(cls):
-        # 注册 mzapi.utlis 包以支持 tencent_auth.py 中的相对导入
-        if "mzapi.utlis" not in sys.modules:
-            utlis_pkg = types.ModuleType("mzapi.utlis")
-            utlis_pkg.__path__ = [os.path.join(_ROOT, "utlis")]
-            utlis_pkg.__package__ = "mzapi.utlis"
-            utlis_pkg.__loader__ = None
-            sys.modules["mzapi.utlis"] = utlis_pkg
-        spec = importlib.util.spec_from_file_location(
-            "mzapi.utlis.tencent_auth",
-            os.path.join(_ROOT, "utlis", "tencent_auth.py"),
-            submodule_search_locations=[],
-        )
-        mod = importlib.util.module_from_spec(spec)
-        mod.__package__ = "mzapi.utlis"
-        sys.modules["mzapi.utlis.tencent_auth"] = mod
-        spec.loader.exec_module(mod)
-        cls.TencentCloudAuth = mod.TencentCloudAuth
-
-    def setUp(self):
-        self.auth = self.TencentCloudAuth(
-            secret_id="test_secret_id", secret_key="test_secret_key"
-        )
-
-    def test_init(self):
-        self.assertEqual(self.auth.secret_id, "test_secret_id")
-        self.assertEqual(self.auth.secret_key, "test_secret_key")
-        self.assertIsNone(self.auth.token)
-
-    def test_init_with_token(self):
-        auth = self.TencentCloudAuth("id", "key", "tok")
-        self.assertEqual(auth.token, "tok")
-
-    def test_sign_request_header_format(self):
-        h = self.auth.sign_request(
-            endpoint="ocr.tencentcloudapi.com",
-            payload={"ImageBase64": "test"},
-            service="ocr",
-            action="RecognizeGeneralText",
-            version="2018-11-19",
-            region="ap-guangzhou",
-        )
-        a = h["Authorization"]
-        self.assertTrue(a.startswith("TC3-HMAC-SHA256 "))
-        self.assertIn("Credential=test_secret_id/", a)
-        self.assertIn("SignedHeaders=content-type;host", a)
-        # 签名部分为 64 字符十六进制
-        sig = a.split("Signature=")[1]
-        self.assertEqual(len(sig), 64)
-        self.assertTrue(all(c in "0123456789abcdef" for c in sig))
-
-    def test_sign_request_deterministic(self):
-        kw = dict(
-            endpoint="ocr.tencentcloudapi.com",
-            payload={"key": "val"},
-            service="ocr", action="Test", version="1.0",
-        )
-        self.assertEqual(
-            self.auth.sign_request(**kw)["Authorization"],
-            self.auth.sign_request(**kw)["Authorization"],
-        )
-
-    def test_sign_request_diff_key(self):
-        other = self.TencentCloudAuth("other_id", "other_key")
-        kw = dict(
-            endpoint="ocr.tencentcloudapi.com",
-            payload={"key": "val"},
-            service="ocr", action="Test", version="1.0",
-        )
-        self.assertNotEqual(
-            self.auth.sign_request(**kw)["Authorization"],
-            other.sign_request(**kw)["Authorization"],
-        )
-
-    def test_with_region(self):
-        h = self.auth.sign_request(
-            endpoint="ocr.tencentcloudapi.com", payload={},
-            service="ocr", action="Test", version="1.0", region="ap-sh",
-        )
-        self.assertEqual(h["X-TC-Region"], "ap-sh")
-
-    def test_without_region(self):
-        h = self.auth.sign_request(
-            endpoint="ocr.tencentcloudapi.com", payload={},
-            service="ocr", action="Test", version="1.0",
-        )
-        self.assertNotIn("X-TC-Region", h)
-
-    def test_with_token(self):
-        auth = self.TencentCloudAuth("id", "key", "session_tok")
-        h = auth.sign_request(
-            endpoint="ocr.tencentcloudapi.com", payload={},
-            service="ocr", action="Test", version="1.0",
-        )
-        self.assertEqual(h["X-TC-Token"], "session_tok")
-
-    def test_action_camelcased(self):
-        h = self.auth.sign_request(
-            endpoint="ocr.tencentcloudapi.com", payload={},
-            service="ocr", action="recognizeGeneralText", version="1.0",
-        )
-        self.assertEqual(h["X-TC-Action"], "RecognizeGeneralText")
-
-    def test_timestamp_is_reasonable(self):
-        import time
-        h = self.auth.sign_request(
-            endpoint="ocr.tencentcloudapi.com", payload={},
-            service="ocr", action="Test", version="1.0",
-        )
-        ts = int(h["X-TC-Timestamp"])
-        now = int(time.time())
-        self.assertTrue(abs(ts - now) < 5)
 
 
 if __name__ == "__main__":

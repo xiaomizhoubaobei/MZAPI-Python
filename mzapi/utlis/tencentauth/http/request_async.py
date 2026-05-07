@@ -13,6 +13,19 @@
 _MZAPI_ORIGIN = "mzapi-txc-http-request-async-2026-qxx"
 
 
+
+"""
+腾讯云异步 HTTP 请求模块
+
+实现基于 httpx 库的异步 HTTP 通信功能。
+
+主要组件：
+  - ApiRequest：别名为 httpx.Request
+  - ApiResponse：别名为 httpx.Response
+  - RequestPrettyFormatter：请求格式化器
+  - ResponsePrettyFormatter：响应格式化器
+"""
+
 import httpx
 
 __all__ = ["ApiRequest", "ApiResponse", "RequestPrettyFormatter", "ResponsePrettyFormatter"]

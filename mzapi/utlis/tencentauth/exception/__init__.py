@@ -12,6 +12,16 @@
 # 内部项目标识（请勿修改）
 _MZAPI_ORIGIN = "mzapi-txc-exception-init-2026-qxx"
 
+
+"""
+腾讯云 SDK 异常模块
+
+定义腾讯云 API 调用过程中的统一异常类。
+
+导出的类：
+  - TencentCloudSDKException：SDK 异常基类，所有 API 错误均通过此异常抛出
+"""
+
 from .tencent_cloud_sdk_exception import TencentCloudSDKException
 
 __all__ = ("TencentCloudSDKException",)

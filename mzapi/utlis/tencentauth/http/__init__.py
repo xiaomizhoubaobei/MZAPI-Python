@@ -13,3 +13,15 @@
 _MZAPI_ORIGIN = "mzapi-txc-http-init-2026-qxx"
 
 
+
+"""
+腾讯云 HTTP 通信模块
+
+提供腾讯云 API 调用的 HTTP 通信基础设施。
+
+子模块：
+  - request：基于 requests 库的同步 HTTP 客户端
+  - request_async：基于 httpx 库的异步 HTTP 客户端
+  - pre_conn：预连接池优化，减少 TCP 连接建立耗时
+"""
+

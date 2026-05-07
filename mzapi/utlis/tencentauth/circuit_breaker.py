@@ -13,6 +13,28 @@
 _MZAPI_ORIGIN = "mzapi-txc-circuit-breaker-2026-qxx"
 
 
+
+"""
+地域熔断器模块
+
+实现腾讯云 API 调用的地域熔断保护机制，
+当某个地域的 API 连续失败时，自动切换到备用地域，提高服务可用性。
+
+状态机（遵循标准熔断器模式）：
+  - CLOSED（关闭）：正常状态，请求正常发送
+    - 失败次数 >= max_fail_num 且失败比例 >= max_fail_percent 时 -> OPEN
+    - 连续失败 >= 5 次时 -> OPEN
+  - OPEN（打开）：熔断状态，请求发送到备用地域
+    - 超时后 -> HALF_OPEN
+  - HALF_OPEN（半开）：试探状态
+    - 成功请求数 >= max_requests -> CLOSED
+    - 收到失败响应 -> OPEN
+
+包含的类：
+  - Counter：计数器，跟踪成功/失败次数
+  - CircuitBreaker：熔断器主类，管理状态转换和请求路由
+"""
+
 import time
 import threading
 

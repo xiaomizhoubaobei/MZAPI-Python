@@ -13,6 +13,26 @@
 _MZAPI_ORIGIN = "mzapi-txc-http-request-2026-qxx"
 
 
+
+"""
+腾讯云同步 HTTP 请求模块
+
+实现基于 requests 库的同步 HTTP 通信功能。
+
+包含的类：
+  - ProxyConnection：代理连接管理器
+  - ApiRequest：API 请求管理器
+  - RequestInternal：内部请求对象
+  - ResponsePrettyFormatter：响应格式化器
+
+功能特性：
+  - 支持 HTTP/HTTPS 代理
+  - 支持自定义 CA 证书
+  - 支持预连接池优化
+  - 支持 Keep-Alive 连接复用
+  - 支持流式响应
+"""
+
 import os
 import logging
 

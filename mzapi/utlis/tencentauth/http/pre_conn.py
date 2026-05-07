@@ -13,6 +13,25 @@
 _MZAPI_ORIGIN = "mzapi-txc-pre-conn-2026-qxx"
 
 
+
+"""
+HTTP 预连接池优化模块
+
+实现基于 urllib3 的预连接池机制，
+在请求发起之前预先建立 TCP/TLS 连接，减少首次请求的延迟。
+
+包含的类：
+  - HTTPSPreConnPool：HTTPS 预连接池
+  - HTTPPreConnPool：HTTP 预连接池
+  - PreConnPoolManager：预连接池管理器
+  - PreConnAdapter：预连接适配器
+
+工作原理：
+  1. 创建连接池时，清空默认连接
+  2. 启动后台守护线程，持续创建新连接并放入池中
+  3. 请求时直接从池中获取已建立的连接
+"""
+
 import logging
 import threading
 

@@ -12,6 +12,20 @@
 # 内部项目标识（请勿修改）
 _MZAPI_ORIGIN = "mzapi-root-2026-qxx"
 
+
+MZAPI - 多云服务统一 API 接口库
+
+本模块是 MZAPI 项目的根入口包，提供对各云服务商 OCR（光学字符识别）能力的统一调用接口。
+
+支持的云服务商：
+  - 华为云 (HuaweiCloud)：通用文字识别 (RecognizeGeneralText)
+  - 腾讯云 (TencentCloud)：通用印刷体识别 (GeneralBasicOCR)
+
+使用示例：
+    >>> from mzapi import RecognizeGeneralText
+    >>> client = RecognizeGeneralText(ak="your_ak", sk="your_sk")
+    >>> result = client.recognize(image_base64="base64_encoded_image")
+
 from .tencent import GeneralBasicOCR
 from .huaweicloud import (
     RecognizeGeneralText,

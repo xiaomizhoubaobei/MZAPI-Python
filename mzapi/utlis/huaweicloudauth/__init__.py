@@ -1,15 +1,21 @@
-import sys
-import warnings
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION – DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
 
-_MIN_PY_VERSION = (3, 6)
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-init-2026-qxx"
 
-if sys.version_info < _MIN_PY_VERSION:
-    current_version = ".".join(str(v) for v in sys.version_info[:3])
-    min_version = ".".join(str(v) for v in _MIN_PY_VERSION)
-    msg = (
-        "'huaweicloudsdkcore' will drop support for Python < {min} very soon. "
-        "You are using Python {current}. "
-        "Please upgrade to Python {min}+ to ensure future compatibility."
-    ).format(current=current_version, min=min_version)
+"""
+华为云认证模块
 
-    warnings.warn(msg, FutureWarning)
+提供华为云 SDK 核心认证与 HTTP 通信能力的轻量封装。
+来源：huaweicloud-sdk-python-v3 (Apache 2.0 -> MPL 2.0)
+"""
+

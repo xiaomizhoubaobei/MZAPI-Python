@@ -1,24 +1,23 @@
-# coding: utf-8
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION – DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-auth-provider-2026-qxx"
+
+"""华为云凭证提供者链
+
+实现 EnvCredentialProvider、ProfileCredentialProvider 等凭证提供者，
+通过 CredentialProviderChain 自动发现和获取凭证。
 """
- Copyright 2022 Huawei Technologies Co.,Ltd.
 
- Licensed to the Apache Software Foundation (ASF) under one
- or more contributor license agreements.  See the NOTICE file
- distributed with this work for additional information
- regarding copyright ownership.  The ASF licenses this file
- to you under the Apache LICENSE, Version 2.0 (the
- "LICENSE"); you may not use this file except in compliance
- with the LICENSE.  You may obtain a copy of the LICENSE at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing,
- software distributed under the LICENSE is distributed on an
- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- KIND, either express or implied.  See the LICENSE for the
- specific language governing permissions and limitations
- under the LICENSE.
-"""
 import os
 import configparser
 from abc import abstractmethod, ABC

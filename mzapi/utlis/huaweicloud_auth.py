@@ -10,7 +10,7 @@
 # when redistributed.
 
 # 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-xxx-xxx-2026-qxx"
+_MZAPI_ORIGIN = "mzapi-hwc-auth-2026-qxx"
 
 """
 华为云 API 签名工具类

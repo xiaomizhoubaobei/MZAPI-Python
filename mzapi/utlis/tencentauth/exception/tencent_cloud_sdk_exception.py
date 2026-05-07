@@ -10,7 +10,7 @@
 # when redistributed.
 
 # 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-tc-exception-2026-qxx"
+_MZAPI_ORIGIN = "mzapi-txc-exception-2026-qxx"
 
 """
 腾讯云 SDK 异常类

@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-root-2026-qxx"
+
 from .tencent import GeneralBasicOCR
 from .huaweicloud import (
     RecognizeGeneralText,

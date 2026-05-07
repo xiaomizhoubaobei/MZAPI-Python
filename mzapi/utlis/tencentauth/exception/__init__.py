@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-txc-exception-init-2026-qxx"
+
 from .tencent_cloud_sdk_exception import TencentCloudSDKException
 
 __all__ = ("TencentCloudSDKException",)

@@ -9,6 +9,8 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-test-hwc-auth-2026-qxx"
 
 """
 HuaweiCloudAuth 单元测试

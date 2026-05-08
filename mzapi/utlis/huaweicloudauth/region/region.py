@@ -23,16 +23,16 @@ from typing import List
 class Region:
     def __init__(self, *args, **kwargs):
         """
-        There are two ways to initialize the region object.
+        有两种方式初始化区域对象。
 
-        In the first way, only one region and one endpoint can be specified.
+        第一种方式，指定一个区域和一个端点：
         region1 = Region(id="region-id", endpoint="region-endpoint")
 
-        In the second way, one region and multiple endpoints can be specified.
+        第二种方式，指定一个区域和多个端点：
         region2 = Region("region-id", "endpoint1", "endpoint2")
 
-        It is not recommended to mix the two initialization ways.
-        If two initialization ways are mixed, the first way has priority over the second.
+        不建议混合使用两种初始化方式。
+        如果混合使用，第一种方式优先于第二种方式。
         """
         self._id = None
         self._endpoints = None
@@ -62,13 +62,13 @@ class Region:
 
     @property
     def endpoint(self):
-        warnings.warn("As of 3.1.27, because of the support of the multi-endpoint feature, use endpoints instead",
+        warnings.warn("自 3.1.27 版本起，由于支持多端点功能，请使用 endpoints 代替",
                       DeprecationWarning)
         return self.endpoints[0] if self.endpoints else None
 
     @endpoint.setter
     def endpoint(self, endpoint):
-        warnings.warn("As of 3.1.27, because of the support of the multi-endpoint feature, use endpoints instead",
+        warnings.warn("自 3.1.27 版本起，由于支持多端点功能，请使用 endpoints 代替",
                       DeprecationWarning)
         self.endpoints = [endpoint]
 

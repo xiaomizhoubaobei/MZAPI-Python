@@ -43,64 +43,55 @@ class HttpConfig:
                  signing_algorithm: SigningAlgorithm = SigningAlgorithm.get_default(),
                  user_agent: str = None):
         """
-        :param proxy_protocol(optional) : proxy protocol, http or https
+        :param proxy_protocol(可选) : 代理协议，http 或 https
         :type proxy_protocol: str
 
-        :param proxy_host(optional) : hostname or ip address of proxy server
+        :param proxy_host(可选) : 代理服务器的主机名或 IP 地址
         :type proxy_host: str
 
-        :param proxy_port(optional) : port of proxy server
+        :param proxy_port(可选) : 代理服务器的端口
         :type proxy_port: int
 
-        :param proxy_user(optional) : username used for proxy authentication
+        :param proxy_user(可选) : 代理认证使用的用户名
         :type proxy_user: str
 
-        :param proxy_password(optional) : username used for proxy authentication
+        :param proxy_password(可选) : 代理认证使用的密码
         :type proxy_password: str
 
-        :param ignore_ssl_verification: whether skip SSL certificate validation while sending https request,
-         default, value is False
+        :param ignore_ssl_verification: 发送 HTTPS 请求时是否跳过 SSL 证书验证，默认值为 False
         :type ignore_ssl_verification: bool
 
-        :param ssl_ca_cert: (optional) a path to a CA bundle to use
+        :param ssl_ca_cert: (可选) CA 证书包的路径
         :type ssl_ca_cert: str
 
-        :param cert_file: (optional) a path to ssl client cert file (.pem)
+        :param cert_file: (可选) SSL 客户端证书文件路径 (.pem)
         :type cert_file: str
 
-        :param key_file: (optional) a path to a  ssl client cert key file (.key)
+        :param key_file: (可选) SSL 客户端证书密钥文件路径 (.key)
         :type key_file: str
 
-        :param timeout: (optional) seconds to wait for the server to send data before giving up,
-         as a float, or a :ref:`(connect timeout, read timeout) <timeouts>` tuple.
-        :type timeout: float or tuple
+        :param timeout: (可选) 等待服务器发送数据的超时时间（秒），可以是浮点数或 (连接超时, 读取超时) 元组
+        :type timeout: float 或 tuple
 
-        :param retry_times: maximum number of retries each connection should attempt,
-         default, does not retry failed connections.
+        :param retry_times: 每个连接的最大重试次数，默认值为 0（不重试）
         :type retry_times: int
 
-        :param pool_connections: number of urllib3 connection pools to cache,
-         default, value is 10
+        :param pool_connections: 缓存的连接池数量，默认值为 10
         :type pool_connections: int
 
-        :param pool_maxsize: maximum number of connections to save in the pool，
-         default, value is 10
+        :param pool_maxsize: 连接池中保存的最大连接数，默认值为 10
         :type pool_maxsize: int
 
-        :param allow_redirects: Experimental configuration.
-         Automatic redirection is allowed when turns on, which may cause some request exceptions.
-         default, value is False
+        :param allow_redirects: 实验性配置，开启后允许自动重定向，可能导致请求异常，默认值为 False
         :type allow_redirects: bool
 
-        :param ignore_content_type_for_get_request: Ignore the request header Content-Type when sending a GET request,
-         default, value is False
+        :param ignore_content_type_for_get_request: 发送 GET 请求时忽略请求头中的 Content-Type，默认值为 False
         :type ignore_ssl_verification: bool
 
-        :param signing_algorithm: signing algorithm of request
-         default, value is HMAC_SHA256
+        :param signing_algorithm: 请求的签名算法，默认值为 HMAC_SHA256
         :type signing_algorithm: SigningAlgorithm
 
-        :param user_agent(optional): An optional custom value can be appended to the User-Agent request header.
+        :param user_agent(可选): 可选的自定义值，将附加到 User-Agent 请求头
         :type user_agent: str
         """
         self._proxy_protocol = proxy_protocol

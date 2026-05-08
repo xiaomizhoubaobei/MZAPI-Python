@@ -27,10 +27,10 @@ from huaweicloudsdkcore.utils import six_utils as six
 class XmlTransfer:
 
     def __init__(self, encoding="UTF-8", resolve_attr=False):
-        """Dict to xml, or xml to dict
+        """字典与 XML 互转工具类
 
-        :param encoding: Default is 'utf-8'
-        :param resolve_attr: Parse the attributes of the label
+        :param encoding: 编码格式，默认为 'utf-8'
+        :param resolve_attr: 是否解析标签的属性
         """
         self._encoding = encoding
         self._resolve_attr = resolve_attr

@@ -25,12 +25,12 @@ class FormFile:
     TYPE = "file"
 
     def __init__(self, f, content_type=None):
-        """This class is used for the formdata.
+        """表单文件类，用于 multipart/form-data 文件上传。
 
-        :param f: An opened file or file path, for example, f = open("demo.txt", "rb") or f = "/tmp/log.txt"
-        :type f: stream or str
-        :param content_type: the content type of the file
-        :type content_type: str
+        :param f: 已打开的文件对象或文件路径，例如 f = open("demo.txt", "rb") 或 f = "/tmp/log.txt"
+        :type f: 文件流 或 字符串
+        :param content_type: 文件的内容类型
+        :type content_type: 字符串
         """
         self._file = ensure_file_in_rb_mode(f)
         self._content_type = content_type

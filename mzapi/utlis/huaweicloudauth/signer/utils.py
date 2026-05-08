@@ -40,14 +40,14 @@ if version_info.major == 3:
 
         def _left_rotate(n: int, k: int) -> int:
             """
-            Shift the binary representation of n to the left by k bits,
-            and then shift the k bits of the highest bits to the lowest bits to form a new 32-bit unsigned integer.
+            将 n 的二进制表示左移 k 位，
+            然后将最高位的 k 位移到最低位，形成新的 32 位无符号整数。
             """
             return ((n << k) & _0X8F) | ((n >> (32 - k)) & _0X8F)
 
 
         def _ff_j(x: int, y: int, z: int, j: int) -> int:
-            """Boolean function, take different expressions as j changes. Based on GB/T 32905-2016."""
+            """布尔函数，根据 j 的取值采用不同表达式。基于 GB/T 32905-2016。"""
             if 0 <= j < 16:
                 return x ^ y ^ z
             elif 16 <= j < 64:
@@ -57,7 +57,7 @@ if version_info.major == 3:
 
 
         def _gg_j(x: int, y: int, z: int, j: int) -> int:
-            """Boolean function, take different expressions as j changes, based on GB/T 32905-2016."""
+            """布尔函数，根据 j 的取值采用不同表达式。基于 GB/T 32905-2016。"""
             if 0 <= j < 16:
                 return x ^ y ^ z
             elif 16 <= j < 64:
@@ -67,17 +67,17 @@ if version_info.major == 3:
 
 
         def _p_0(x: int) -> int:
-            """permutation function in compression function, based on GB/T 32905-2016."""
+            """压缩函数中的置换函数，基于 GB/T 32905-2016。"""
             return x ^ _left_rotate(x, 9) ^ _left_rotate(x, 17)
 
 
         def _p_1(x: int) -> int:
-            """permutation function in compression function, based on GB/T 32905-2016."""
+            """压缩函数中的置换函数，基于 GB/T 32905-2016。"""
             return x ^ _left_rotate(x, 15) ^ _left_rotate(x, 23)
 
 
         def _cf(v_i: List[int], b_i: List[int]) -> List[int]:
-            """Compression function, based on GB/T 32905-2016."""
+            """压缩函数，基于 GB/T 32905-2016。"""
             w = [0] * 68
             for i in range(16):
                 data = b_i[i * 4: (i + 1) * 4]
@@ -104,7 +104,7 @@ if version_info.major == 3:
 
 
         def _hash(data: bytes) -> bytes:
-            """Hash function, based on GB/T 32905-2016."""
+            """哈希函数，基于 GB/T 32905-2016。"""
             data_list = [i for i in data]
             length = len(data_list)
             bit_length = length * 8
@@ -143,10 +143,10 @@ if version_info.major == 3:
                 return self.digest().hex()
 
             def copy(self) -> '_SM3Hash':
-                """Return a copy of the current instance
+                """返回当前实例的副本
 
-                Returns:
-                    _SM3Hash: a copy of the current instance
+                返回:
+                    _SM3Hash: 当前实例的副本
                 """
                 return self.__class__(bytes(self._bytearray))
 
@@ -310,9 +310,9 @@ class SM2SigningKey(P256SigningKey):
     @classmethod
     def _za(cls, public_key: Point, uid: bytes=b'1234567812345678') -> bytes:
         """
-        Cryptographic hash algorithm
+        密码学哈希算法
 
-        ZA = H256(ENTLA | | IDA | | a | | b | | xG | | yG | | xA | | yA)
+        ZA = H256(ENTLA | IDA | a | b | xG | yG | xA | yA)
         """
         array = bytearray()
         uid_len = len(uid)
@@ -336,15 +336,15 @@ class SM2SigningKey(P256SigningKey):
 
     def sign(self, data):
         """
-        SM2 sign, based on GB/T 32918.2-2016
+        SM2 签名，基于 GB/T 32918.2-2016
 
-        Step 1: M' = Za || M
-        Step 2: e = Hash(M')
-        Step 3: Random k in [1, n-1]
-        Step 4: P(x,y) = [k]G(x,y)
-        Step 5: r = (e + x1) mod n, back to step 3 if r = 0 or r + k = n
-        Step 6: s = ((1 + D)^-1 · (k - r · D)) mod n, back to step 3 if s = 0
-        Step 7: Encode r and s to ASN.1-DER
+        步骤 1: M' = Za || M
+        步骤 2: e = Hash(M')
+        步骤 3: 在 [1, n-1] 范围内随机选取 k
+        步骤 4: P(x,y) = [k]G(x,y)
+        步骤 5: r = (e + x1) mod n，若 r = 0 或 r + k = n 则返回步骤 3
+        步骤 6: s = ((1 + D)^-1 · (k - r · D)) mod n，若 s = 0 则返回步骤 3
+        步骤 7: 将 r 和 s 编码为 ASN.1-DER 格式
         """
         n = self.PARAM_n
 
@@ -376,15 +376,15 @@ class SM2SigningKey(P256SigningKey):
 
     def verify(self, signature, data):
         """
-        SM2 verify, based on GB/T 32918.2-2016
+        SM2 验签，基于 GB/T 32918.2-2016
 
-        Step 1: assert r in [1, n-1]
-        Step 2: assert s in [1, n-1]
-        Step 3: M' = Za || M
-        Step 4: e = Hash(M')
-        Step 5: t = (r + s) mod n, failed if t = 0
-        Step 6: P(x,y) = [s]G(x,y) + [t]Pub(x,y)
-        Step 7: R = (e + x1) mod n, assert R = r
+        步骤 1: 断言 r 在 [1, n-1] 范围内
+        步骤 2: 断言 s 在 [1, n-1] 范围内
+        步骤 3: M' = Za || M
+        步骤 4: e = Hash(M')
+        步骤 5: t = (r + s) mod n，若 t = 0 则失败
+        步骤 6: P(x,y) = [s]G(x,y) + [t]Pub(x,y)
+        步骤 7: R = (e + x1) mod n，断言 R = r
         """
         n = self.PARAM_n
         seq, _ = decoder.decode(signature)

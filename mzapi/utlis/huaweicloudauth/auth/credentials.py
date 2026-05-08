@@ -250,11 +250,11 @@ class BasicCredentials(Credentials):
     _X_PROJECT_ID = "X-Project-Id"
 
     def __init__(self, ak: str = None, sk: str = None, project_id: str = None):
-        """For regional services' authentication
+        """区域级服务认证凭证
 
-        :param ak: The access key ID for your account
-        :param sk: The secret access key for your account
-        :param project_id: The ID of your project depending on your region which you want to operate
+        :param ak: 账户的访问密钥 ID
+        :param sk: 账户的秘钥访问密钥
+        :param project_id: 目标操作区域的项目 ID
         """
         super().__init__(ak, sk)
         self._project_id = project_id
@@ -349,11 +349,11 @@ class GlobalCredentials(Credentials):
     _X_DOMAIN_ID = "X-Domain-Id"
 
     def __init__(self, ak: str = None, sk: str = None, domain_id: str = None):
-        """For global services' authentication
+        """全局级服务认证凭证
 
-        :param ak: The access key ID for your account
-        :param sk: The secret access key for your account
-        :param domain_id: The account ID of Huawei Cloud
+        :param ak: 账户的访问密钥 ID
+        :param sk: 账户的秘钥访问密钥
+        :param domain_id: 华为云账号 ID
         """
         super().__init__(ak, sk)
         self._domain_id = domain_id

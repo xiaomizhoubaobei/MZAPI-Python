@@ -86,15 +86,15 @@ class SyncInvoker(BaseInvoker["SyncInvoker"]):
 
     def with_retry(self, retry_condition, max_retries, backoff_strategy):
         """
-        Retry on condition.
+        按条件进行重试。
 
-        :param retry_condition: Retry condition, retry if true
+        :param retry_condition: 重试条件，返回 True 时进行重试
         :type retry_condition: Callable[[SdkResponse, SdkException], bool]
 
-        :param max_retries: Max retry times
+        :param max_retries: 最大重试次数
         :type max_retries: int
 
-        :param backoff_strategy: Calculate the delay before next retry
+        :param backoff_strategy: 计算下次重试前的延迟时间
         :type backoff_strategy: BackoffStrategy
         """
         if not retry_condition:

@@ -19,7 +19,7 @@ _MZAPI_ORIGIN = "mzapi-hwc-exceptions-2026-qxx"
 class SdkException(Exception):
     def __init__(self, error_msg):
         """
-        The base exception class.
+        基础异常类。
         """
         super().__init__()
         self._error_msg = error_msg
@@ -39,7 +39,7 @@ class SdkException(Exception):
 class ConnectionException(SdkException):
     def __init__(self, error_msg):
         """
-        The base exception class of connection exceptions.
+        连接异常基类。
         """
         super().__init__(error_msg)
 
@@ -47,7 +47,7 @@ class ConnectionException(SdkException):
 class HostUnreachableException(ConnectionException):
     def __init__(self, error_msg):
         """
-        Host Unreachable Exception
+        主机不可达异常。
         """
         super().__init__(error_msg)
 
@@ -55,7 +55,7 @@ class HostUnreachableException(ConnectionException):
 class SslHandShakeException(ConnectionException):
     def __init__(self, error_msg):
         """
-        Ssl HandShake Exception
+        SSL 握手异常。
         """
         super().__init__(error_msg)
 
@@ -63,7 +63,7 @@ class SslHandShakeException(ConnectionException):
 class ServiceResponseException(SdkException):
     def __init__(self, status_code, sdk_error):
         """
-        The base exception class of service response exceptions.
+        服务响应异常基类。
         """
         super().__init__(sdk_error.error_msg)
         self._status_code = status_code
@@ -112,7 +112,7 @@ class ServiceResponseException(SdkException):
 class ClientRequestException(ServiceResponseException):
     def __init__(self, status_code, sdk_error):
         """
-        Client Request Exception
+        客户端请求异常。
         """
         super().__init__(status_code, sdk_error)
 
@@ -120,7 +120,7 @@ class ClientRequestException(ServiceResponseException):
 class ServerResponseException(ServiceResponseException):
     def __init__(self, status_code, sdk_error):
         """
-        Server Response Exception
+        服务端响应异常。
         """
         super().__init__(status_code, sdk_error)
 
@@ -128,7 +128,7 @@ class ServerResponseException(ServiceResponseException):
 class RequestTimeoutException(SdkException):
     def __init__(self, error_msg):
         """
-        The base exception class of timeout exceptions.
+        请求超时异常基类。
         """
         super().__init__(error_msg)
 
@@ -136,7 +136,7 @@ class RequestTimeoutException(SdkException):
 class CallTimeoutException(RequestTimeoutException):
     def __init__(self, error_msg):
         """
-        Call Timeout Exception
+        调用超时异常。
         """
         super().__init__(error_msg)
 
@@ -144,7 +144,7 @@ class CallTimeoutException(RequestTimeoutException):
 class RetryOutageException(RequestTimeoutException):
     def __init__(self, error_msg):
         """
-        Retry Outage Exception
+        重试耗尽异常。
         """
         super().__init__(error_msg)
 
@@ -190,7 +190,7 @@ class SdkError:
 
 
 def render_path(path_to_item):
-    """Returns a string representation of a path"""
+    """返回路径的字符串表示"""
     result = ""
     for pth in path_to_item:
         if isinstance(pth, int):
@@ -203,22 +203,15 @@ def render_path(path_to_item):
 class ApiTypeError(TypeError):
     def __init__(self, msg, path_to_item=None, valid_classes=None,
                  key_type=None):
-        """ Raises an exception for TypeErrors
+        """类型错误异常
 
-        Args:
-            msg (str): the exception message
+        参数:
+            msg (str): 异常消息
 
-        Keyword Args:
-            path_to_item (list): a list of keys an indices to get to the
-                                 current_item
-                                 None if unset
-            valid_classes (tuple): the primitive classes that current item
-                                   should be an instance of
-                                   None if unset
-            key_type (bool): False if our value is a value in a dict
-                             True if it is a key in a dict
-                             False if our item is an item in a list
-                             None if unset
+        可选参数:
+            path_to_item (list): 定位到当前元素的键和索引列表，未设置时为 None
+            valid_classes (tuple): 当前元素应为实例的原始类型，未设置时为 None
+            key_type (bool): 值是否为字典中的值(False)、字典中的键(True)或列表中的元素(False)，未设置时为 None
         """
         self.path_to_item = path_to_item
         self.valid_classes = valid_classes
@@ -232,12 +225,11 @@ class ApiTypeError(TypeError):
 class ApiValueError(ValueError):
     def __init__(self, msg, path_to_item=None):
         """
-        Args:
-            msg (str): the exception message
+        参数:
+            msg (str): 异常消息
 
-        Keyword Args:
-            path_to_item (list) the path to the exception in the
-                received_data dict. None if unset
+        可选参数:
+            path_to_item (list): 在接收数据字典中定位异常的路径，未设置时为 None
         """
 
         self.path_to_item = path_to_item
@@ -250,12 +242,11 @@ class ApiValueError(ValueError):
 class ApiKeyError(KeyError):
     def __init__(self, msg, path_to_item=None):
         """
-        Args:
-            msg (str): the exception message
+        参数:
+            msg (str): 异常消息
 
-        Keyword Args:
-            path_to_item (None/list) the path to the exception in the
-                received_data dict
+        可选参数:
+            path_to_item (list): 在接收数据字典中定位异常的路径，未设置时为 None
         """
         self.path_to_item = path_to_item
         full_msg = msg

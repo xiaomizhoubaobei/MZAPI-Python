@@ -1,0 +1,45 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION – DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+# -*- coding: utf-8 -*-
+# This file is auto-generated, don't edit it. Thanks.
+from __future__ import annotations
+
+from typing import Dict, Any
+
+from mzapi.utlis.alicloudauth import exceptions as main_exceptions
+
+class ClientException(main_exceptions.AlibabaCloudException):
+    def __init__(
+        self, *,
+        status_code: int = None,
+        code: str = None,
+        message: str = None,
+        description: str = None,
+        request_id: str = None,
+        retry_after: int = None,
+        data: Dict[str, Any] = None,
+        stack: str = None,
+        access_denied_detail: Dict[str, Any] = None,
+    ):
+        super().__init__(
+            status_code = status_code,
+            code = code,
+            message = message,
+            description = description,
+            request_id = request_id,
+            retry_after = retry_after,
+            data = data,
+            access_denied_detail = access_denied_detail,
+            stack = stack,
+        )
+        self.name = 'ClientException'
+        self.access_denied_detail = access_denied_detail
+

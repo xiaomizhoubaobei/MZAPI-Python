@@ -4,6 +4,13 @@ pytz~=2026.1
 simplejson>=3.20.2,<4.2.0
 huaweicloudsdkcore==3.1.193
 
+# 阿里云 OpenAPI SDK 外部依赖（来自 alibabacloud_tea_openapi）
+alibabacloud-credentials>=1.0.0
+alibabacloud-gateway-spi>=0.0.3
+alibabacloud-tea>=0.4.0
+darabonba-core>=1.0.0
+cryptography>=41.0.0
+
 # 代码格式化和检查
 black>=21.0
 flake8>=3.8

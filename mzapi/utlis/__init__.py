@@ -21,4 +21,5 @@ _MZAPI_ORIGIN = "mzapi-utlis-init-2026-qxx"
 包含的子模块：
   - huaweicloudauth：华为云 SDK 核心认证模块（来自 huaweicloud-sdk-python-v3）
   - tencentauth：腾讯云 API 完整认证工具集
+  - alicloudauth：阿里云 OpenAPI SDK 核心模块（来自 alibabacloud_tea_openapi）
 """

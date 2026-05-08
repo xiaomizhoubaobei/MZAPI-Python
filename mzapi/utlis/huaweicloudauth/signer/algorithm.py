@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-signer-algorithm-2026-qxx"
-
 """华为云签名算法枚举
 
 定义 SigningAlgorithm 枚举，支持 HMAC-SHA256、HMAC-SM3、ECDSA-P256、SM2-SM3。"""

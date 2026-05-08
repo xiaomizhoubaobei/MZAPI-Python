@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-http-bson-types-2026-qxx"
-
 """华为云 BSON 类型映射
 
 定义 BSON 格式支持的数据类型映射。"""

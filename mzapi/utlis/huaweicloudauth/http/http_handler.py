@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-http-handler-2026-qxx"
-
 """华为云 HTTP 处理器
 
 提供 HttpHandler 类，处理请求和响应的拦截与日志记录。"""

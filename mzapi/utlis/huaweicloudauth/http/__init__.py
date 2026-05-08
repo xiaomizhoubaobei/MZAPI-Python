@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-http-init-2026-qxx"
-
 """华为云 HTTP 通信子模块
 
 提供 HTTP 客户端、配置、处理器等通信基础设施。"""

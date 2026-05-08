@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-warning-2026-qxx"
-
 """华为云警告类型
 
 定义 SdkWarning 和 TypeConversionWarning 警告类。"""

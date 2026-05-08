@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-http-client-2026-qxx"
-
 """华为云 HTTP 客户端
 
 实现 HttpClient 类，负责同步/异步 HTTP 请求的发送和响应处理。"""

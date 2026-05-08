@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-utils-filepath-2026-qxx"
-
 """华为云文件路径工具
 
 提供路径存在性检查、Home 目录获取等文件路径操作函数。"""

@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-http-formdata-2026-qxx"
-
 """华为云表单数据处理
 
 提供 FormFile 类，处理 multipart/form-data 格式的文件上传。"""

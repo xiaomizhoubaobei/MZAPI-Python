@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-utils-init-2026-qxx"
-
 """华为云工具子模块
 
 提供 HTTP、字符串、文件路径等通用工具函数。"""

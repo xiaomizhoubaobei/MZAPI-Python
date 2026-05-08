@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-exchange-2026-qxx"
-
 """华为云 SDK 交换对象
 
 提供 SdkExchange 和 SdkExchangeCache，管理 SDK 交换实例的缓存。"""

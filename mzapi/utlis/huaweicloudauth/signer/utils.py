@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-signer-utils-2026-qxx"
-
 """华为云签名工具
 
 提供 SM3 哈希、SM2/P256 签名密钥等签名相关的工具函数。"""

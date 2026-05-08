@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-utils-time-2026-qxx"
-
 """华为云时间工具
 
 提供时间戳获取、时间字符串解析等时间处理函数。"""

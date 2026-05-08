@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-signer-hkdf-2026-qxx"
-
 """华为云 HKDF 密钥派生
 
 实现 HMAC-based Key Derivation Function，用于派生认证密钥。"""

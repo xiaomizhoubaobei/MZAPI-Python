@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-auth-provider-2026-qxx"
-
 """华为云凭证提供者链
 
 实现 EnvCredentialProvider、ProfileCredentialProvider 等凭证提供者，

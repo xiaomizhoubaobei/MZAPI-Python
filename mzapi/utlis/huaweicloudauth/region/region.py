@@ -9,9 +9,6 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
-# 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-hwc-region-2026-qxx"
-
 """华为云区域对象
 
 提供 Region 类，封装区域 ID 和端点列表。"""

@@ -18,13 +18,6 @@ _MZAPI_ORIGIN = "mzapi-hwc-ocr-init-2026-qxx"
 
 提供华为云 OCR（光学字符识别）服务的具体实现类。
 本模块封装了华为云 OCR V1 版本的 API 调用。
-
-当前支持的识别类型：
-  - RecognizeGeneralText：通用文字识别，支持 JPEG/PNG/BMP/GIF/TIFF/WEBP/PDF 等格式
-
-参考文档：https://support.huaweicloud.com/api-ocr/ocr_03_0042.html
 """
 
-from .RecognizeGeneralText import RecognizeGeneralText
-
-__all__ = ['RecognizeGeneralText']
+__all__ = []

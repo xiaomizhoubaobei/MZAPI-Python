@@ -16,6 +16,5 @@ _MZAPI_ORIGIN = "mzapi-hwc-init-2026-qxx"
 华为云认证模块
 
 提供华为云 SDK 核心认证与 HTTP 通信能力的轻量封装。
-来源：huaweicloud-sdk-python-v3 (Apache 2.0 -> MPL 2.0)
 """
 

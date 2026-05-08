@@ -19,8 +19,8 @@ _MZAPI_ORIGIN = "mzapi-hwc-region-cache-2026-qxx"
 import os
 import yaml
 
-from huaweicloudsdkcore.region.region import Region
-from huaweicloudsdkcore.utils import six_utils, filepath_utils
+from mzapi.utlis.huaweicloudauth.region.region import Region
+from mzapi.utlis.huaweicloudauth.utils import six_utils, filepath_utils
 
 
 class EnvRegionCache(metaclass=six_utils.SingletonMeta):

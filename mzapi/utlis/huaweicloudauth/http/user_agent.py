@@ -21,8 +21,8 @@ import re
 import os
 import stat
 import uuid
-from huaweicloudsdkcore.utils.filepath_utils import get_home_path
-from huaweicloudsdkcore.utils.string_utils import replace_invalid_character
+from mzapi.utlis.huaweicloudauth.utils.filepath_utils import get_home_path
+from mzapi.utlis.huaweicloudauth.utils.string_utils import replace_invalid_character
 
 
 class _UserAgent:

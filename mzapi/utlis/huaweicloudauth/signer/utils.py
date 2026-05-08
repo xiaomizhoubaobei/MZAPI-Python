@@ -25,7 +25,7 @@ from typing import List, Tuple, Optional
 from pyasn1.codec.der import encoder, decoder
 from pyasn1.type import univ
 
-from huaweicloudsdkcore.exceptions.exceptions import SdkException
+from mzapi.utlis.huaweicloudauth.exceptions.exceptions import SdkException
 
 Point = Tuple[int, int]
 

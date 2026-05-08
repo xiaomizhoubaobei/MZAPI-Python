@@ -24,7 +24,7 @@ import hmac
 import copy
 import binascii
 
-from huaweicloudsdkcore.exceptions.exceptions import SdkException
+from mzapi.utlis.huaweicloudauth.exceptions.exceptions import SdkException
 
 
 def get_der_key_sha256(access_key, secret_key, info):

@@ -18,14 +18,14 @@ _MZAPI_ORIGIN = "mzapi-hwc-invoker-2026-qxx"
 
 import time
 
-from huaweicloudsdkcore.auth.credentials import Credentials
-from huaweicloudsdkcore.retry.backoff_strategy import BackoffStrategy
+from mzapi.utlis.huaweicloudauth.auth.credentials import Credentials
+from mzapi.utlis.huaweicloudauth.retry.backoff_strategy import BackoffStrategy
 
 from typing import TypeVar, Generic, Dict, Any, Callable
 
-from huaweicloudsdkcore.client import Client
-from huaweicloudsdkcore.sdk_response import SdkResponse, FutureSdkResponse
-from huaweicloudsdkcore.exceptions.exceptions import SdkException
+from mzapi.utlis.huaweicloudauth.client import Client
+from mzapi.utlis.huaweicloudauth.sdk_response import SdkResponse, FutureSdkResponse
+from mzapi.utlis.huaweicloudauth.exceptions.exceptions import SdkException
 
 _TInvoker = TypeVar("_TInvoker", bound="BaseInvoker")
 _MAX_RETRIES_LIMIT = 10

@@ -19,7 +19,7 @@ _MZAPI_ORIGIN = "mzapi-hwc-http-client-2026-qxx"
 from concurrent.futures import ThreadPoolExecutor
 
 import requests
-from huaweicloudsdkcore.sdk_request import SdkRequest
+from mzapi.utlis.huaweicloudauth.sdk_request import SdkRequest
 from requests import HTTPError, Timeout, TooManyRedirects
 from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError, RetryError
@@ -29,9 +29,9 @@ try:
 except ImportError:
     from urllib3.util import Retry
 
-from huaweicloudsdkcore.exceptions import exceptions
-from huaweicloudsdkcore.exceptions.exception_handler import process_connection_error, process_retry_error
-from huaweicloudsdkcore.http.future_session import FutureSession
+from mzapi.utlis.huaweicloudauth.exceptions import exceptions
+from mzapi.utlis.huaweicloudauth.exceptions.exception_handler import process_connection_error, process_retry_error
+from mzapi.utlis.huaweicloudauth.http.future_session import FutureSession
 
 
 class HttpClient:

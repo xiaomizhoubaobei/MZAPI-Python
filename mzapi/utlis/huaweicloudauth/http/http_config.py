@@ -20,7 +20,7 @@ from typing import Union
 
 from urllib.parse import quote_plus
 
-from huaweicloudsdkcore.signer.algorithm import SigningAlgorithm
+from mzapi.utlis.huaweicloudauth.signer.algorithm import SigningAlgorithm
 
 
 class HttpConfig:

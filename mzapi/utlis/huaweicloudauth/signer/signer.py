@@ -23,11 +23,11 @@ import hmac
 from datetime import datetime
 from typing import Optional, List
 
-from huaweicloudsdkcore.exceptions.exceptions import SdkException
-from huaweicloudsdkcore.sdk_request import SdkRequest
-from huaweicloudsdkcore.signer import hkdf
-from huaweicloudsdkcore.signer.utils import new_sm3_hash, SM2SigningKey, P256SigningKey
-from huaweicloudsdkcore.utils import six_utils as six
+from mzapi.utlis.huaweicloudauth.exceptions.exceptions import SdkException
+from mzapi.utlis.huaweicloudauth.sdk_request import SdkRequest
+from mzapi.utlis.huaweicloudauth.signer import hkdf
+from mzapi.utlis.huaweicloudauth.signer.utils import new_sm3_hash, SM2SigningKey, P256SigningKey
+from mzapi.utlis.huaweicloudauth.utils import six_utils as six
 
 from urllib.parse import quote, unquote
 

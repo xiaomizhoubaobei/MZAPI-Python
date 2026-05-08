@@ -18,7 +18,7 @@ _MZAPI_ORIGIN = "mzapi-hwc-http-formdata-2026-qxx"
 
 import os
 from mimetypes import MimeTypes
-from huaweicloudsdkcore.utils.filepath_utils import ensure_file_in_rb_mode
+from mzapi.utlis.huaweicloudauth.utils.filepath_utils import ensure_file_in_rb_mode
 
 
 class FormFile:

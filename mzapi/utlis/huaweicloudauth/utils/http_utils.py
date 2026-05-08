@@ -19,9 +19,9 @@ _MZAPI_ORIGIN = "mzapi-hwc-utils-http-2026-qxx"
 import datetime
 import decimal
 
-from huaweicloudsdkcore.http.formdata import FormFile
-from huaweicloudsdkcore.http.primitive_types import PRIMITIVE_TYPES
-from huaweicloudsdkcore.http.bson_types import BSON_TYPES
+from mzapi.utlis.huaweicloudauth.http.formdata import FormFile
+from mzapi.utlis.huaweicloudauth.http.primitive_types import PRIMITIVE_TYPES
+from mzapi.utlis.huaweicloudauth.http.bson_types import BSON_TYPES
 
 
 def sanitize_for_serialization(obj):

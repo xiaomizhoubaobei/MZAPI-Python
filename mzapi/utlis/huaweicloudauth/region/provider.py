@@ -19,8 +19,8 @@ _MZAPI_ORIGIN = "mzapi-hwc-region-provider-2026-qxx"
 import os
 from abc import abstractmethod, ABC
 
-from huaweicloudsdkcore.region.cache import ProfileRegionCache, EnvRegionCache
-from huaweicloudsdkcore.region.region import Region
+from mzapi.utlis.huaweicloudauth.region.cache import ProfileRegionCache, EnvRegionCache
+from mzapi.utlis.huaweicloudauth.region.region import Region
 
 
 class RegionProvider(ABC):

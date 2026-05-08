@@ -26,16 +26,16 @@ from typing import Dict, Optional
 
 import requests
 
-from huaweicloudsdkcore.utils import time_utils
+from mzapi.utlis.huaweicloudauth.utils import time_utils
 from six.moves.urllib.parse import urlparse
 
-from huaweicloudsdkcore.auth import endpoint
-from huaweicloudsdkcore.exceptions import exceptions
-from huaweicloudsdkcore.exceptions.exceptions import SdkException
-from huaweicloudsdkcore.http.http_client import HttpClient
-from huaweicloudsdkcore.http.http_config import HttpConfig
-from huaweicloudsdkcore.http.user_agent import user_agent_string
-from huaweicloudsdkcore.sdk_request import SdkRequest
+from mzapi.utlis.huaweicloudauth.auth import endpoint
+from mzapi.utlis.huaweicloudauth.exceptions import exceptions
+from mzapi.utlis.huaweicloudauth.exceptions.exceptions import SdkException
+from mzapi.utlis.huaweicloudauth.http.http_client import HttpClient
+from mzapi.utlis.huaweicloudauth.http.http_config import HttpConfig
+from mzapi.utlis.huaweicloudauth.http.user_agent import user_agent_string
+from mzapi.utlis.huaweicloudauth.sdk_request import SdkRequest
 
 _TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 

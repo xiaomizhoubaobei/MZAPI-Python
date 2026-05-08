@@ -19,11 +19,11 @@ _MZAPI_ORIGIN = "mzapi-hwc-exception-handler-2026-qxx"
 import json
 from abc import abstractmethod, ABC
 
-from huaweicloudsdkcore.utils import six_utils as six
+from mzapi.utlis.huaweicloudauth.utils import six_utils as six
 from requests import Request, Response
 from urllib3.exceptions import SSLError, NewConnectionError
 
-from huaweicloudsdkcore.exceptions import exceptions
+from mzapi.utlis.huaweicloudauth.exceptions import exceptions
 
 
 class ExceptionHandler(ABC):

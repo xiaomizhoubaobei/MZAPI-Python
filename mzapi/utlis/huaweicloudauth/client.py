@@ -37,28 +37,28 @@ import bson
 import simplejson as json
 from requests_toolbelt import MultipartEncoder
 
-from huaweicloudsdkcore.auth.credentials import BasicCredentials, DerivedCredentials, Credentials
-from huaweicloudsdkcore.auth.provider import CredentialProviderChain
-from huaweicloudsdkcore.exceptions.exception_handler import ExceptionHandler, DefaultExceptionHandler
-from huaweicloudsdkcore.exceptions.exceptions import HostUnreachableException, SslHandShakeException, \
+from mzapi.utlis.huaweicloudauth.auth.credentials import BasicCredentials, DerivedCredentials, Credentials
+from mzapi.utlis.huaweicloudauth.auth.provider import CredentialProviderChain
+from mzapi.utlis.huaweicloudauth.exceptions.exception_handler import ExceptionHandler, DefaultExceptionHandler
+from mzapi.utlis.huaweicloudauth.exceptions.exceptions import HostUnreachableException, SslHandShakeException, \
     ConnectionException
-from huaweicloudsdkcore.http import progress
-from huaweicloudsdkcore.http.bson_types import BSON_TYPES_MAPPING
-from huaweicloudsdkcore.http.formdata import FormFile
-from huaweicloudsdkcore.http.http_client import HttpClient
-from huaweicloudsdkcore.http.http_config import HttpConfig
-from huaweicloudsdkcore.http.http_handler import HttpHandler
-from huaweicloudsdkcore.http.primitive_types import NATIVE_TYPES_MAPPING
-from huaweicloudsdkcore.http.primitive_types import PRIMITIVE_TYPES
-from huaweicloudsdkcore.region.region import Region
-from huaweicloudsdkcore.sdk_request import SdkRequest
-from huaweicloudsdkcore.sdk_response import FutureSdkResponse, SdkResponse
-from huaweicloudsdkcore.sdk_stream_response import SdkStreamResponse
-from huaweicloudsdkcore.utils import http_utils
-from huaweicloudsdkcore.utils import six_utils as six
-from huaweicloudsdkcore.utils.filepath_utils import ensure_file_in_rb_mode
-from huaweicloudsdkcore.utils.xml_utils import XmlTransfer
-from huaweicloudsdkcore.warning import warning
+from mzapi.utlis.huaweicloudauth.http import progress
+from mzapi.utlis.huaweicloudauth.http.bson_types import BSON_TYPES_MAPPING
+from mzapi.utlis.huaweicloudauth.http.formdata import FormFile
+from mzapi.utlis.huaweicloudauth.http.http_client import HttpClient
+from mzapi.utlis.huaweicloudauth.http.http_config import HttpConfig
+from mzapi.utlis.huaweicloudauth.http.http_handler import HttpHandler
+from mzapi.utlis.huaweicloudauth.http.primitive_types import NATIVE_TYPES_MAPPING
+from mzapi.utlis.huaweicloudauth.http.primitive_types import PRIMITIVE_TYPES
+from mzapi.utlis.huaweicloudauth.region.region import Region
+from mzapi.utlis.huaweicloudauth.sdk_request import SdkRequest
+from mzapi.utlis.huaweicloudauth.sdk_response import FutureSdkResponse, SdkResponse
+from mzapi.utlis.huaweicloudauth.sdk_stream_response import SdkStreamResponse
+from mzapi.utlis.huaweicloudauth.utils import http_utils
+from mzapi.utlis.huaweicloudauth.utils import six_utils as six
+from mzapi.utlis.huaweicloudauth.utils.filepath_utils import ensure_file_in_rb_mode
+from mzapi.utlis.huaweicloudauth.utils.xml_utils import XmlTransfer
+from mzapi.utlis.huaweicloudauth.warning import warning
 
 _BASE_ITER_TYPES = (str, bytes, list, tuple, Mapping)
 
@@ -178,7 +178,7 @@ class ClientBuilder(Generic[T]):
         client.with_endpoints(self._endpoints).with_credentials(self._credentials)
 
         if self._config.user_agent is None:
-            from huaweicloudsdkcore.http.user_agent import user_agent_string
+            from mzapi.utlis.huaweicloudauth.http.user_agent import user_agent_string
             self._config.user_agent = user_agent_string
 
         return client

@@ -24,14 +24,14 @@ import threading
 from abc import abstractmethod, ABC
 from typing import Callable, Optional, Dict, Any
 
-from huaweicloudsdkcore.auth.internal import IamHelper, MetadataAccessor, StsHelper, StsAccessor, FederalAccessor
-from huaweicloudsdkcore.exceptions.exceptions import ApiValueError, ServiceResponseException, SdkException, \
+from mzapi.utlis.huaweicloudauth.auth.internal import IamHelper, MetadataAccessor, StsHelper, StsAccessor, FederalAccessor
+from mzapi.utlis.huaweicloudauth.exceptions.exceptions import ApiValueError, ServiceResponseException, SdkException, \
     HostUnreachableException
-from huaweicloudsdkcore.http.http_client import HttpClient
-from huaweicloudsdkcore.sdk_request import SdkRequest
-from huaweicloudsdkcore.signer.algorithm import SigningAlgorithm
-from huaweicloudsdkcore.signer.signer import Signer, SM3Signer, DerivationAKSKSigner, P256SHA256Signer, SM2SM3Signer
-from huaweicloudsdkcore.utils import string_utils, six_utils, time_utils
+from mzapi.utlis.huaweicloudauth.http.http_client import HttpClient
+from mzapi.utlis.huaweicloudauth.sdk_request import SdkRequest
+from mzapi.utlis.huaweicloudauth.signer.algorithm import SigningAlgorithm
+from mzapi.utlis.huaweicloudauth.signer.signer import Signer, SM3Signer, DerivationAKSKSigner, P256SHA256Signer, SM2SM3Signer
+from mzapi.utlis.huaweicloudauth.utils import string_utils, six_utils, time_utils
 
 
 class DerivedCredentials(ABC):

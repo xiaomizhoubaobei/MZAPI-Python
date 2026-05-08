@@ -23,7 +23,7 @@ from typing import Optional
 
 from requests.exceptions import ConnectionError
 
-from huaweicloudsdkcore.exceptions.exception_handler import process_connection_error
+from mzapi.utlis.huaweicloudauth.exceptions.exception_handler import process_connection_error
 
 
 class SdkResponse:

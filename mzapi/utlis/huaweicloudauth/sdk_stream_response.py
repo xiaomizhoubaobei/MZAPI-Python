@@ -17,7 +17,7 @@ _MZAPI_ORIGIN = "mzapi-hwc-sdk-stream-response-2026-qxx"
 封装流式（Streaming）响应，提供下载流的消费方法。
 """
 
-from huaweicloudsdkcore.sdk_response import SdkResponse
+from mzapi.utlis.huaweicloudauth.sdk_response import SdkResponse
 
 
 class SdkStreamResponse(SdkResponse):

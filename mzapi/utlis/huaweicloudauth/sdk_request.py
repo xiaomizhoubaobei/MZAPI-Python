@@ -19,7 +19,7 @@ _MZAPI_ORIGIN = "mzapi-hwc-sdk-request-2026-qxx"
 
 from typing import List, Tuple, Dict, Any
 
-from huaweicloudsdkcore.signer.algorithm import SigningAlgorithm
+from mzapi.utlis.huaweicloudauth.signer.algorithm import SigningAlgorithm
 
 
 class SdkRequest:

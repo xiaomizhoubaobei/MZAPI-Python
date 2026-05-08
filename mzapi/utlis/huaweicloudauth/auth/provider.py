@@ -22,10 +22,10 @@ import os
 import configparser
 from abc import abstractmethod, ABC
 
-from huaweicloudsdkcore.auth.internal import MetadataAccessor, FederalAccessor, PodIdentityAccessor
-from huaweicloudsdkcore.utils import filepath_utils
-from huaweicloudsdkcore.auth.credentials import BasicCredentials, GlobalCredentials
-from huaweicloudsdkcore.exceptions.exceptions import ApiTypeError, ApiValueError, SdkException
+from mzapi.utlis.huaweicloudauth.auth.internal import MetadataAccessor, FederalAccessor, PodIdentityAccessor
+from mzapi.utlis.huaweicloudauth.utils import filepath_utils
+from mzapi.utlis.huaweicloudauth.auth.credentials import BasicCredentials, GlobalCredentials
+from mzapi.utlis.huaweicloudauth.exceptions.exceptions import ApiTypeError, ApiValueError, SdkException
 
 
 class _CredentialType:

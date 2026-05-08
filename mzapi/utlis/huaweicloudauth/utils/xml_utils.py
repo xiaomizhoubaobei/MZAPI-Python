@@ -21,7 +21,7 @@ from defusedxml.ElementTree import fromstring
 from decimal import Decimal
 import re
 
-from huaweicloudsdkcore.utils import six_utils as six
+from mzapi.utlis.huaweicloudauth.utils import six_utils as six
 
 
 class XmlTransfer:

@@ -19,10 +19,13 @@ MZAPI - 多云服务统一 API 接口库
 
 支持的云服务商：
   - 腾讯云 (TencentCloud)：通用印刷体识别 (GeneralBasicOCR)
+  - 阿里云 (AliCloud)：识别全部文字 (RecognizeAllText)
 """
 
 from .tencent import GeneralBasicOCR
+from .alicloud.ocr import RecognizeAllText
 
 __all__ = [
     'GeneralBasicOCR',
+    'RecognizeAllText',
 ]

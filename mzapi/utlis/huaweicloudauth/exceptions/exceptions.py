@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-exceptions-2026-qxx"
+
 """华为云 SDK 异常定义
 
 定义 SdkException、ConnectionException、ServiceResponseException 等异常类型。"""

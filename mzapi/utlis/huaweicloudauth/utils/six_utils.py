@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-utils-six-2026-qxx"
+
 """华为云兼容性工具
 
 提供 Python 2/3 兼容性函数和单例模式实现。"""

@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-http-user-agent-2026-qxx"
+
 """华为云 User-Agent 配置
 
 定义 SDK 的 User-Agent 字符串，包含版本和运行环境信息。"""

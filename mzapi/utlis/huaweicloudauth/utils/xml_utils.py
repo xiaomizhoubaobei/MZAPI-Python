@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-utils-xml-2026-qxx"
+
 """华为云 XML 工具
 
 提供 XML 与字典之间的相互转换功能。"""

@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-http-config-2026-qxx"
+
 """华为云 HTTP 配置
 
 提供 HttpConfig 类，管理代理、SSL、超时、重试等 HTTP 配置参数。"""

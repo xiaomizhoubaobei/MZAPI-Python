@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-auth-init-2026-qxx"
+
 """华为云认证子模块
 
 提供凭证管理、认证链、端点配置等认证基础设施。"""

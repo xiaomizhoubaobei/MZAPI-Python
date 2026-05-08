@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-auth-credentials-2026-qxx"
+
 """华为云凭证管理
 
 实现 Credentials、BasicCredentials、GlobalCredentials 等凭证类，

@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-invoker-2026-qxx"
+
 """华为云 API 调用器
 
 实现 SyncInvoker 和 AsyncInvoker，封装带重试策略的 API 调用逻辑。"""

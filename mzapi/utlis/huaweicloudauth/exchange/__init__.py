@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-exchange-init-2026-qxx"
+
 """华为云交换子模块
 
 提供 API 引用和交换缓存功能。"""

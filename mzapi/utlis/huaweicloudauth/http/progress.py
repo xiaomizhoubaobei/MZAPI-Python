@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-http-progress-2026-qxx"
+
 """华为云上传/下载进度
 
 提供 ProgressNotifier 和 ProgressRequestBody，实现文件传输进度回调。"""

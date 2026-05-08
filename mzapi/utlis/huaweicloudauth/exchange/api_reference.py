@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-exchange-api-reference-2026-qxx"
+
 """华为云 API 引用对象
 
 封装 API 的名称、方法和 URI 信息。"""

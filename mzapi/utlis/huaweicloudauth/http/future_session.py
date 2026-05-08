@@ -9,6 +9,9 @@
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-hwc-http-future-session-2026-qxx"
+
 """华为云异步会话
 
 提供 FutureSession 类，封装异步 HTTP 请求的 Future 机制。"""

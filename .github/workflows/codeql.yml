@@ -56,7 +56,7 @@ jobs:
 
       # 初始化 CodeQL 工具进行扫描。
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4.32.4
+        uses: github/codeql-action/init@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4.35.4
         with:
           languages: ${{ matrix.language }}
           # 如果您希望指定自定义查询，可以在这里或在配置文件中进行。
@@ -66,7 +66,7 @@ jobs:
       # Autobuild 尝试构建任何编译型语言（C/C++、C# 或 Java）。
       # 如果此步骤失败，则应删除它并手动运行构建（见下方）
       - name: Autobuild
-        uses: github/codeql-action/autobuild@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4.32.4
+        uses: github/codeql-action/autobuild@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4.35.4
 
       # ℹ️ 使用操作系统 shell 运行的命令行程序。
       # 📚 请参阅 https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
@@ -75,6 +75,6 @@ jobs:
       #   修改它们（或添加更多）以构建您的代码，请参考下方的示例以获取指导。
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4.32.4
+        uses: github/codeql-action/analyze@68bde559dea0fdcac2102bfdf6230c5f70eb485e # v4.35.4
         with:
           category: "/language:${{matrix.language}}"

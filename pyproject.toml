@@ -26,7 +26,7 @@ classifiers = [
 ]
 keywords = ["API", "SDK", "MZAPI", "PYTHON"]
 dependencies = [
-    "requests>=2.32.4,<2.34.0",
+    "requests>=2.32.4,<2.35.0",
     "pytz~=2026.1",
     "simplejson>=3.20.0",
     "alibabacloud-credentials>=1.0.0",

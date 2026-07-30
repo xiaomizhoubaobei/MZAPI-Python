@@ -1,6 +1,6 @@
-from .core import DaraModel
+from mzapi.utlis.alicloudauth.darabonba.core import DaraModel
 from typing import Dict, Any
-from .policy.retry import RetryOptions
+from mzapi.utlis.alicloudauth.darabonba.policy.retry import RetryOptions
 
 class ExtendsParameters(DaraModel):
     def __init__(

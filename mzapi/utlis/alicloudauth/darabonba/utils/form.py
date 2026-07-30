@@ -2,8 +2,8 @@ import os
 import sys
 from _io import BytesIO
 import random
-from ..utils.stream import BaseStream, READABLE
-from ..core import DaraModel
+from mzapi.utlis.alicloudauth.darabonba.utils.stream import BaseStream, READABLE
+from mzapi.utlis.alicloudauth.darabonba.core import DaraModel
 from urllib.parse import urlencode
 
 class Form:

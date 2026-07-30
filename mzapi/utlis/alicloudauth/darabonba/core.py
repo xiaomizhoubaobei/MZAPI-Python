@@ -13,12 +13,12 @@ from typing import Any, Dict, Optional, Union
 from enum import Enum
 from urllib.parse import urlencode, urlparse
 from requests import status_codes, adapters, PreparedRequest, Session
-from .exceptions import RequiredArgumentException, RetryError
-from .model import DaraModel
-from .request import DaraRequest
-from .response import DaraResponse
-from .utils.stream import BaseStream, SSEResponseWrapper, SyncSSEResponseWrapper
-from .policy.retry import RetryOptions, RetryPolicyContext
+from mzapi.utlis.alicloudauth.darabonba.exceptions import RequiredArgumentException, RetryError
+from mzapi.utlis.alicloudauth.darabonba.model import DaraModel
+from mzapi.utlis.alicloudauth.darabonba.request import DaraRequest
+from mzapi.utlis.alicloudauth.darabonba.response import DaraResponse
+from mzapi.utlis.alicloudauth.darabonba.utils.stream import BaseStream, SSEResponseWrapper, SyncSSEResponseWrapper
+from mzapi.utlis.alicloudauth.darabonba.policy.retry import RetryOptions, RetryPolicyContext
 
 
 DEFAULT_CONNECT_TIMEOUT = 5000

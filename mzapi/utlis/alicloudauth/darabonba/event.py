@@ -1,4 +1,4 @@
-from .model import DaraModel
+from mzapi.utlis.alicloudauth.darabonba.model import DaraModel
 
 class Event(DaraModel):
     def __init__(

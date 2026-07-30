@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from darabonba.date import Date
+from .date import Date
 
 class File:
     def __init__(self, path: str):

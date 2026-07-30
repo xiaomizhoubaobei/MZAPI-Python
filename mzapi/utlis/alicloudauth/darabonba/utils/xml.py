@@ -1,5 +1,5 @@
 from xml.etree import ElementTree
-from darabonba.model import DaraModel
+from ..model import DaraModel
 from collections import defaultdict
 
 class XML:

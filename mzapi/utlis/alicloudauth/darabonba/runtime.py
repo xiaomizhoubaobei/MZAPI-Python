@@ -1,6 +1,6 @@
-from darabonba.core import DaraModel
+from .core import DaraModel
 from typing import Dict, Any
-from darabonba.policy.retry import RetryOptions
+from .policy.retry import RetryOptions
 
 class ExtendsParameters(DaraModel):
     def __init__(

@@ -1,11 +1,8 @@
-from Tea.exceptions import UnretryableException as TeaUnretryableException
-from Tea.exceptions import RequiredArgumentException as TeaRequiredArgumentException
-from Tea.exceptions import TeaException
-from darabonba.policy.retry import RetryPolicyContext
+from .policy.retry import RetryPolicyContext
 from typing import Any, Optional
 
 
-class DaraException(TeaException):
+class DaraException(Exception):
     def __init__(self, dic):
         super().__init__(dic)
         self.code = dic.get("code")
@@ -52,7 +49,7 @@ class ValidateException(Exception):
     pass
 
 
-class RequiredArgumentException(TeaRequiredArgumentException):
+class RequiredArgumentException(Exception):
     def __init__(self, arg):
         self.arg = arg
 
@@ -69,20 +66,18 @@ class RetryError(Exception):
         self.data = None
         self.name = 'RetryError'
 
-class UnretryableException(TeaUnretryableException):
+class UnretryableException(Exception):
     def __init__(
             self,
             _context: RetryPolicyContext
     ):
         if isinstance(_context.exception, ResponseException):
             raise _context.exception
-        
-        super().__init__(
-            request= _context.http_request,
-            ex= _context.exception,
-        )
-        
+
+        self.inner_exception = _context.exception
+        self.http_request = _context.http_request
         self.name = 'UnretryableException'
+        super().__init__(str(self.inner_exception) if self.inner_exception else 'Unretryable exception')
         
 
     def __str__(self):

@@ -1,6 +1,6 @@
 import re
 
-from darabonba.exceptions import ValidateException
+from ..exceptions import ValidateException
 
 
 def assert_integer_positive(integer, name):

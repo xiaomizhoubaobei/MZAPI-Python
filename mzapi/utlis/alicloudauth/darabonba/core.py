@@ -13,12 +13,12 @@ from typing import Any, Dict, Optional, Union
 from enum import Enum
 from urllib.parse import urlencode, urlparse
 from requests import status_codes, adapters, PreparedRequest, Session
-from darabonba.exceptions import RequiredArgumentException, RetryError
-from darabonba.model import DaraModel
-from darabonba.request import DaraRequest
-from darabonba.response import DaraResponse
-from darabonba.utils.stream import BaseStream, SSEResponseWrapper, SyncSSEResponseWrapper
-from darabonba.policy.retry import RetryOptions, RetryPolicyContext
+from .exceptions import RequiredArgumentException, RetryError
+from .model import DaraModel
+from .request import DaraRequest
+from .response import DaraResponse
+from .utils.stream import BaseStream, SSEResponseWrapper, SyncSSEResponseWrapper
+from .policy.retry import RetryOptions, RetryPolicyContext
 
 
 DEFAULT_CONNECT_TIMEOUT = 5000

@@ -12,9 +12,9 @@ from urllib.parse import parse_qs, urlencode, urlparse
 import websocket
 from websocket._abnf import ABNF
 
-from darabonba.request import DaraRequest
-from darabonba.response import DaraResponse
-from darabonba.runtime import RuntimeOptions
+from .request import DaraRequest
+from .response import DaraResponse
+from .runtime import RuntimeOptions
 
 
 class WebSocketMessageType(IntEnum):

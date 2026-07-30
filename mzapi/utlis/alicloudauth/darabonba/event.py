@@ -1,4 +1,4 @@
-from darabonba.model import DaraModel
+from .model import DaraModel
 
 class Event(DaraModel):
     def __init__(

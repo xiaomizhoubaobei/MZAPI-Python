@@ -2,7 +2,7 @@ import json
 import re
 import aiohttp
 import codecs
-from ..event import Event
+from mzapi.utlis.alicloudauth.darabonba.event import Event
 
 from io import BytesIO, StringIO
 from typing import Any, BinaryIO, Generator, AsyncGenerator, Dict

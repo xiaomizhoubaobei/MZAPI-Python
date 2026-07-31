@@ -14,8 +14,8 @@ from __future__ import annotations
 
 from typing import Dict
 
-from darabonba.event import Event as SSEEvent
-from darabonba.model import DaraModel
+from ..darabonba.event import Event as SSEEvent
+from ..darabonba.model import DaraModel
 
 
 

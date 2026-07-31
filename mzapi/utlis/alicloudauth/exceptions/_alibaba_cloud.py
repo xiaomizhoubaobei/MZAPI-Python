@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Dict, Any
 
-from darabonba.exceptions import ResponseException
+from mzapi.utlis.alicloudauth.darabonba.exceptions import ResponseException
 
 class AlibabaCloudException(ResponseException):
     def __init__(

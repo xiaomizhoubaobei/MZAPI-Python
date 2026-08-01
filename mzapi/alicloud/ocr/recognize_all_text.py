@@ -26,8 +26,8 @@ from typing import Optional, Union
 
 from darabonba.runtime import RuntimeOptions
 
-from mzapi.utlis.alicloudauth import utils_models
-from mzapi.utlis.alicloudauth.client import Client as AliyunOpenApiClient
+from mzapi.core.alicloudauth import utils_models
+from mzapi.core.alicloudauth.client import Client as AliyunOpenApiClient
 
 
 # OCR API 默认版本

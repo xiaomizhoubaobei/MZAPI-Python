@@ -164,7 +164,7 @@ jobs:
         retention-days: 90
 
     - name: Create GitHub release
-      uses: step-security/action-gh-release@d45511d7589f080cf54961ff056b9705a74fd160 # v2.5.0
+      uses: step-security/action-gh-release@277bfa82abcfdb73e5bbb19e213fd76532ee2be5 # v3.0.0
       with:
           tag_name: v${{ env.version }}
           name: Release v${{ env.version }}

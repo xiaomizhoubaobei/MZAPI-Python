@@ -32,7 +32,7 @@ from mzapi.utlis.aliyunauth.utils_models import (
     Params,
 )
 from mzapi.utlis.aliyunauth.client import Client as AliyunOpenApiClient
-from mzapi.alicloud.ocr import RecognizeAllText, RecognizeAllTextResponse
+from mzapi.aliyun.ocr import RecognizeAllText, RecognizeAllTextResponse
 
 
 # =========================================================================
@@ -222,13 +222,13 @@ class TestAlicloudOcrModule(unittest.TestCase):
 
     def test_module_origin(self):
         """验证内部项目标识"""
-        import mzapi.alicloud.ocr as ocr_mod
-        self.assertEqual(ocr_mod._MZAPI_ORIGIN, "mzapi-alicloud-ocr-2026-qxx")
+        import mzapi.aliyun.ocr as ocr_mod
+        self.assertEqual(ocr_mod._MZAPI_ORIGIN, "mzapi-aliyun-ocr-2026-qxx")
 
     def test_import_classes(self):
         """验证可以导入所有公开类"""
-        from mzapi.alicloud.ocr import RecognizeAllText
-        from mzapi.alicloud.ocr import RecognizeAllTextResponse
+        from mzapi.aliyun.ocr import RecognizeAllText
+        from mzapi.aliyun.ocr import RecognizeAllTextResponse
         self.assertTrue(callable(RecognizeAllText))
         self.assertTrue(callable(RecognizeAllTextResponse))
 

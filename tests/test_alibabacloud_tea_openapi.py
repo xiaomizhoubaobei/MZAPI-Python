@@ -15,21 +15,21 @@ if 'mzapi.utlis' not in sys.modules:
     fake_utlis.__path__ = ['mzapi/utlis']
     sys.modules['mzapi.utlis'] = fake_utlis
 
-from mzapi.utlis.alicloudauth.utils_models import (
+from mzapi.utlis.aliyunauth.utils_models import (
     Config,
     GlobalParameters,
     OpenApiRequest,
     Params,
 )
-from mzapi.utlis.alicloudauth.exceptions import (
+from mzapi.utlis.aliyunauth.exceptions import (
     AlibabaCloudException,
     ClientException,
     ServerException,
     ThrottlingException,
 )
-from mzapi.utlis.alicloudauth.utils import Utils
-from mzapi.utlis.alicloudauth.sm3 import Sm3, hash_sm3
-from mzapi.utlis.alicloudauth.models import SSEResponse
+from mzapi.utlis.aliyunauth.utils import Utils
+from mzapi.utlis.aliyunauth.sm3 import Sm3, hash_sm3
+from mzapi.utlis.aliyunauth.models import SSEResponse
 
 
 class TestConfig(unittest.TestCase):
@@ -416,14 +416,14 @@ class TestModuleInit(unittest.TestCase):
     """模块初始化测试"""
 
     def test_exceptions_init_all(self):
-        from mzapi.utlis.alicloudauth import exceptions as exc_mod
+        from mzapi.utlis.aliyunauth import exceptions as exc_mod
         self.assertTrue(hasattr(exc_mod, "AlibabaCloudException"))
         self.assertTrue(hasattr(exc_mod, "ClientException"))
         self.assertTrue(hasattr(exc_mod, "ServerException"))
         self.assertTrue(hasattr(exc_mod, "ThrottlingException"))
 
     def test_utils_models_init_all(self):
-        from mzapi.utlis.alicloudauth import utils_models as um_mod
+        from mzapi.utlis.aliyunauth import utils_models as um_mod
         self.assertTrue(hasattr(um_mod, "Config"))
         self.assertTrue(hasattr(um_mod, "GlobalParameters"))
         self.assertTrue(hasattr(um_mod, "OpenApiRequest"))

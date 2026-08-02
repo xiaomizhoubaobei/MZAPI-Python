@@ -17,7 +17,7 @@ _MZAPI_ORIGIN = "mzapi-alicloud-init-2026-qxx"
 
 提供阿里云 OCR（光学字符识别）服务的调用接口。
 本模块基于阿里云 OpenAPI SDK 的认证与签名机制，
-通过 alicloudauth OpenAPI Client 实现对阿里云 OCR API 的调用。
+通过 aliyunauth OpenAPI Client 实现对阿里云 OCR API 的调用。
 
 当前支持的识别能力：
   - RecognizeAllText：识别全部文字（通用 OCR）

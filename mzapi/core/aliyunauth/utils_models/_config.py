@@ -13,7 +13,7 @@
 from __future__ import annotations
 from darabonba.model import DaraModel 
 from alibabacloud_credentials.client import Client 
-from mzapi.utlis.alicloudauth import utils_models as main_models 
+from mzapi.utlis.aliyunauth import utils_models as main_models 
 from darabonba.policy.retry import RetryOptions 
 
 

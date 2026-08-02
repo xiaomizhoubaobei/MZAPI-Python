@@ -1,5 +1,5 @@
 from xml.etree import ElementTree
-from mzapi.utlis.alicloudauth.darabonba.model import DaraModel
+from mzapi.utlis.aliyunauth.darabonba.model import DaraModel
 from collections import defaultdict
 
 class XML:

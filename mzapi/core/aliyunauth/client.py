@@ -20,10 +20,10 @@ from alibabacloud_credentials import models as credential_models
 from alibabacloud_credentials.client import Client as CredentialClient
 from alibabacloud_gateway_spi import models as spi_models
 from alibabacloud_gateway_spi.client import Client as SPIClient
-from mzapi.utlis.alicloudauth import exceptions as main_exceptions
-from mzapi.utlis.alicloudauth import models as main_models
-from mzapi.utlis.alicloudauth import utils_models as open_api_util_models
-from mzapi.utlis.alicloudauth.utils import Utils
+from mzapi.utlis.aliyunauth import exceptions as main_exceptions
+from mzapi.utlis.aliyunauth import models as main_models
+from mzapi.utlis.aliyunauth import utils_models as open_api_util_models
+from mzapi.utlis.aliyunauth.utils import Utils
 from darabonba.core import DaraCore as DaraCore
 from darabonba.core import DaraCore
 from darabonba.exceptions import DaraException, UnretryableException

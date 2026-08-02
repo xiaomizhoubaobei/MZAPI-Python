@@ -4,6 +4,6 @@
 #
 # Copyright (C) 2026 祁筱欣
 
-from alicloudauth.websocket_utils.client import WebSocketClient
+from aliyunauth.websocket_utils.client import WebSocketClient
 
 __all__ = ['WebSocketClient']

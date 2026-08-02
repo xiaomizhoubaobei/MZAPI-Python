@@ -12,9 +12,9 @@ from urllib.parse import parse_qs, urlencode, urlparse
 import websocket
 from websocket._abnf import ABNF
 
-from mzapi.utlis.alicloudauth.darabonba.request import DaraRequest
-from mzapi.utlis.alicloudauth.darabonba.response import DaraResponse
-from mzapi.utlis.alicloudauth.darabonba.runtime import RuntimeOptions
+from mzapi.utlis.aliyunauth.darabonba.request import DaraRequest
+from mzapi.utlis.aliyunauth.darabonba.response import DaraResponse
+from mzapi.utlis.aliyunauth.darabonba.runtime import RuntimeOptions
 
 
 class WebSocketMessageType(IntEnum):

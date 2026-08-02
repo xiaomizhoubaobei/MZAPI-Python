@@ -13,7 +13,7 @@ from .provider import (StaticAKCredentialsProvider,
                                                EcsRamRoleCredentialsProvider,
                                                URLCredentialsProvider,
                                                DefaultCredentialsProvider)
-from \.utils import auth_constant as ac
+from mzapi.utils.aliyun import auth_constant as ac
 from Tea.decorators import deprecated
 
 

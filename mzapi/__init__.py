@@ -23,7 +23,7 @@ MZAPI - 多云服务统一 API 接口库
 """
 
 from .tencent import GeneralBasicOCR
-from .alicloud.ocr import RecognizeAllText
+from .aliyun.ocr import RecognizeAllText
 
 __all__ = [
     'GeneralBasicOCR',

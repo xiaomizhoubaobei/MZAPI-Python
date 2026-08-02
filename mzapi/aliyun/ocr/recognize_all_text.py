@@ -10,7 +10,7 @@
 # when redistributed.
 
 # 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-alicloud-ocr-recognize-all-text-2026-qxx"
+_MZAPI_ORIGIN = "mzapi-aliyun-ocr-recognize-all-text-2026-qxx"
 
 """
 阿里云 OCR - 识别全部文字（RecognizeAllText）实现
@@ -69,7 +69,7 @@ class RecognizeAllText:
 
     使用示例::
 
-        >>> from mzapi.alicloud.ocr import RecognizeAllText
+        >>> from mzapi.aliyun.ocr import RecognizeAllText
         >>> client = RecognizeAllText(
         ...     access_key_id="your_ak",
         ...     access_key_secret="your_sk",

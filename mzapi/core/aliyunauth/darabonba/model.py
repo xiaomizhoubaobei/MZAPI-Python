@@ -1,5 +1,5 @@
 import re
-from mzapi.core.alicloudauth.darabonba.exceptions import RequiredArgumentException, ValidateException
+from mzapi.core.aliyunauth.darabonba.exceptions import RequiredArgumentException, ValidateException
 
 
 class DaraModel:

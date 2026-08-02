@@ -26,12 +26,12 @@ if 'mzapi.utlis' not in sys.modules:
     fake_utlis.__path__ = ['mzapi/utlis']
     sys.modules['mzapi.utlis'] = fake_utlis
 
-from mzapi.utlis.alicloudauth.utils_models import (
+from mzapi.utlis.aliyunauth.utils_models import (
     Config,
     OpenApiRequest,
     Params,
 )
-from mzapi.utlis.alicloudauth.client import Client as AliyunOpenApiClient
+from mzapi.utlis.aliyunauth.client import Client as AliyunOpenApiClient
 from mzapi.alicloud.ocr import RecognizeAllText, RecognizeAllTextResponse
 
 

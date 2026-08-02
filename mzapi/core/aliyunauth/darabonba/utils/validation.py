@@ -1,6 +1,6 @@
 import re
 
-from mzapi.utlis.alicloudauth.darabonba.exceptions import ValidateException
+from mzapi.utlis.aliyunauth.darabonba.exceptions import ValidateException
 
 
 def assert_integer_positive(integer, name):

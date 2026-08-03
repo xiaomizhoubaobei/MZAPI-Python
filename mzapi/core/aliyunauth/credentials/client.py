@@ -1,3 +1,29 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-txc-circuit-breaker-2026-qxx"
+
+
+"""
+凭证客户端模块
+
+封装阿里云凭证获取逻辑，提供统一的凭证访问接口。
+支持多种认证方式：AccessKey、STS、RAM Role、OIDC 等。
+
+包含的类：
+  - _CredentialsProviderWrap：凭证提供者包装类，将 ICredentialsProvider 适配为统一接口
+  - Client：凭证客户端主类，根据配置类型选择合适的凭证提供者
+"""
+
 from functools import wraps
 
 from alibabacloud_credentials_api import ICredentialsProvider
@@ -6,18 +32,19 @@ from .exceptions import CredentialException
 from .models import Config, CredentialModel
 from .http import HttpOptions
 from .provider import (StaticAKCredentialsProvider,
-                                               StaticSTSCredentialsProvider,
-                                               RamRoleArnCredentialsProvider,
-                                               OIDCRoleArnCredentialsProvider,
-                                               RsaKeyPairCredentialsProvider,
-                                               EcsRamRoleCredentialsProvider,
-                                               URLCredentialsProvider,
-                                               DefaultCredentialsProvider)
+                                              StaticSTSCredentialsProvider,
+                                              RamRoleArnCredentialsProvider,
+                                              OIDCRoleArnCredentialsProvider,
+                                              RsaKeyPairCredentialsProvider,
+                                              EcsRamRoleCredentialsProvider,
+                                              URLCredentialsProvider,
+                                              DefaultCredentialsProvider)
 from mzapi.utils.aliyun import auth_constant as ac
 from Tea.decorators import deprecated
 
 
 def attribute_error_return_none(f):
+    """属性错误时返回 None 的装饰器"""
     @wraps(f)
     def i(*args, **kwargs):
         try:
@@ -29,6 +56,11 @@ def attribute_error_return_none(f):
 
 
 class _CredentialsProviderWrap:
+    """凭证提供者包装类
+
+    将 ICredentialsProvider 接口适配为统一的凭证访问接口，
+    支持同步和异步两种方式获取凭证信息。
+    """
 
     def __init__(self,
                  *,
@@ -38,30 +70,37 @@ class _CredentialsProviderWrap:
         self.provider = provider
 
     def get_access_key_id(self) -> str:
+        """获取访问密钥 ID"""
         credential = self.provider.get_credentials()
         return credential.get_access_key_id()
 
     async def get_access_key_id_async(self) -> str:
+        """异步获取访问密钥 ID"""
         credential = await self.provider.get_credentials_async()
         return credential.get_access_key_id()
 
     def get_access_key_secret(self) -> str:
+        """获取访问密钥密钥"""
         credential = self.provider.get_credentials()
         return credential.get_access_key_secret()
 
     async def get_access_key_secret_async(self) -> str:
+        """异步获取访问密钥密钥"""
         credential = await self.provider.get_credentials_async()
         return credential.get_access_key_secret()
 
     def get_security_token(self):
+        """获取安全令牌"""
         credential = self.provider.get_credentials()
         return credential.get_security_token()
 
     async def get_security_token_async(self):
+        """异步获取安全令牌"""
         credential = await self.provider.get_credentials_async()
         return credential.get_security_token()
 
     def get_credential(self) -> CredentialModel:
+        """获取完整凭证信息"""
         credential = self.provider.get_credentials()
         return CredentialModel(
             access_key_id=credential.get_access_key_id(),
@@ -72,6 +111,7 @@ class _CredentialsProviderWrap:
         )
 
     async def get_credential_async(self) -> CredentialModel:
+        """异步获取完整凭证信息"""
         credential = await self.provider.get_credentials_async()
         return CredentialModel(
             access_key_id=credential.get_access_key_id(),
@@ -82,10 +122,26 @@ class _CredentialsProviderWrap:
         )
 
     def get_type(self) -> str:
+        """获取凭证类型"""
         return self.type_name
 
 
 class Client:
+    """凭证客户端主类
+
+    根据配置类型自动选择合适的凭证提供者，
+    支持同步和异步两种方式获取凭证。
+    支持的凭证类型：
+      - access_key：静态访问密钥
+      - sts：STS 临时凭证
+      - bearer：Bearer Token
+      - ecs_ram_role：ECS RAM 角色
+      - ram_role_arn：RAM 角色 ARN
+      - rsa_key_pair：RSA 密钥对
+      - oidc_role_arn：OIDC 角色 ARN
+      - credentials_uri：凭证 URI
+    """
+
     cloud_credential = None
 
     def __init__(self,
@@ -101,20 +157,35 @@ class Client:
 
     def get_credential(self) -> CredentialModel:
         """
-        Get credential
-        @return: the whole credential
+        获取凭证
+
+        Returns:
+            CredentialModel: 完整的凭证信息
         """
         return self.cloud_credential.get_credential()
 
     async def get_credential_async(self) -> CredentialModel:
         """
-        Get credential
-        @return: the whole credential
+        异步获取凭证
+
+        Returns:
+            CredentialModel: 完整的凭证信息
         """
         return await self.cloud_credential.get_credential_async()
 
     @staticmethod
     def get_credentials(config):
+        """根据配置类型获取凭证提供者
+
+        Args:
+            config: 凭证配置对象
+
+        Returns:
+            _CredentialsProviderWrap: 凭证提供者包装实例
+
+        Raises:
+            CredentialException: 当凭证类型无效时抛出
+        """
         if config.type == ac.ACCESS_KEY:
             provider = StaticAKCredentialsProvider(
                 access_key_id=config.access_key_id,

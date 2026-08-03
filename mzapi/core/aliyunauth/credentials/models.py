@@ -1,11 +1,61 @@
-# -*- coding: utf-8 -*-
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-txc-circuit-breaker-2026-qxx"
+
+
+"""
+凭证数据模型模块
+
+定义阿里云凭证相关的配置模型和数据模型。
+包括凭证初始化配置和凭证结果模型。
+
+包含的类：
+  - Config：凭证初始化配置类
+  - CredentialModel：凭证结果模型
+"""
+
 # This file is auto-generated, don't edit it. Thanks.
 from Tea.model import TeaModel
 
 
 class Config(TeaModel):
-    """
-    Model for initializing credential
+    """凭证初始化配置类
+
+    用于初始化阿里云凭证客户端的配置类。
+    支持多种凭证类型的配置参数。
+
+    Attributes:
+        type: 凭证类型，支持 access_key、sts、bearer、ecs_ram_role、ram_role_arn、rsa_key_pair、oidc_role_arn、credentials_uri
+        access_key_id: 访问密钥 ID
+        access_key_secret: 访问密钥密钥
+        security_token: 安全令牌
+        bearer_token: Bearer Token
+        role_arn: RAM 角色 ARN
+        oidc_provider_arn: OIDC 提供商 ARN
+        oidc_token_file_path: OIDC Token 文件路径
+        role_session_name: 角色会话名称
+        role_session_expiration: 角色会话过期时间（秒）
+        policy: 权限策略
+        external_id: 外部 ID
+        sts_endpoint: STS 端点
+        public_key_id: 公钥 ID
+        private_key_file: 私钥文件路径
+        role_name: 角色名称
+        disable_imds_v1: 是否禁用 IMDS v1
+        credentials_uri: 凭证 URI
+        timeout: 读取超时时间（毫秒）
+        connect_timeout: 连接超时时间（毫秒）
+        proxy: 代理地址
     """
 
     def __init__(
@@ -38,59 +88,34 @@ class Config(TeaModel):
             proxy: str = None,
     ):
         """
-        Initialize the credential object.
+        初始化凭证配置对象
 
-        ### Parameters
-
-        #### General Parameters
-        - `type` (str): Credential type, including `access_key`, `sts`, `bearer`, `ecs_ram_role`, `ram_role_arn`, `rsa_key_pair`, `oidc_role_arn`, `credentials_uri`.
-
-        #### Access Key Type
-        - `access_key_id` (str): Access Key ID.
-        - `access_key_secret` (str): Access Key Secret.
-        - `security_token` (str, optional): Security token.
-
-        #### Bearer Token Type
-        - `bearer_token` (str): Bearer token.
-
-        #### RAM Role ARN and OIDC Role ARN Types
-        - `role_arn` (str): Role ARN.
-        - `oidc_provider_arn` (str, for `oidc_role_arn` only): OIDC provider ARN.
-        - `oidc_token_file_path` (str, for `oidc_role_arn` only): Path to the OIDC token file.
-        - `role_session_name` (str): Role session name.
-        - `role_session_expiration` (int, optional): Role session expiration time in seconds.
-        - `policy` (str, optional): Policy.
-        - `external_id` (str, optional): External ID.
-        - `sts_endpoint` (str, optional): STS endpoint.
-        - `duration_seconds`: deprecated
-
-        #### RSA Key Pair Type
-        - `public_key_id` (str): Public key ID.
-        - `private_key_file` (str): Path to the private key file.
-
-        #### ECS RAM Role Type
-        - `role_name` (str): Role name.
-        - `disable_imds_v1` (bool, optional): Whether to disable IMDS v1. Default is `False`.
-
-        #### Credentials URI Type
-        - `credentials_uri` (str): Credentials URI.
-
-        #### HTTP Options
-        - `host` (str, optional): Host address.
-        - `timeout` (int, optional): Read timeout in milliseconds. Default values:
-          - `ecs_ram_role`: 1000ms
-          - `ram_role_arn`: 5000ms
-          - `oidc_role_arn`: 5000ms
-        - `connect_timeout` (int, optional): Connection timeout in milliseconds. Default values:
-          - `ecs_ram_role`: 1000ms
-          - `ram_role_arn`: 10000ms
-          - `oidc_role_arn`: 10000ms
-        - `proxy` (str, optional): HTTP or HTTPS proxy.
-
-        #### Other Parameters
-        - `duration_seconds` (int, optional): Duration in seconds, mainly used for `sts` type credentials.
-
-        Note: Some parameters are only valid for specific credential types. Please use them according to your actual needs.
+        Args:
+            type: 凭证类型
+            access_key_id: 访问密钥 ID
+            access_key_secret: 访问密钥密钥
+            security_token: 安全令牌
+            bearer_token: Bearer Token
+            duration_seconds: 持续时间（秒），已废弃，请使用 role_session_expiration
+            role_arn: RAM 角色 ARN
+            oidc_provider_arn: OIDC 提供商 ARN
+            oidc_token_file_path: OIDC Token 文件路径
+            role_session_name: 角色会话名称
+            role_session_expiration: 角色会话过期时间（秒）
+            policy: 权限策略
+            external_id: 外部 ID
+            sts_endpoint: STS 端点
+            public_key_id: 公钥 ID
+            private_key_file: 私钥文件路径
+            role_name: 角色名称
+            enable_imds_v2: 是否启用 IMDS v2
+            disable_imds_v1: 是否禁用 IMDS v1
+            metadata_token_duration: 元数据令牌持续时间
+            credentials_uri: 凭证 URI
+            host: 主机地址
+            timeout: 读取超时时间（毫秒）
+            connect_timeout: 连接超时时间（毫秒）
+            proxy: 代理地址
         """
         self.type = type
         self.access_key_id = access_key_id
@@ -122,6 +147,7 @@ class Config(TeaModel):
         pass
 
     def to_map(self):
+        """转换为字典格式"""
         result = dict()
         if self.type is not None:
             result['type'] = self.type
@@ -176,6 +202,7 @@ class Config(TeaModel):
         return result
 
     def from_map(self, m: dict = None):
+        """从字典格式创建对象"""
         m = m or dict()
         if m.get('type') is not None:
             self.type = m.get('type')
@@ -231,6 +258,19 @@ class Config(TeaModel):
 
 
 class CredentialModel(TeaModel):
+    """凭证结果模型
+
+    包含凭证的所有信息，包括访问密钥、安全令牌等。
+
+    Attributes:
+        access_key_id: 访问密钥 ID
+        access_key_secret: 访问密钥密钥
+        security_token: 安全令牌
+        bearer_token: Bearer Token
+        type: 凭证类型
+        provider_name: 提供者名称
+    """
+
     def __init__(
             self,
             access_key_id: str = None,
@@ -240,6 +280,17 @@ class CredentialModel(TeaModel):
             type: str = None,
             provider_name: str = None,
     ):
+        """
+        初始化凭证模型
+
+        Args:
+            access_key_id: 访问密钥 ID
+            access_key_secret: 访问密钥密钥
+            security_token: 安全令牌
+            bearer_token: Bearer Token
+            type: 凭证类型
+            provider_name: 提供者名称
+        """
         # accesskey id
         self.access_key_id = access_key_id
         # accesskey secret
@@ -257,6 +308,7 @@ class CredentialModel(TeaModel):
         pass
 
     def to_map(self) -> dict:
+        """转换为字典格式"""
         _map = super().to_map()
         if _map is not None:
             return _map
@@ -277,6 +329,7 @@ class CredentialModel(TeaModel):
         return result
 
     def from_map(self, m: dict = None):
+        """从字典格式创建对象"""
         m = m or dict()
         if m.get('accessKeyId') is not None:
             self.access_key_id = m.get('accessKeyId')
@@ -293,19 +346,25 @@ class CredentialModel(TeaModel):
         return self
 
     def get_access_key_id(self) -> str:
+        """获取访问密钥 ID"""
         return self.access_key_id
 
     def get_access_key_secret(self) -> str:
+        """获取访问密钥密钥"""
         return self.access_key_secret
 
     def get_security_token(self) -> str:
+        """获取安全令牌"""
         return self.security_token
 
     def get_bearer_token(self) -> str:
+        """获取 Bearer Token"""
         return self.bearer_token
 
     def get_type(self) -> str:
+        """获取凭证类型"""
         return self.type
 
     def get_provider_name(self) -> str:
+        """获取提供者名称"""
         return self.provider_name

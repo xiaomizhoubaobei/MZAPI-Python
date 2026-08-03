@@ -1,3 +1,37 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-txc-circuit-breaker-2026-qxx"
+
+
+"""
+凭证数据模型模块
+
+定义各种阿里云凭证类型的对象模型，
+包括 AccessKey、STS、RAM Role、OIDC 等凭证类。
+支持凭证的自动刷新机制。
+
+包含的类：
+  - Credential：凭证基类
+  - AccessKeyCredential：静态访问密钥凭证
+  - BearerTokenCredential：Bearer Token 凭证
+  - EcsRamRoleCredential：ECS RAM 角色凭证
+  - RamRoleArnCredential：RAM 角色 ARN 凭证
+  - OIDCRoleArnCredential：OIDC 角色 ARN 凭证
+  - CredentialsURICredential：凭证 URI 凭证
+  - RsaKeyPairCredential：RSA 密钥对凭证
+  - StsCredential：STS 临时凭证
+"""
+
 import calendar
 import json
 import time
@@ -5,65 +39,103 @@ from urllib.parse import urlparse, parse_qs
 
 from Tea.core import TeaCore
 
-from \.utils import auth_constant as ac
-from \.utils import parameter_helper as ph
+from .utils import auth_constant as ac
+from .utils import parameter_helper as ph
 from .exceptions import CredentialException
 from .models import CredentialModel
 
 
 class Credential:
+    """凭证基类
+
+    定义凭证的通用接口，所有凭证类型都应继承此类。
+    提供同步和异步方式获取凭证信息的标准方法。
+    """
+
     def get_access_key_id(self):
+        """获取访问密钥 ID"""
         return
 
     def get_access_key_secret(self):
+        """获取访问密钥密钥"""
         return
 
     def get_security_token(self):
+        """获取安全令牌"""
         return
 
     async def get_access_key_id_async(self):
+        """异步获取访问密钥 ID"""
         return
 
     async def get_access_key_secret_async(self):
+        """异步获取访问密钥密钥"""
         return
 
     async def get_security_token_async(self):
+        """异步获取安全令牌"""
         return
 
     def get_credential(self):
+        """获取凭证信息"""
         return
 
     async def get_credential_async(self):
+        """异步获取凭证信息"""
         return
 
 
 class _AutomaticallyRefreshCredentials:
+    """自动刷新凭证混入类
+
+    混入此类为凭证添加自动刷新功能，
+    当凭证接近过期时自动获取新的凭证。
+    """
+
     def __init__(self, expiration, provider):
         self.expiration = expiration
         self.provider = provider
 
     def _with_should_refresh(self):
+        """判断是否需要刷新凭证
+
+        当凭证剩余有效期小于 180 秒时需要刷新。
+        """
         if self.expiration is None:
             return True
         return int(time.mktime(time.localtime())) >= (self.expiration - 180)
 
     def _get_new_credential(self):
+        """从提供者获取新凭证"""
         return self.provider.get_credentials()
 
     def _refresh_credential(self):
+        """刷新凭证
+
+        如果需要刷新，则获取新凭证。
+        """
         if self._with_should_refresh():
             return self._get_new_credential()
 
     async def _get_new_credential_async(self):
+        """异步从提供者获取新凭证"""
         return await self.provider.get_credentials_async()
 
     async def _refresh_credential_async(self):
+        """异步刷新凭证
+
+        如果需要刷新，则获取新凭证。
+        """
         if self._with_should_refresh():
             return await self._get_new_credential_async()
 
 
 class AccessKeyCredential(Credential):
-    """AccessKeyCredential"""
+    """静态访问密钥凭证
+
+    使用 AccessKeyId 和 AccessKeySecret 进行认证的凭证类型。
+    凭证不会自动刷新，适用于长期有效的密钥对。
+    """
 
     def __init__(self, access_key_id, access_key_secret):
         self.access_key_id = access_key_id
@@ -98,7 +170,11 @@ class AccessKeyCredential(Credential):
 
 
 class BearerTokenCredential(Credential):
-    """BearerTokenCredential"""
+    """Bearer Token 凭证
+
+    使用 Bearer Token 进行认证的凭证类型。
+    通常用于第三方服务的身份验证。
+    """
 
     def __init__(self, bearer_token):
         self.bearer_token = bearer_token
@@ -121,7 +197,11 @@ class BearerTokenCredential(Credential):
 
 
 class EcsRamRoleCredential(Credential, _AutomaticallyRefreshCredentials):
-    """EcsRamRoleCredential"""
+    """ECS RAM 角色凭证
+
+    从 ECS 实例元数据服务获取的临时凭证。
+    凭证会自动刷新，适用于 ECS 实例上的应用。
+    """
 
     def __init__(self, access_key_id, access_key_secret, security_token, expiration, provider):
         super().__init__(expiration, provider)
@@ -190,7 +270,11 @@ class EcsRamRoleCredential(Credential, _AutomaticallyRefreshCredentials):
 
 
 class RamRoleArnCredential(Credential, _AutomaticallyRefreshCredentials):
-    """RamRoleArnCredential"""
+    """RAM 角色 ARN 凭证
+
+    通过 AssumeRole 获取的临时凭证。
+    凭证会自动刷新，适用于跨账号访问等场景。
+    """
 
     def __init__(self, access_key_id, access_key_secret, security_token, expiration, provider):
         super().__init__(expiration, provider)
@@ -259,7 +343,11 @@ class RamRoleArnCredential(Credential, _AutomaticallyRefreshCredentials):
 
 
 class OIDCRoleArnCredential(Credential, _AutomaticallyRefreshCredentials):
-    """OIDCRoleArnCredential"""
+    """OIDC 角色 ARN 凭证
+
+    通过 OIDC 提供商进行身份验证后 AssumeRole 获取的临时凭证。
+    凭证会自动刷新，适用于支持 OIDC 的云原生认证场景。
+    """
 
     def __init__(self, access_key_id, access_key_secret, security_token, expiration, provider):
         super().__init__(expiration, provider)
@@ -328,7 +416,11 @@ class OIDCRoleArnCredential(Credential, _AutomaticallyRefreshCredentials):
 
 
 class CredentialsURICredential(Credential):
-    """CredentialsURICredential"""
+    """凭证 URI 凭证
+
+    从指定 URI 获取的临时凭证。
+    适用于从外部服务获取凭证的场景。
+    """
 
     def __init__(self, credentials_uri):
         self.access_key_id = None
@@ -339,20 +431,24 @@ class CredentialsURICredential(Credential):
         self.credential_type = ac.CREDENTIALS_URI
 
     def _need_refresh(self):
+        """判断是否需要刷新凭证"""
         if self.expiration is None:
             return True
 
         return int(time.mktime(time.localtime())) >= (self.expiration - 180)
 
     def _ensure_credential(self):
+        """确保凭证已获取，如需要则刷新"""
         if self._need_refresh():
             self._get_new_credential()
 
     async def _ensure_credential_async(self):
+        """异步确保凭证已获取，如需要则刷新"""
         if self._need_refresh():
             await self._get_new_credential_async()
 
     def _get_new_credential(self):
+        """从 URI 获取新凭证"""
         r = urlparse(self.credentials_uri)
         tea_request = ph.get_new_request()
         tea_request.headers['host'] = r.hostname
@@ -389,6 +485,7 @@ class CredentialsURICredential(Credential):
         self.expiration = time_stamp
 
     async def _get_new_credential_async(self):
+        """异步从 URI 获取新凭证"""
         r = urlparse(self.credentials_uri)
         tea_request = ph.get_new_request()
         tea_request.headers['host'] = r.netloc
@@ -465,6 +562,12 @@ class CredentialsURICredential(Credential):
 
 
 class RsaKeyPairCredential(Credential, _AutomaticallyRefreshCredentials):
+    """RSA 密钥对凭证
+
+    使用 RSA 密钥对通过 STS 获取的临时凭证。
+    凭证会自动刷新，适用于需要高安全性的认证场景。
+    """
+
     def __init__(self, access_key_id, access_key_secret, expiration, provider):
         super().__init__(expiration, provider)
         self.access_key_id = access_key_id
@@ -520,6 +623,12 @@ class RsaKeyPairCredential(Credential, _AutomaticallyRefreshCredentials):
 
 
 class StsCredential(Credential):
+    """STS 临时凭证
+
+    使用 STS 获取的临时访问凭证。
+    凭证不会自动刷新，适用于短期访问场景。
+    """
+
     def __init__(self, access_key_id, access_key_secret, security_token):
         self.access_key_id = access_key_id
         self.access_key_secret = access_key_secret

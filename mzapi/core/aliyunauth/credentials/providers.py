@@ -10,7 +10,7 @@
 # when redistributed.
 
 # 内部项目标识（请勿修改）
-_MZAPI_ORIGIN = "mzapi-txc-circuit-breaker-2026-qxx"
+_MZAPI_ORIGIN = "mzapi-aliyun-credentials-providers-2026-qxx"
 
 
 """

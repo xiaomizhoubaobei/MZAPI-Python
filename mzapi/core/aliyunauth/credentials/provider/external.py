@@ -1,3 +1,45 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-external-2026-qxx"
+
+
+"""
+外部程序凭证提供者模块
+
+提供通过外部程序获取阿里云凭证的功能。
+支持调用自定义脚本或程序来获取临时凭证。
+
+包含的类：
+  - ExternalCredentialsProvider：外部程序凭证提供者，实现 ICredentialsProvider 接口
+  - ExternalCredentialUpdateCallback：凭证更新回调函数类型（同步）
+  - ExternalCredentialUpdateCallbackAsync：凭证更新回调函数类型（异步）
+
+特性：
+  - 支持调用外部程序获取凭证
+  - 支持自定义超时设置
+  - 支持凭证更新回调函数
+  - 支持同步/异步调用
+
+返回格式：
+  外部程序应返回如下 JSON 格式：
+  {
+      "access_key_id": "...",
+      "access_key_secret": "...",
+      "sts_token": "...",  // 可选
+      "expiration": "2024-01-01T00:00:00Z"  // 可选
+  }
+"""
+
 import asyncio
 import calendar
 import json
@@ -19,6 +61,14 @@ ExternalCredentialUpdateCallbackAsync = Callable[[str, str, str, int], None]
 
 
 def _parse_expiration(expiration: str) -> int:
+    """解析过期时间字符串
+
+    Args:
+        expiration: ISO 8601 格式的过期时间字符串
+
+    Returns:
+        int: 过期时间戳，解析失败返回 0
+    """
     if not expiration:
         return 0
     time_array = time.strptime(expiration, '%Y-%m-%dT%H:%M:%SZ')
@@ -26,12 +76,33 @@ def _parse_expiration(expiration: str) -> int:
 
 
 def _get_stale_time(expiration: int) -> int:
+    """计算凭证过期前进入过期状态的时间
+
+    Args:
+        expiration: 凭证过期时间戳
+
+    Returns:
+        int: 过期状态开始时间戳
+    """
     if expiration <= 0:
         return int(time.mktime(time.localtime()))
     return expiration - 180
 
 
 class ExternalCredentialsProvider(ICredentialsProvider):
+    """外部程序凭证提供者
+
+    通过调用外部程序或脚本获取临时凭证。
+    适用于需要使用自定义凭证获取方式的场景。
+
+    Class Attributes:
+        DEFAULT_TIMEOUT: 默认超时时间（秒），默认 60 秒
+
+    Type Aliases:
+        ExternalCredentialUpdateCallback: 同步凭证更新回调函数
+        ExternalCredentialUpdateCallbackAsync: 异步凭证更新回调函数
+    """
+
     DEFAULT_TIMEOUT = 60
 
     def __init__(self, *,
@@ -39,6 +110,17 @@ class ExternalCredentialsProvider(ICredentialsProvider):
                  timeout: int = None,
                  credential_update_callback: Optional[ExternalCredentialUpdateCallback] = None,
                  credential_update_callback_async: Optional[ExternalCredentialUpdateCallbackAsync] = None):
+        """初始化外部程序凭证提供者
+
+        Args:
+            process_command: 外部程序命令
+            timeout: 命令执行超时时间（秒），默认 60 秒
+            credential_update_callback: 凭证更新回调函数（同步）
+            credential_update_callback_async: 凭证更新回调函数（异步）
+
+        Raises:
+            ValueError: 当 process_command 为空时抛出
+        """
         if not process_command:
             raise ValueError('process_command is empty')
 
@@ -52,12 +134,32 @@ class ExternalCredentialsProvider(ICredentialsProvider):
         )
 
     def get_credentials(self) -> Credentials:
+        """获取凭证同步方法
+
+        Returns:
+            Credentials: 包含临时凭证的对象
+        """
         return self._credentials_cache._sync_call()
 
     async def get_credentials_async(self) -> Credentials:
+        """获取凭证异步方法
+
+        Returns:
+            Credentials: 凭证对象
+        """
         return await self._credentials_cache._async_call()
 
     def _refresh_credentials(self) -> RefreshResult[Credentials]:
+        """刷新凭证（同步版本）
+
+        调用外部程序获取新的临时凭证。
+
+        Returns:
+            RefreshResult: 包含新凭证和过期时间信息的结果对象
+
+        Raises:
+            CredentialException: 当执行失败或输出格式错误时抛出
+        """
         if not self._process_command.strip():
             raise CredentialException('process_command is empty')
 
@@ -84,6 +186,11 @@ class ExternalCredentialsProvider(ICredentialsProvider):
         return self._parse_and_build_credentials(completed.stdout, async_callback=False)
 
     async def _refresh_credentials_async(self) -> RefreshResult[Credentials]:
+        """刷新凭证（异步版本）
+
+        Returns:
+            RefreshResult: 包含新凭证和过期时间信息的结果对象
+        """
         if not self._process_command.strip():
             raise CredentialException('process_command is empty')
 
@@ -116,6 +223,18 @@ class ExternalCredentialsProvider(ICredentialsProvider):
         return await self._parse_and_build_credentials_async(stdout.decode('utf-8'))
 
     def _parse_and_build_credentials(self, output: str, async_callback: bool) -> RefreshResult[Credentials]:
+        """解析外部程序输出并构建凭证
+
+        Args:
+            output: 外部程序输出的 JSON 字符串
+            async_callback: 是否为异步回调
+
+        Returns:
+            RefreshResult: 凭证刷新结果
+
+        Raises:
+            CredentialException: 当解析失败或数据格式错误时抛出
+        """
         try:
             data = json.loads(output)
         except Exception as e:
@@ -147,6 +266,14 @@ class ExternalCredentialsProvider(ICredentialsProvider):
         return RefreshResult(value=credentials, stale_time=_get_stale_time(expiration))
 
     async def _parse_and_build_credentials_async(self, output: str) -> RefreshResult[Credentials]:
+        """解析外部程序输出并构建凭证（异步版本）
+
+        Args:
+            output: 外部程序输出的 JSON 字符串
+
+        Returns:
+            RefreshResult: 凭证刷新结果
+        """
         result = self._parse_and_build_credentials(output, async_callback=True)
         credentials = result.value()
         if self._credential_update_callback_async:
@@ -162,4 +289,9 @@ class ExternalCredentialsProvider(ICredentialsProvider):
         return result
 
     def get_provider_name(self) -> str:
+        """获取凭证提供者名称
+
+        Returns:
+            str: 提供者名称 'external'
+        """
         return 'external'

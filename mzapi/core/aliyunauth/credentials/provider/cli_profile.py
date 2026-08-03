@@ -1,3 +1,43 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-cli-profile-2026-qxx"
+
+
+"""
+CLI Profile 凭证提供者模块
+
+提供通过阿里云 CLI 配置文件获取凭证的功能。
+支持从 ~/.aliyun/config.json 读取配置并自动创建对应的凭证提供者。
+
+包含的类：
+  - CLIProfileCredentialsProvider：CLI Profile 凭证提供者，实现 ICredentialsProvider 接口
+
+支持的凭证模式：
+  - AK：静态访问密钥
+  - StsToken：STS 临时凭证
+  - RamRoleArn：RAM 角色 ARN
+  - EcsRamRole：ECS RAM 角色
+  - OIDC：OIDC 角色
+  - ChainableRamRoleArn：链式 RAM 角色
+  - CloudSSO：Cloud SSO
+  - OAuth：OAuth 认证
+  - External：外部程序获取凭证
+
+环境变量：
+  - ALIBABA_CLOUD_PROFILE_NAME：CLI Profile 名称
+  - ALIBABA_CLOUD_CLI_PROFILE_DISABLED：是否禁用 CLI Profile 凭证
+"""
+
 import os
 import json
 import threading
@@ -37,29 +77,68 @@ from .external import (
 )
 from .refreshable import Credentials
 from .refreshable import ICredentialsProvider
-from \.\.\. auth_constant as ac
-from \.\.\. auth_util as au
+from ... import auth_constant as ac
+from ... import auth_util as au
 from ..exceptions import CredentialException
 
 
 async def _load_config_async(file_path: str) -> Any:
+    """异步加载 JSON 配置文件
+
+    Args:
+        file_path: 配置文件路径
+
+    Returns:
+        Any: 解析后的配置对象
+    """
     async with aiofiles.open(file_path, mode='r') as f:
         content = await f.read()
     return json.loads(content)
 
 
 def _load_config(file_path: str) -> Any:
+    """同步加载 JSON 配置文件
+
+    Args:
+        file_path: 配置文件路径
+
+    Returns:
+        Any: 解析后的配置对象
+    """
     with open(file_path, mode='r') as f:
         content = f.read()
     return json.loads(content)
 
 
 class CLIProfileCredentialsProvider(ICredentialsProvider):
+    """CLI Profile 凭证提供者
+
+    从阿里云 CLI 配置文件（~/.aliyun/config.json）中读取凭证配置，
+    并根据配置模式自动创建对应的凭证提供者。
+
+    支持多种凭证模式，包括 AK、STS、RAM 角色、ECS 角色、OIDC 等。
+    支持凭证自动刷新和写回配置文件。
+
+    Attributes:
+        _profile_file: CLI 配置文件路径
+        _profile_name: Profile 名称
+        _file_lock: 文件锁，用于并发安全
+    """
 
     def __init__(self, *,
                  profile_name: str = None,
                  profile_file: str = None,
                  allow_config_force_rewrite: bool = False):
+        """初始化 CLI Profile 凭证提供者
+
+        Args:
+            profile_name: Profile 名称，默认从环境变量 ALIBABA_CLOUD_PROFILE_NAME 读取
+            profile_file: CLI 配置文件路径，默认 ~/.aliyun/config.json
+            allow_config_force_rewrite: 是否允许强制重写配置
+
+        Raises:
+            CredentialException: 当配置文件禁用时抛出
+        """
         self._profile_file = profile_file or os.path.join(ac.HOME, ".aliyun", "config.json")
         self._profile_name = profile_name or au.environment_profile_name
         self._allow_config_force_rewrite = allow_config_force_rewrite
@@ -68,11 +147,24 @@ class CLIProfileCredentialsProvider(ICredentialsProvider):
         self._file_lock = threading.RLock()
 
     def _should_reload_credentials_provider(self) -> bool:
+        """检查是否需要重新加载凭证提供者
+
+        Returns:
+            bool: 是否需要重新加载
+        """
         if self.__innerProvider is None:
             return True
         return False
 
     def get_credentials(self) -> Credentials:
+        """获取凭证同步方法
+
+        Returns:
+            Credentials: 凭证对象
+
+        Raises:
+            CredentialException: 当获取凭证失败时抛出
+        """
         if au.environment_cli_profile_disabled.lower() == "true":
             raise CredentialException('cli credentials file is disabled')
 
@@ -103,6 +195,11 @@ class CLIProfileCredentialsProvider(ICredentialsProvider):
         return credentials
 
     async def get_credentials_async(self) -> Credentials:
+        """获取凭证异步方法
+
+        Returns:
+            Credentials: 凭证对象
+        """
         if au.environment_cli_profile_disabled.lower() == "true":
             raise CredentialException('cli credentials file is disabled')
 
@@ -133,6 +230,18 @@ class CLIProfileCredentialsProvider(ICredentialsProvider):
         return credentials
 
     def _get_credentials_provider(self, config: Dict, profile_name: str) -> ICredentialsProvider:
+        """根据配置获取对应的凭证提供者
+
+        Args:
+            config: CLI 配置文件内容
+            profile_name: Profile 名称
+
+        Returns:
+            ICredentialsProvider: 凭证提供者实例
+
+        Raises:
+            CredentialException: 当配置无效或不支持的模式时抛出
+        """
         if profile_name is None or profile_name == '':
             raise CredentialException('invalid profile name')
 
@@ -245,6 +354,11 @@ class CLIProfileCredentialsProvider(ICredentialsProvider):
         raise CredentialException(f"unable to get profile with '{profile_name}' form cli credentials file.")
 
     def get_provider_name(self) -> str:
+        """获取凭证提供者名称
+
+        Returns:
+            str: 提供者名称 'cli_profile'
+        """
         return 'cli_profile'
 
     def _update_oauth_tokens(self, refresh_token: str, access_token: str, access_key: str, secret: str,
@@ -480,7 +594,7 @@ class CLIProfileCredentialsProvider(ICredentialsProvider):
         Windows 上目标文件被打开锁定时无法 rename/replace，因此在锁内直接原地写入；
         其他平台使用临时文件 + os.replace 原子覆盖。
         """
-        # 获取原文件权限（如果存在）
+        # 获取原文件权限（如果存��）
         file_mode = 0o644
         if os.path.exists(config_path):
             file_mode = os.stat(config_path).st_mode

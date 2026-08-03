@@ -1,3 +1,40 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-oauth-2026-qxx"
+
+
+"""
+OAuth 凭证提供者模块
+
+提供通过阿里云 OAuth 认证获取临时凭证的功能。
+支持自动刷新 OAuth 令牌和凭证刷新回调。
+
+包含的类：
+  - OAuthCredentialsProvider：OAuth 凭证提供者，实现 ICredentialsProvider 接口
+  - OAuthTokenUpdateCallback：OAuth 令牌更新回调函数类型（同步）
+  - OAuthTokenUpdateCallbackAsync：OAuth 令牌更新回调函数类型（异步）
+
+特性：
+  - 支持 OAuth 2.0 认证流程
+  - 支持自动刷新 OAuth 令牌
+  - 支持令牌更新回调函数
+  - 支持凭证自动刷新
+
+Type Aliases:
+  OAuthTokenUpdateCallback: 同步令牌更新回调函数
+  OAuthTokenUpdateCallbackAsync: 异步令牌更新回调函数
+"""
+
 import calendar
 import json
 import logging
@@ -9,7 +46,7 @@ from .refreshable import Credentials, RefreshResult, RefreshCachedSupplier
 from ..http import HttpOptions
 from Tea.core import TeaCore
 from .refreshable import ICredentialsProvider
-from \.\.\. parameter_helper as ph
+from ... import parameter_helper as ph
 from ..exceptions import CredentialException
 
 log = logging.getLogger('credentials')
@@ -23,12 +60,30 @@ OAuthTokenUpdateCallbackAsync = Callable[[str, str, str, str, str, int, int], No
 
 
 def _get_stale_time(expiration: int) -> int:
+    """计算凭证过期前进入过期状态的时间
+
+    Args:
+        expiration: 凭证过期时间戳
+
+    Returns:
+        int: 过期状态开始时间戳
+    """
     if expiration < 0:
         return int(time.mktime(time.localtime())) + 60 * 60
     return expiration - 15 * 60
 
 
 class OAuthCredentialsProvider(ICredentialsProvider):
+    """OAuth 凭证提供者
+
+    通过阿里云 OAuth 2.0 认证获取临时凭证。
+    支持自动刷新 OAuth 访问令牌和刷新凭证。
+
+    Class Attributes:
+        DEFAULT_CONNECT_TIMEOUT: 默认连接超时（毫秒），默认 5000ms
+        DEFAULT_READ_TIMEOUT: 默认读取超时（毫秒），默认 10000ms
+    """
+
     DEFAULT_CONNECT_TIMEOUT = 5000
     DEFAULT_READ_TIMEOUT = 10000
 
@@ -41,7 +96,21 @@ class OAuthCredentialsProvider(ICredentialsProvider):
                  http_options: HttpOptions = None,
                  token_update_callback: Optional[OAuthTokenUpdateCallback] = None,
                  token_update_callback_async: Optional[OAuthTokenUpdateCallbackAsync] = None):
+        """初始化 OAuth 凭证提供者
 
+        Args:
+            client_id: OAuth 客户端 ID
+            sign_in_url: OAuth 登录 URL
+            access_token: 访问令牌
+            access_token_expire: 访问令牌过期时间戳
+            refresh_token: 刷新令牌
+            http_options: HTTP 请求选项配置
+            token_update_callback: 令牌更新回调函数（同步）
+            token_update_callback_async: 令牌更新回调函数（异步）
+
+        Raises:
+            ValueError: 当 client_id 或 sign_in_url 为空时抛出
+        """
         if not client_id:
             raise ValueError('the ClientId is empty')
 
@@ -68,12 +137,27 @@ class OAuthCredentialsProvider(ICredentialsProvider):
         )
 
     def get_credentials(self) -> Credentials:
+        """获取凭证同步方法
+
+        Returns:
+            Credentials: 包含临时凭证的对象
+        """
         return self._credentials_cache._sync_call()
 
     async def get_credentials_async(self) -> Credentials:
+        """获取凭证异步方法
+
+        Returns:
+            Credentials: 凭证对象
+        """
         return await self._credentials_cache._async_call()
 
     def _try_refresh_oauth_token(self) -> None:
+        """刷新 OAuth 访问令牌
+
+        Raises:
+            CredentialException: 当刷新令牌失败时抛出
+        """
         current_time = int(time.mktime(time.localtime()))
         # 构建刷新令牌请求
         r = urlparse(self._sign_in_url)
@@ -115,6 +199,11 @@ class OAuthCredentialsProvider(ICredentialsProvider):
         self._access_token_expire = new_access_token_expire
 
     async def _try_refresh_oauth_token_async(self) -> None:
+        """异步刷新 OAuth 访问令牌
+
+        Raises:
+            CredentialException: 当刷新令牌失败时抛出
+        """
         current_time = int(time.mktime(time.localtime()))
         # 构建刷新令牌请求
         r = urlparse(self._sign_in_url)
@@ -156,6 +245,14 @@ class OAuthCredentialsProvider(ICredentialsProvider):
         self._access_token_expire = new_access_token_expire
 
     def _refresh_credentials(self) -> RefreshResult[Credentials]:
+        """刷新凭证（同步版本）
+
+        Returns:
+            RefreshResult: 包含新凭证和过期时间信息的结果对象
+
+        Raises:
+            CredentialException: 当获取凭证失败时抛出
+        """
         if self._refresh_token and (
                 self._access_token is None or self._access_token_expire <= 0 or self._access_token_expire - int(
                 time.mktime(time.localtime())) <= 1200):
@@ -218,6 +315,11 @@ class OAuthCredentialsProvider(ICredentialsProvider):
                              stale_time=_get_stale_time(expiration))
 
     async def _refresh_credentials_async(self) -> RefreshResult[Credentials]:
+        """刷新凭证（异步版本）
+
+        Returns:
+            RefreshResult: 包含新凭证和过期时间信息的结果对象
+        """
         if self._refresh_token and (
                 self._access_token is None or self._access_token_expire <= 0 or self._access_token_expire - int(
                 time.mktime(time.localtime())) <= 1200):
@@ -283,4 +385,9 @@ class OAuthCredentialsProvider(ICredentialsProvider):
         return self._client_id
 
     def get_provider_name(self) -> str:
+        """获取凭证提供者名称
+
+        Returns:
+            str: 提供者名称 'oauth'
+        """
         return 'oauth'

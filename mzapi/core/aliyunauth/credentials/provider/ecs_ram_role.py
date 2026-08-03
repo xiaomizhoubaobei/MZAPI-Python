@@ -1,3 +1,38 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-ecs-ram-role-2026-qxx"
+
+
+"""
+ECS RAM 角色凭证提供者模块
+
+提供通过阿里云 ECS 实例元数据服务获取临时凭证的功能。
+适用于在 ECS 实例上运行的应用自动获取 RAM 角色凭证。
+
+包含的类：
+  - EcsRamRoleCredentialsProvider：ECS RAM 角色凭证提供者，实现 ICredentialsProvider 接口
+
+特性：
+  - 支持 IMDSv1 和 IMDSv2 两种元数据服务版本
+  - 支持异步自动刷新凭证
+  - 支持自定义 HTTP 请求选项
+
+环境变量：
+  - ALIBABA_CLOUD_ECS_METADATA：ECS RAM 角色名称
+  - ALIBABA_CLOUD_ECS_METADATA_DISABLED：是否禁用 ECS 元数据凭证
+  - ALIBABA_CLOUD_IMDS_V1_DISABLED：是否禁用 IMDSv1
+"""
+
 import calendar
 import json
 import time
@@ -10,8 +45,8 @@ from ..http import HttpOptions
 from Tea.core import TeaCore
 from apscheduler.schedulers.background import BackgroundScheduler
 from .refreshable import ICredentialsProvider
-from \.\.\. auth_util as au
-from \.\.\. parameter_helper as ph
+from ... import auth_util as au
+from ... import parameter_helper as ph
 from ..exceptions import CredentialException
 
 log = logging.getLogger('credentials')
@@ -21,6 +56,21 @@ log.addHandler(ch)
 
 
 class EcsRamRoleCredentialsProvider(ICredentialsProvider):
+    """ECS RAM 角色凭证提供者
+
+    通过阿里云 ECS 实例元数据服务（IMDS）获取临时 RAM 角色凭证。
+    支持 IMDSv1 和 IMDSv2 两种版本，自动处理凭证刷新。
+
+    Class Attributes:
+        DEFAULT_METADATA_TOKEN_DURATION: IMDSv2 Token 默认有效期（秒），默认 21600 秒（6小时）
+        DEFAULT_CONNECT_TIMEOUT: 默认连接超时（毫秒），默认 1000ms
+        DEFAULT_READ_TIMEOUT: 默认读取超时（毫秒），默认 1000ms
+
+    Attributes:
+        _role_name: RAM 角色名称
+        _http_options: HTTP 请求选项
+    """
+
     DEFAULT_METADATA_TOKEN_DURATION = 21600
     DEFAULT_CONNECT_TIMEOUT = 1000
     DEFAULT_READ_TIMEOUT = 1000
@@ -30,7 +80,17 @@ class EcsRamRoleCredentialsProvider(ICredentialsProvider):
                  disable_imds_v1: bool = None,
                  http_options: HttpOptions = None,
                  async_update_enabled: bool = True):
+        """初始化 ECS RAM 角色凭证提供者
 
+        Args:
+            role_name: RAM 角色名称，默认从环境变量 ALIBABA_CLOUD_ECS_METADATA 读取
+            disable_imds_v1: 是否禁用 IMDSv1，默认从环境变量 ALIBABA_CLOUD_IMDS_V1_DISABLED 读取
+            http_options: HTTP 请求选项配置
+            async_update_enabled: 是否启用异步自动刷新凭证，默认启用
+
+        Raises:
+            ValueError: 当环境变量 ALIBABA_CLOUD_ECS_METADATA_DISABLED 设置为 'true' 时抛出
+        """
         if au.environment_ecs_metadata_disabled.lower() == 'true':
             raise ValueError('IMDS credentials is disabled')
 
@@ -77,12 +137,35 @@ class EcsRamRoleCredentialsProvider(ICredentialsProvider):
             )
 
     def get_credentials(self) -> Credentials:
+        """获取凭证同步方法
+
+        Returns:
+            Credentials: 包含临时凭证的对象
+        """
         return self._credentials_cache._sync_call()
 
     async def get_credentials_async(self) -> Credentials:
+        """获取凭证异步方法
+
+        Returns:
+            Credentials: 凭证对象
+        """
         return await self._credentials_cache._async_call()
 
     def _get_role_name(self, url: str = None) -> str:
+        """获取 RAM 角色名称
+
+        从 ECS 元数据服务获取角色名称。
+
+        Args:
+            url: 可选的元数据服务地址
+
+        Returns:
+            str: RAM 角色名称
+
+        Raises:
+            CredentialException: 当获取角色名称失败时抛出
+        """
         tea_request = ph.get_new_request()
         tea_request.headers['host'] = url if url else self.__metadata_service_host
         metadata_token = self._get_metadata_token(url)
@@ -96,6 +179,17 @@ class EcsRamRoleCredentialsProvider(ICredentialsProvider):
         return response.body.decode('utf-8')
 
     async def _get_role_name_async(self, url: str = None) -> str:
+        """获取 RAM 角色名称（异步版本）
+
+        Args:
+            url: 可选的元数据服务地址
+
+        Returns:
+            str: RAM 角色名称
+
+        Raises:
+            CredentialException: 当获取角色名称失败时抛出
+        """
         tea_request = ph.get_new_request()
         tea_request.headers['host'] = url if url else self.__metadata_service_host
         metadata_token = await self._get_metadata_token_async(url)
@@ -109,6 +203,16 @@ class EcsRamRoleCredentialsProvider(ICredentialsProvider):
         return response.body.decode('utf-8')
 
     def _get_metadata_token(self, url: str = None) -> str:
+        """获取 IMDSv2 Token
+
+        获取用于访问 ECS 元数据服务的安全 Token。
+
+        Args:
+            url: 可选的元数据服务地址
+
+        Returns:
+            str: IMDS Token，若获取失败且不禁用 IMDSv1 则返回 None
+        """
         tea_request = ph.get_new_request()
         tea_request.method = 'PUT'
         tea_request.headers['host'] = url if url else self.__metadata_service_host
@@ -128,6 +232,14 @@ class EcsRamRoleCredentialsProvider(ICredentialsProvider):
             return None
 
     async def _get_metadata_token_async(self, url: str = None) -> str:
+        """获取 IMDSv2 Token（异步版本）
+
+        Args:
+            url: 可选的元数据服务地址
+
+        Returns:
+            str: IMDS Token
+        """
         tea_request = ph.get_new_request()
         tea_request.method = 'PUT'
         tea_request.headers['host'] = url if url else self.__metadata_service_host
@@ -147,6 +259,19 @@ class EcsRamRoleCredentialsProvider(ICredentialsProvider):
             return None
 
     def _refresh_credentials(self, url: str = None) -> RefreshResult[Credentials]:
+        """刷新凭证（同步版本）
+
+        从 ECS 元数据服务获取新的临时凭证。
+
+        Args:
+            url: 可选的元数据服务地址
+
+        Returns:
+            RefreshResult: 包含新凭证和过期时间信息的结果对象
+
+        Raises:
+            CredentialException: 当获取凭证失败时抛出
+        """
         role_name = self._role_name
         if self._role_name is None or self._role_name == '':
             role_name = self._get_role_name(url)
@@ -190,6 +315,14 @@ class EcsRamRoleCredentialsProvider(ICredentialsProvider):
                              prefetch_time=self._get_prefetch_time(expiration))
 
     async def _refresh_credentials_async(self, url: str = None) -> RefreshResult[Credentials]:
+        """刷新凭证（异步版本）
+
+        Args:
+            url: 可选的元数据服务地址
+
+        Returns:
+            RefreshResult: 包含新凭证和过期时间信息的结果对象
+        """
         role_name = self._role_name
         if self._role_name is None:
             role_name = await self._get_role_name_async(url)
@@ -234,14 +367,35 @@ class EcsRamRoleCredentialsProvider(ICredentialsProvider):
                              prefetch_time=self._get_prefetch_time(expiration))
 
     def _get_stale_time(self, expiration: int) -> int:
+        """计算凭证过期前进入过期状态的时间
+
+        Args:
+            expiration: 凭证过期时间戳
+
+        Returns:
+            int: 过期状态开始时间戳
+        """
         if expiration < 0:
             return int(time.mktime(time.localtime())) + 60 * 60
         return expiration - 15 * 60
 
     def _get_prefetch_time(self, expiration: int) -> int:
+        """计算凭证预刷新时间
+
+        Args:
+            expiration: 凭证过期时间戳
+
+        Returns:
+            int: 预刷新时间戳
+        """
         if expiration < 0:
             return int(time.mktime(time.localtime())) + 5 * 60
         return int(time.mktime(time.localtime())) + 60 * 60
 
     def get_provider_name(self) -> str:
+        """获取凭证提供者名称
+
+        Returns:
+            str: 提供者名称 'ecs_ram_role'
+        """
         return 'ecs_ram_role'

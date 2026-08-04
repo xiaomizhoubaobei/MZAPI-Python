@@ -1,8 +1,33 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-darabonba-runtime-2026-qxx"
+
+
+"""
+运行时配置模型模块
+
+定义请求运行时的公共配置模型：
+  - ExtendsParameters：扩展参数，用于携带额外的请求头与查询参数。
+  - RuntimeOptions：运行时选项，覆盖重试、超时、代理、TLS、WebSocket 等配置。
+"""
+
 from mzapi.utlis.aliyunauth.darabonba.core import DaraModel
 from typing import Dict, Any
 from mzapi.utlis.aliyunauth.darabonba.policy.retry import RetryOptions
 
+
 class ExtendsParameters(DaraModel):
+    """扩展参数模型，用于向请求附加自定义请求头与查询参数。"""
     def __init__(
         self,
         headers: Dict[str, str] = None,
@@ -12,9 +37,11 @@ class ExtendsParameters(DaraModel):
         self.queries = queries
 
     def validate(self):
+        """校验扩展参数，默认无需校验。"""
         pass
 
     def to_map(self):
+        """将扩展参数序列化为字典（跳过值为空的字段）。"""
         _map = super().to_map()
         if _map is not None:
             return _map
@@ -27,6 +54,14 @@ class ExtendsParameters(DaraModel):
         return result
 
     def from_map(self, m: dict = None):
+        """从字典反序列化扩展参数。
+
+        Args:
+            m: 包含 headers 与 queries 字段的字典。
+
+        Returns:
+            当前 ExtendsParameters 对象。
+        """
         m = m or dict()
         if m.get('headers') is not None:
             self.headers = m.get('headers')
@@ -35,9 +70,12 @@ class ExtendsParameters(DaraModel):
         return self
 
 class RuntimeOptions(DaraModel):
+    """通用运行时选项模型。
+
+    集中管理重试、自动重试、TLS、代理、超时、连接池以及
+    WebSocket（心跳、重连、超时等）相关的全部运行时配置。
     """
-    The common runtime options model
-    """
+
     def __init__(
         self,
         retry_options: RetryOptions = None,
@@ -120,12 +158,14 @@ class RuntimeOptions(DaraModel):
         self.web_socket_handler = web_socket_handler
 
     def validate(self):
+        """校验运行时选项，递归校验重试选项与扩展参数。"""
         if self.retry_options:
             self.retry_options.validate()
         if self.extends_parameters:
             self.extends_parameters.validate()
 
     def to_map(self):
+        """将运行时选项序列化为字典（跳过值为空的字段）。"""
         _map = super().to_map()
         if _map is not None:
             return _map
@@ -188,6 +228,14 @@ class RuntimeOptions(DaraModel):
         return result
 
     def from_map(self, m: dict = None):
+        """从字典反序列化运行时选项。
+
+        Args:
+            m: 包含运行时配置字段的字典。
+
+        Returns:
+            当前 RuntimeOptions 对象。
+        """
         m = m or dict()
         if m.get('retryOptions') is not None:
             self.retry_options = RetryOptions.from_map(m.get('retryOptions'))

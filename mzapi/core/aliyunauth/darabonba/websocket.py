@@ -1,3 +1,35 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-darabonba-websocket-2026-qxx"
+
+
+"""
+WebSocket 客户端模块
+
+提供基于 websocket-client 的 WebSocket 连接管理能力，包括：
+  - 连接建立与关闭（支持握手超时、TLS、代理配置）；
+  - 心跳（Ping/Pong）与断线自动重连；
+  - 文本/二进制消息收发；
+  - 会话信息管理与事件回调（连接建立、消息、错误、关闭）。
+
+包含的类：
+  - WebSocketMessageType：消息类型枚举。
+  - WebSocketMessage：单条 WebSocket 消息。
+  - WebSocketSessionInfo：连接会话信息。
+  - WebSocketHandler：事件处理器基类。
+  - DefaultWebSocketClient：默认 WebSocket 客户端实现。
+"""
+
 import base64
 import hashlib
 import os
@@ -18,6 +50,8 @@ from mzapi.utlis.aliyunauth.darabonba.runtime import RuntimeOptions
 
 
 class WebSocketMessageType(IntEnum):
+    """WebSocket 消息类型枚举。"""
+
     Text = 0
     Binary = 1
     Ping = 2
@@ -26,6 +60,8 @@ class WebSocketMessageType(IntEnum):
 
 
 class WebSocketMessage:
+    """单条 WebSocket 消息，包含类型、载荷、头信息与时间戳。"""
+
     def __init__(
         self,
         type: WebSocketMessageType,
@@ -40,6 +76,8 @@ class WebSocketMessage:
 
 
 class WebSocketSessionInfo:
+    """WebSocket 会话信息，记录会话 ID、连接时间与地址等元数据。"""
+
     def __init__(
         self,
         session_id: str,
@@ -64,6 +102,16 @@ STATE_DISCONNECTING = 3
 
 
 def _get_runtime_value(runtime: Any, camel_key: str, snake_key: str = None):
+    """从运行时配置（字典或对象）中读取指定键的值。
+
+    Args:
+        runtime: 运行时配置对象或字典。
+        camel_key: 驼峰形式的配置键。
+        snake_key: 蛇形形式的配置键（可选）。
+
+    Returns:
+        配置值；读取不到时返回 None。
+    """
     if runtime is None:
         return None
     if isinstance(runtime, dict):
@@ -73,34 +121,42 @@ def _get_runtime_value(runtime: Any, camel_key: str, snake_key: str = None):
 
 
 def get_web_socket_ping_interval(runtime: Any) -> Optional[int]:
+    """读取 WebSocket Ping 心跳间隔（毫秒）。"""
     return _get_runtime_value(runtime, 'webSocketPingInterval', 'web_socket_ping_interval')
 
 
 def get_web_socket_pong_timeout(runtime: Any) -> Optional[int]:
+    """读取 WebSocket Pong 超时时间（毫秒）。"""
     return _get_runtime_value(runtime, 'webSocketPongTimeout', 'web_socket_pong_timeout')
 
 
 def get_web_socket_enable_reconnect(runtime: Any) -> Optional[bool]:
+    """读取是否启用断线自动重连。"""
     return _get_runtime_value(runtime, 'webSocketEnableReconnect', 'web_socket_enable_reconnect')
 
 
 def get_web_socket_reconnect_interval(runtime: Any) -> Optional[int]:
+    """读取重连间隔时间（毫秒）。"""
     return _get_runtime_value(runtime, 'webSocketReconnectInterval', 'web_socket_reconnect_interval')
 
 
 def get_web_socket_max_reconnect_times(runtime: Any) -> Optional[int]:
+    """读取最大重连次数。"""
     return _get_runtime_value(runtime, 'webSocketMaxReconnectTimes', 'web_socket_max_reconnect_times')
 
 
 def get_web_socket_write_timeout(runtime: Any) -> Optional[int]:
+    """读取 WebSocket 写入超时时间（毫秒）。"""
     return _get_runtime_value(runtime, 'webSocketWriteTimeout', 'web_socket_write_timeout')
 
 
 def get_web_socket_handshake_timeout(runtime: Any) -> Optional[int]:
+    """读取 WebSocket 握手超时时间（毫秒）。"""
     return _get_runtime_value(runtime, 'webSocketHandshakeTimeout', 'web_socket_handshake_timeout')
 
 
 def get_web_socket_handler(runtime: Any):
+    """读取 WebSocket 事件处理器（WebSocketHandler 实例）。"""
     return _get_runtime_value(runtime, 'webSocketHandler', 'web_socket_handler')
 
 
@@ -109,6 +165,18 @@ def new_websocket_response(
     status_message: str,
     headers: Optional[Dict[str, Any]] = None,
 ) -> DaraResponse:
+    """构建一个 WebSocket 握手结果的 DaraResponse 对象。
+
+    响应头统一转为小写键，列表值取首项。
+
+    Args:
+        status_code: 握手响应状态码。
+        status_message: 状态消息。
+        headers: 响应头字典。
+
+    Returns:
+        填充好状态与响应头的 DaraResponse。
+    """
     res = DaraResponse()
     res.status_code = status_code
     res.status_message = status_message
@@ -124,24 +192,59 @@ def new_websocket_response(
 
 
 class WebSocketHandler:
+    """WebSocket 事件处理器基类。
+
+    子类可覆写以下回调以处理连接建立、消息接收、错误与连接关闭事件。
+    """
+
     def after_connection_established(self, session: WebSocketSessionInfo) -> None:
+        """连接建立后的回调。
+
+        Args:
+            session: 会话信息。
+        """
         return None
 
     def handle_raw_message(self, session: WebSocketSessionInfo, message: WebSocketMessage) -> None:
+        """收到原始消息时的回调。
+
+        Args:
+            session: 会话信息。
+            message: 收到的消息。
+        """
         return None
 
     def handle_error(self, session: WebSocketSessionInfo, err: Exception) -> None:
+        """发生错误时的回调。
+
+        Args:
+            session: 会话信息。
+            err: 异常对象。
+        """
         return None
 
     def after_connection_closed(self, session: WebSocketSessionInfo, code: int, reason: str) -> None:
+        """连接关闭后的回调。
+
+        Args:
+            session: 会话信息。
+            code: 关闭状态码。
+            reason: 关闭原因。
+        """
         return None
 
 
 class AbstractWebSocketHandler(WebSocketHandler):
-    pass
+    """抽象 WebSocket 处理器，作为自定义处理器的基类。"""
 
 
 class DefaultWebSocketClient:
+    """默认 WebSocket 客户端。
+
+    封装连接建立、心跳保活、自动重连、消息收发与资源清理等逻辑，
+    将各类事件回调到 WebSocketHandler 供上层处理。
+    """
+
     def __init__(self, handler: WebSocketHandler):
         if handler is None:
             raise ValueError('handler cannot be nil')
@@ -169,6 +272,21 @@ class DefaultWebSocketClient:
         self._handshake_response: Dict[str, Any] = {}
 
     def connect(self, request: DaraRequest, runtime_object: Any) -> DaraResponse:
+        """建立 WebSocket 连接并返回握手结果。
+
+        支持握手超时、TLS、代理配置；连接成功后回调连接建立事件。
+
+        Args:
+            request: WebSocket 请求对象。
+            runtime_object: 运行时配置。
+
+        Returns:
+            握手结果的 DaraResponse。
+
+        Raises:
+            ValueError: 请求或运行时配置为空、URL 非法时抛出。
+            TimeoutError: 握手超时时抛出。
+        """
         if request is None:
             raise ValueError('request cannot be nil')
         if runtime_object is None:
@@ -316,6 +434,7 @@ class DefaultWebSocketClient:
         )
 
     def disconnect(self) -> None:
+        """主动断开 WebSocket 连接（正常关闭）。"""
         self._disconnect_internal(1000, 'Normal closure')
 
     def _disconnect_internal(self, code: int, reason: str) -> None:
@@ -346,9 +465,11 @@ class DefaultWebSocketClient:
         self._abort_event.set()
 
     def reconnect(self) -> DaraResponse:
+        """立即发起重连，成功后返回新的握手响应。"""
         return self._reconnect_internal(False)
 
     def reconnect_gracefully(self) -> DaraResponse:
+        """优雅重连：携带原会话 ID 重建连接，保持会话连续性。"""
         return self._reconnect_internal(True)
 
     def _reconnect_internal(self, graceful: bool) -> DaraResponse:
@@ -420,9 +541,19 @@ class DefaultWebSocketClient:
         self.state = STATE_DISCONNECTED
 
     def is_connected(self) -> bool:
+        """判断当前是否处于已连接状态。"""
         return self.state == STATE_CONNECTED
 
     def send_text(self, text: str) -> None:
+        """发送文本消息，受写入超时保护。
+
+        Args:
+            text: 待发送的文本。
+
+        Raises:
+            Exception: 未连接或连接对象为空时抛出。
+            TimeoutError: 写入超时时抛出。
+        """
         if not self.is_connected():
             raise Exception('not connected')
         ws_app = self.ws_app
@@ -431,6 +562,15 @@ class DefaultWebSocketClient:
         self._send_with_timeout(lambda: ws_app.send(text))
 
     def send_binary(self, data: bytes) -> None:
+        """发送二进制消息，受写入超时保护。
+
+        Args:
+            data: 待发送的二进制数据。
+
+        Raises:
+            Exception: 未连接或连接对象为空时抛出。
+            TimeoutError: 写入超时时抛出。
+        """
         if not self.is_connected():
             raise Exception('not connected')
         ws_app = self.ws_app
@@ -439,9 +579,11 @@ class DefaultWebSocketClient:
         self._send_with_timeout(lambda: ws_app.send(data, opcode=ABNF.OPCODE_BINARY))
 
     def get_session_info(self) -> Optional[WebSocketSessionInfo]:
+        """返回当前会话信息；未连接时返回 None。"""
         return self.session
 
     def close(self) -> None:
+        """关闭 WebSocket 连接。"""
         self._disconnect_internal(1000, 'Client closed')
 
     def configure_tls(self, runtime_object: Any, scheme: str = 'wss') -> Dict[str, Any]:
@@ -705,6 +847,14 @@ class DefaultWebSocketClient:
 
 
 def new_default_websocket_client(handler: WebSocketHandler) -> DefaultWebSocketClient:
+    """创建默认 WebSocket 客户端实例。
+
+    Args:
+        handler: 事件处理器。
+
+    Returns:
+        DefaultWebSocketClient 实例。
+    """
     return DefaultWebSocketClient(handler)
 
 
@@ -712,6 +862,18 @@ def new_websocket_client_and_connect(
     request: DaraRequest,
     runtime_object: Any,
 ):
+    """创建 WebSocket 客户端并立即发起连接。
+
+    Args:
+        request: WebSocket 请求对象。
+        runtime_object: 运行时配置（必须包含 webSocketHandler）。
+
+    Returns:
+        (client, response) 元组。
+
+    Raises:
+        ValueError: 运行时配置为空或缺少处理器时抛出。
+    """
     if runtime_object is None:
         raise ValueError('runtimeObject cannot be nil')
 
@@ -727,6 +889,19 @@ def new_websocket_client_and_connect(
 
 
 def build_websocket_url(request: DaraRequest) -> str:
+    """根据请求对象组装 WebSocket 连接 URL。
+
+    将 http/https 协议转换为 ws/wss，并拼接主机、路径与查询参数。
+
+    Args:
+        request: WebSocket 请求对象。
+
+    Returns:
+        WebSocket URL 字符串。
+
+    Raises:
+        ValueError: 请求为空或缺少 domain 时抛出。
+    """
     if request is None:
         raise ValueError('request cannot be nil')
 
@@ -755,6 +930,14 @@ def build_websocket_url(request: DaraRequest) -> str:
 
 
 def convert_to_websocket_message_type(message_type: int) -> WebSocketMessageType:
+    """将帧操作码映射为 WebSocketMessageType 枚举。
+
+    Args:
+        message_type: 帧操作码（1 文本、2 二进制、9 Ping、10 Pong、8 关闭）。
+
+    Returns:
+        对应的消息类型；未知操作码默认返回 Binary。
+    """
     mapping = {
         1: WebSocketMessageType.Text,
         2: WebSocketMessageType.Binary,
@@ -766,10 +949,19 @@ def convert_to_websocket_message_type(message_type: int) -> WebSocketMessageType
 
 
 def _generate_session_id() -> str:
+    """生成一个基于时间戳与随机数的会话 ID。"""
     return f'ws-session-{int(time.time() * 1000)}{os.urandom(4).hex()}'
 
 
 def _get_connect_timeout(runtime_object: Any) -> int:
+    """读取连接超时时间（毫秒），未配置时默认 10000。
+
+    Args:
+        runtime_object: 运行时配置。
+
+    Returns:
+        连接超时毫秒数。
+    """
     connect_timeout = _get_runtime_value(runtime_object, 'connectTimeout', 'connect_timeout')
     if connect_timeout and connect_timeout > 0:
         return connect_timeout
@@ -777,6 +969,15 @@ def _get_connect_timeout(runtime_object: Any) -> int:
 
 
 def _get_no_proxy(protocol: str, runtime: Any) -> List[str]:
+    """读取不走代理的主机白名单（支持运行时配置与环境变量）。
+
+    Args:
+        protocol: 协议类型（ws / wss）。
+        runtime: 运行时配置。
+
+    Returns:
+        白名单主机列表。
+    """
     no_proxy = _get_runtime_value(runtime, 'noProxy', 'no_proxy')
     if no_proxy:
         return no_proxy.split(',')
@@ -787,6 +988,16 @@ def _get_no_proxy(protocol: str, runtime: Any) -> List[str]:
 
 
 def _get_http_proxy_url(protocol: str, host: str, runtime: Any) -> Optional[str]:
+    """获取对应协议的代理 URL（运行时配置优先，其次环境变量）。
+
+    Args:
+        protocol: 协议类型（ws / wss）。
+        host: 目标主机名。
+        runtime: 运行时配置。
+
+    Returns:
+        代理 URL；白名单命中或无代理时返回 None。
+    """
     no_proxy_list = _get_no_proxy(protocol, runtime)
     for no_proxy_host in no_proxy_list:
         if no_proxy_host.strip() == host:

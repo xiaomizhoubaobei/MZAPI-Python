@@ -4,19 +4,43 @@
 #
 # Copyright (C) 2026 祁筱欣
 #
-# ORIGINAL IMPLEMENTATION – DO NOT REMOVE OR ALTER THIS NOTICE
-# This file is part of MZAPI and is licensed under MPL 2.0
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
-# -*- coding: utf-8 -*-
-# This file is auto-generated, don't edit it. Thanks.
+
 from __future__ import annotations
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-exceptions-throttling-2026-qxx"
+
+
+"""
+限流异常模块
+
+定义阿里云 API 因访问频率超限而抛出的异常，
+携带重试等待时间用于退避处理。
+
+包含的类：
+  - ThrottlingException：限流异常
+"""
 
 from typing import Dict, Any
 
 from mzapi.utlis.aliyunauth import exceptions as main_exceptions
 
+
 class ThrottlingException(main_exceptions.AlibabaCloudException):
+    """阿里云限流异常。
+
+    当请求频率超过阿里云 API 限制时抛出，
+    可通过重试等待时间进行退避处理。
+
+    Attributes:
+        name: 异常名称。
+        retry_after: 重试等待时间（秒）。
+    """
+
     def __init__(
         self, *,
         status_code: int = None,
@@ -29,6 +53,19 @@ class ThrottlingException(main_exceptions.AlibabaCloudException):
         stack: str = None,
         retry_after: int = None,
     ):
+        """初始化限流异常。
+
+        Args:
+            status_code: HTTP 状态码。
+            code: 错误码。
+            message: 错误消息。
+            description: 错误描述。
+            request_id: 请求 ID，用于问题追踪。
+            data: 附加的错误数据。
+            access_denied_detail: 访问被拒绝的详细信息。
+            stack: 错误堆栈信息。
+            retry_after: 重试等待时间（秒）。
+        """
         super().__init__(
             status_code = status_code,
             code = code,
@@ -42,4 +79,3 @@ class ThrottlingException(main_exceptions.AlibabaCloudException):
         )
         self.name = 'ThrottlingException'
         self.retry_after = retry_after
-

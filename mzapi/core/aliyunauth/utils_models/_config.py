@@ -4,26 +4,43 @@
 #
 # Copyright (C) 2026 祁筱欣
 #
-# ORIGINAL IMPLEMENTATION – DO NOT REMOVE OR ALTER THIS NOTICE
-# This file is part of MZAPI and is licensed under MPL 2.0
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
 # Any modifications to this file must remain under MPL 2.0
 # when redistributed.
 # -*- coding: utf-8 -*-
 # This file is auto-generated, don't edit it. Thanks.
+
+"""客户端初始化配置模型模块
+
+定义阿里云认证客户端的初始化配置模型 Config，
+承载 AccessKey 凭证、协议、代理、证书、超时与重试等初始化参数，
+并提供字段校验与字典序列化/反序列化能力。
+
+包含的类：
+  - Config：客户端初始化配置模型。
+"""
+
 from __future__ import annotations
-from darabonba.model import DaraModel 
-from alibabacloud_credentials.client import Client 
-from mzapi.utlis.aliyunauth import utils_models as main_models 
-from darabonba.policy.retry import RetryOptions 
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-utils-models-config-2026-qxx"
+
+from darabonba.model import DaraModel
+from alibabacloud_credentials.client import Client
+from mzapi.utlis.aliyunauth import utils_models as main_models
+from darabonba.policy.retry import RetryOptions
 
 
-"""
- * @remarks
- * Model for initing client
-"""
 class Config(DaraModel):
+    """客户端初始化配置模型，定义创建阿里云认证客户端所需的初始化参数。
+
+    支持 AccessKey 凭证、网络协议、代理、证书、连接池、重试选项
+    与 TLS 版本等配置项，用于初始化认证客户端。
+    """
+
     def __init__(
-        self, 
+        self,
         access_key_id: str = None,
         access_key_secret: str = None,
         security_token: str = None,
@@ -123,10 +140,12 @@ class Config(DaraModel):
         self.tls_min_version = tls_min_version
 
     def validate(self):
+        """校验字段，当存在全局参数时递归校验其合法性。"""
         if self.global_parameters:
             self.global_parameters.validate()
 
     def to_map(self):
+        """将配置对象序列化为字典，值为空的字段将被跳过。"""
         _map = super().to_map()
         if _map is not None:
             return _map
@@ -201,6 +220,14 @@ class Config(DaraModel):
         return result
 
     def from_map(self, m: dict = None):
+        """从字典反序列化配置对象。
+
+        Args:
+            m: 包含配置字段的字典。
+
+        Returns:
+            当前 Config 对象。
+        """
         m = m or dict()
         if m.get('accessKeyId') is not None:
             self.access_key_id = m.get('accessKeyId')

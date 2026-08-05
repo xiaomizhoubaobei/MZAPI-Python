@@ -66,7 +66,7 @@ jobs:
       # Autobuild 尝试构建任何编译型语言（C/C++、C# 或 Java）。
       # 如果此步骤失败，则应删除它并手动运行构建（见下方）
       - name: Autobuild
-        uses: github/codeql-action/autobuild@7211b7c8077ea37d8641b6271f6a365a22a5fbfa # v4.36.0
+        uses: github/codeql-action/autobuild@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
 
       # ℹ️ 使用操作系统 shell 运行的命令行程序。
       # 📚 请参阅 https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun

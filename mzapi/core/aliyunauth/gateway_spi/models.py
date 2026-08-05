@@ -1,5 +1,32 @@
-# -*- coding: utf-8 -*-
-# This file is auto-generated, don't edit it. Thanks.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-gateway-spi-models-2026-qxx"
+
+
+"""
+网关 SPI 数据模型模块
+
+定义阿里云网关 SPI 拦截器所需的数据模型，
+包括拦截上下文的请求、配置、响应以及属性映射等。
+
+包含的类：
+  - InterceptorContextRequest：拦截上下文请求模型
+  - InterceptorContextConfiguration：拦截上下文配置模型
+  - InterceptorContextResponse：拦截上下文响应模型
+  - InterceptorContext：拦截上下文模型
+  - AttributeMap：属性映射模型
+"""
+
 from Tea.model import TeaModel
 from typing import Dict, Any, BinaryIO
 
@@ -7,6 +34,11 @@ from alibabacloud_credentials.client import Client as CredentialClient
 
 
 class InterceptorContextRequest(TeaModel):
+    """拦截上下文请求模型。
+
+    描述一次网关拦截请求的完整信息，包括请求头、查询参数、请求体、
+    数据流、主机映射以及产品 ID、动作、版本、协议等元数据。
+    """
     def __init__(
         self,
         headers: Dict[str, str] = None,
@@ -152,6 +184,12 @@ class InterceptorContextRequest(TeaModel):
 
 
 class InterceptorContextConfiguration(TeaModel):
+    """拦截上下文配置模型。
+
+    描述网关拦截所需的配置信息，包括地域、端点及端点规则等，
+    用于确定请求的目标地址与连接方式。
+    """
+
     def __init__(
         self,
         region_id: str = None,
@@ -215,6 +253,12 @@ class InterceptorContextConfiguration(TeaModel):
 
 
 class InterceptorContextResponse(TeaModel):
+    """拦截上下文响应模型。
+
+    描述网关拦截完成后得到的响应信息，
+    包括状态码、响应头、响应体及反序列化后的数据。
+    """
+
     def __init__(
         self,
         status_code: int = None,
@@ -260,6 +304,12 @@ class InterceptorContextResponse(TeaModel):
 
 
 class InterceptorContext(TeaModel):
+    """拦截上下文模型。
+
+    聚合请求、配置与响应三个子模型，
+    作为网关拦截钩子的统一参数贯穿整个请求处理链路。
+    """
+
     def __init__(
         self,
         request: InterceptorContextRequest = None,
@@ -310,6 +360,12 @@ class InterceptorContext(TeaModel):
 
 
 class AttributeMap(TeaModel):
+    """属性映射模型。
+
+    用于在拦截钩子之间传递附加的属性信息，
+    其中 attributes 存放通用属性，key 存放键值映射。
+    """
+
     def __init__(
         self,
         attributes: Dict[str, Any] = None,

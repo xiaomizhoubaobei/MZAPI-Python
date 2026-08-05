@@ -1,10 +1,37 @@
-# -*- coding: utf-8 -*-
-# This file is auto-generated, don't edit it. Thanks.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# Copyright (C) 2026 祁筱欣
+#
+# ORIGINAL IMPLEMENTATION - DO NOT REMOVE OR ALTER THIS NOTICE
+# This file is part of MZAPI and is licensed under MPL 2.0.
+# Any modifications to this file must remain under MPL 2.0
+# when redistributed.
+
+# 内部项目标识（请勿修改）
+_MZAPI_ORIGIN = "mzapi-aliyun-tea-util-models-2026-qxx"
+
+
+"""
+阿里云 Tea 工具包模型模块
+
+定义阿里云认证场景下 tea-util 工具包所需的运行时配置模型，
+包含扩展参数与运行时选项两类模型，提供字段校验以及
+字典序列化/反序列化能力。
+
+包含的类：
+  - ExtendsParameters：扩展参数模型，承载附加的请求头与查询参数。
+  - RuntimeOptions：运行时选项模型，配置重试、超时、代理、证书等运行参数。
+"""
+
 from Tea.model import TeaModel
 from typing import Dict
 
 
 class ExtendsParameters(TeaModel):
+    """扩展参数模型，表示请求中附加的请求头与查询参数。"""
+
     def __init__(
         self,
         headers: Dict[str, str] = None,
@@ -14,9 +41,11 @@ class ExtendsParameters(TeaModel):
         self.queries = queries
 
     def validate(self):
+        """校验字段（本模型无必需字段，无需额外校验）。"""
         pass
 
     def to_map(self):
+        """将扩展参数对象序列化为字典，值为空的字段将被跳过。"""
         _map = super().to_map()
         if _map is not None:
             return _map
@@ -29,6 +58,14 @@ class ExtendsParameters(TeaModel):
         return result
 
     def from_map(self, m: dict = None):
+        """从字典反序列化扩展参数对象。
+
+        Args:
+            m: 包含扩展参数字段的字典。
+
+        Returns:
+            当前 ExtendsParameters 对象。
+        """
         m = m or dict()
         if m.get('headers') is not None:
             self.headers = m.get('headers')
@@ -38,9 +75,13 @@ class ExtendsParameters(TeaModel):
 
 
 class RuntimeOptions(TeaModel):
+    """运行时选项模型，配置请求执行过程中的各项运行参数。
+
+    支持重试策略、超时时间、代理地址、TLS 证书、连接池大小、
+    本地地址与 SOCKS5 代理等运行参数的配置，用于控制 API 调用的
+    底层执行行为。
     """
-    The common runtime options model
-    """
+
     def __init__(
         self,
         autoretry: bool = None,
@@ -103,10 +144,12 @@ class RuntimeOptions(TeaModel):
         self.extends_parameters = extends_parameters
 
     def validate(self):
+        """校验运行时选项模型，嵌套校验扩展参数模型。"""
         if self.extends_parameters:
             self.extends_parameters.validate()
 
     def to_map(self):
+        """将运行时选项对象序列化为字典，值为空的字段将被跳过。"""
         _map = super().to_map()
         if _map is not None:
             return _map
@@ -153,6 +196,14 @@ class RuntimeOptions(TeaModel):
         return result
 
     def from_map(self, m: dict = None):
+        """从字典反序列化运行时选项对象。
+
+        Args:
+            m: 包含运行时选项字段的字典。
+
+        Returns:
+            当前 RuntimeOptions 对象。
+        """
         m = m or dict()
         if m.get('autoretry') is not None:
             self.autoretry = m.get('autoretry')

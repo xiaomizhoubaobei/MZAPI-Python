@@ -1,75 +1,204 @@
 # =============================================================================
-# AI 审计 Taskflow 测试示例 — Python 仓库
+# AI 审计 Taskflow 测试示例 — Python 仓库（已按官方 GRAMMAR 语法适配）
 # =============================================================================
 # 用途：对 CodeQL 静态扫描在本仓库（mzapi/**）产生的安全告警做 AI 分流。
 # 框架：GitHubSecurityLab/seclab-taskflow-agent
 # 说明：
-#   - 本文件是一个"测试用示例"，用于验证 AI 审计链路能跑通（CodeQL 告警 -> 信息收集 -> 审计 -> 报告 -> 校验）。
-#   - 它参照 GitHub Security Lab 文章中描述的 5 阶段分流流程编写。
-#   - 请先阅读同目录下的 README.md 了解运行前提（LLM 配置、GitHub PAT、MCP Server）。
+#   - 本文件是一个"测试用示例"，用于验证 AI 审计链路能跑通（CodeQL 告警 -> 信息收集 -> 审计 -> 报告 -> 校验 -> 创建真实 Issue -> 知识回流）。
+#   - 已按官方 doc/GRAMMAR.md 语法编写：seclab-taskflow-agent 头部 + filetype: taskflow、
+#     顶层 taskflow key、agents 引用 personalities、shell run 任务 + outputs JSON Schema 校验、
+#     repeat_prompt/over 批量循环等。
+#   - 为适配本项目（Python），使用项目自带的 Python 审计人格
+#     ai_audit.personalities.python_auditer，而非官方默认的 C 语言人格
+#     c_auditer（详见 personalities/python_auditer.yaml）。
+#   - 引用路径 ai_audit.* 假设已将 ai-audit 目录（重命名为 ai_audit）
+#     复制到框架 examples/ 目录下；详见 README.md 的部署说明。
+#   - 请先阅读同目录下的 README.md 了解运行前提（LLM 配置、GitHub PAT、MCP Server、人格模块路径）。
 #
 # 适配语言：Python
 # 告警输入：由 .github/workflows/codeql.yml 扫描 mzapi/** 产生的 CodeQL 安全告警
+# 运行方式：hatch run main -t ai_audit.alert_triage_example （详见 README.md 部署说明）
 # =============================================================================
 
-workflow:
-  name: "MZAPI Python AI 告警分流（测试示例）"
-  description: >-
-    对 mzapi/** 的 CodeQL 告警做 AI 分流，剔除误报并生成带引用的漏洞报告。
-  # LLM 模型固定为 deepseek-v4-flash（支持函数调用，用于框架各阶段的 LLM 推理）
-  model: "deepseek-v4-flash"
-  # 针对 CodeQL 告警列表逐条套用同一套模板（对应文章的 repeat_prompt 批量循环）
-  repeat_prompt: "{{alert}}"
+seclab-taskflow-agent:
+  version: "1.0"
+  filetype: taskflow
 
+# 可选：引入模型配置（参照 examples/model_configs/），如无需可删除本行
+# model_config: examples.model_configs.model_config
+
+taskflow:
+  # ---------------------------------------------------------------------------
+  # 0) 准备：从 GitHub Code Scanning API 拉取「最新 CodeQL 安全告警」，
+  #    生成待审计告警的 JSON 可迭代列表，供后续 repeat_prompt 批量循环。
+  #    通过 id + outputs（JSON Schema）暴露为命名输出 outputs.alerts，供下游 over 显式引用。
+  #    （不再使用写死的占位 JSON，定时运行会真正消费仓库的最新 CodeQL 告警）
+  # ---------------------------------------------------------------------------
+  - task:
+      must_complete: true
+      id: alerts
+      run: |
+        # 需要 GITHUB_TOKEN（PAT，含 security_events 读权限）来读取 CodeQL 告警
+        : "${GITHUB_TOKEN:?请设置 GITHUB_TOKEN 环境变量以读取 CodeQL 告警}"
+        # 仓库使用 GITHUB_REPOSITORY（owner/repo），未设置时回退到默认仓库
+        : "${GITHUB_REPOSITORY:=XMZZUZHI/MZAPI/python}"
+        # 拉取状态为 open 的最新 CodeQL 告警（最多 100 条，可按需调整 per_page）
+        curl -fsSL \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+          "https://api.github.com/repos/${GITHUB_REPOSITORY}/code-scanning/alerts?state=open&tool_name=CodeQL&per_page=100" \
+        | jq -c '
+            map({
+              alert_number: .number,
+              rule: (.rule.id // .rule.description // "unknown"),
+              path: (.most_recent_instance.location.path // "unknown"),
+              message: (.most_recent_instance.message.text // "")
+            })
+          '
+      # 校验生成的 JSON 结构，避免幻觉 / 结构错误传入下游
+      outputs:
+        type: array
+        items:
+          type: object
+          properties:
+            alert_number:
+              type: integer
+            rule:
+              type: string
+            path:
+              type: string
+            message:
+              type: string
+          required: [alert_number, rule, path, message]
+
+  # ---------------------------------------------------------------------------
   # 1) 信息收集：调 GitHub API / MCP Server 拿告警上下文（触发点、调用链、权限）
-  - task: "info_collection"
-    name: "收集告警上下文"
-    prompt: >-
-      你是一名安全审计员。请针对以下 CodeQL 安全告警，调用 MCP Server 的
-      GitHub API 收集信息：
-      - 告警的 source（来源点）与 sink（汇点）在文件中的精确行号；
-      - 告警路径上是否有用户输入（不可信数据）流入；
-      - 该代码路径是否在特权/高权限上下文（如管理员、root、凭证处理）中执行；
-      - 该告警触发的输入是否真的可被外部攻击者控制。
-      输出请使用 JSON，并严格给出"文件名:行号"引用，不得编造。
+  # ---------------------------------------------------------------------------
+  - task:
+      must_complete: true
+      repeat_prompt: true
+      over: "outputs.alerts"
+      agents:
+        - ai_audit.personalities.python_auditer
+      user_prompt: |
+        你是一名 Python 安全审计员。针对以下 CodeQL 安全告警 {{ result.alert_number }}
+        （规则：{{ result.rule }}，文件：{{ result.path }}，描述：{{ result.message }}），
+        调用可用的 MCP Server（如 GitHub API / CodeQL toolbox）收集信息：
+        - 告警的 source（来源点）与 sink（汇点）在该 Python 文件中的精确行号；
+        - 告警路径上是否有用户输入（不可信数据）流入（如 request / MCP tool 入参）；
+        - 该代码路径是否在特权/高权限上下文（如管理员、root、凭证处理）中执行；
+        - 该告警触发的输入是否真的可被外部攻击者控制。
+        输出请使用 JSON，并严格给出"文件名:行号"引用，不得编造。
 
+  # ---------------------------------------------------------------------------
   # 2) 审计：剔除误报（攻击者能否触发？是否特权上下文？）
-  - task: "triage"
-    name: "审计剔除误报"
-    depends_on: ["info_collection"]
-    prompt: >-
-      基于上一步收集的信息，判定该告警是否为真实漏洞（而非误报）：
-      - 若攻击者无法触发该代码路径，或输入不可控，则标记为误报(FP)；
-      - 若在特权上下文执行且输入可控，则视为潜在漏洞(TP)。
-      对每个判定给出 2-3 条简短理由。
+  # ---------------------------------------------------------------------------
+  - task:
+      must_complete: true
+      repeat_prompt: true
+      over: "outputs.alerts"
+      agents:
+        - ai_audit.personalities.python_auditer
+      user_prompt: |
+        针对告警 {{ result.alert_number }}（规则：{{ result.rule }}，文件：{{ result.path }}），
+        基于上一步收集的信息，判定该告警是否为真实漏洞（而非误报）：
+        - 若攻击者无法触发该代码路径，或输入不可控，则标记为误报(FP)；
+        - 若在特权上下文执行且输入可控，则视为潜在漏洞(TP)。
+        对每个判定给出 2-3 条简短理由。
 
+  # ---------------------------------------------------------------------------
   # 3) 生成漏洞报告（带精确文件+行号引用）
-  - task: "report"
-    name: "生成漏洞报告"
-    depends_on: ["triage"]
-    prompt: >-
-      仅对判定为 TP 的告警生成漏洞报告。报告必须包含：
-      - 漏洞类型、严重程度；
-      - 精确的 source 与 sink 位置（文件+行号）；
-      - 攻击路径描述；
-      - 修复建议。
-      若全部为误报，则输出 "NO_VULNERABILITY"。
+  # ---------------------------------------------------------------------------
+  - task:
+      must_complete: true
+      repeat_prompt: true
+      over: "outputs.alerts"
+      agents:
+        - ai_audit.personalities.python_auditer
+      user_prompt: |
+        针对告警 {{ result.alert_number }}（规则：{{ result.rule }}，文件：{{ result.path }}），
+        仅对判定为 TP 的告警生成漏洞报告。报告必须包含：
+        - 漏洞类型、严重程度；
+        - 精确的 source 与 sink 位置（文件+行号）；
+        - 攻击路径描述；
+        - 修复建议。
+        若全部为误报，则输出 "NO_VULNERABILITY"。
 
+  # ---------------------------------------------------------------------------
   # 4) 校验：报告不完整/不一致=幻觉，直接驳回
-  - task: "validate"
-    name: "报告校验（防幻觉）"
-    depends_on: ["report"]
-    prompt: >-
-      校验上一步生成的漏洞报告：
-      - 报告中的文件/行号是否与告警上下文一致？
-      - 是否缺少关键字段（漏洞类型/位置/攻击路径）？
-      - 若信息缺失或不一致，判定为幻觉并驳回（输出 REJECTED），不创建 Issue。
-      通过后输出 APPROVED。
+  # ---------------------------------------------------------------------------
+  - task:
+      must_complete: true
+      repeat_prompt: true
+      over: "outputs.alerts"
+      agents:
+        - ai_audit.personalities.python_auditer
+      user_prompt: |
+        针对告警 {{ result.alert_number }}（规则：{{ result.rule }}，文件：{{ result.path }}），
+        校验上一步生成的漏洞报告：
+        - 报告中的文件/行号是否与告警上下文一致？
+        - 是否缺少关键字段（漏洞类型/位置/攻击路径）？
+        - 若信息缺失或不一致，判定为幻觉并驳回（输出 REJECTED）。
+        通过后输出 APPROVED。
 
-  # 5) 知识回流：人工驳回原因回流给 LLM，持续改进（测试示例中仅记录，不实际创建 Issue）
-  - task: "feedback"
-    name: "知识回流（预留）"
-    depends_on: ["validate"]
-    prompt: >-
-      将人工审查时产生的"驳回原因/误报标签"记录到本地知识文件，供后续
-      同类告警的审计参考，形成持续改进闭环。本测试示例只输出记录结果，不创建 Issue。
+  # ---------------------------------------------------------------------------
+  # 5) 创建真实 Issue：仅对校验通过（APPROVED）的真实漏洞创建 GitHub Issue。
+  #    通过 GitHub REST API 调用 POST /repos/{owner}/{repo}/issues。
+  #    需要的 GITHUB_TOKEN 必须含 repo（issues: write）权限。
+  #    ⚠️ 本步会真实创建 Issue，请在确认链路无误后开启；如需仅输出不改仓库，可注释本步。
+  # ---------------------------------------------------------------------------
+  - task:
+      must_complete: true
+      repeat_prompt: true
+      over: "outputs.alerts"
+      run: |
+        # 需要 GITHUB_TOKEN（PAT，含 repo / issues 写权限）来创建 Issue
+        : "${GITHUB_TOKEN:?请设置 GITHUB_TOKEN 环境变量以创建 Issue}"
+        : "${GITHUB_REPOSITORY:=XMZZUZHI/MZAPI/python}"
+
+        # 防重复：若仓库已存在标题完全相同的 open Issue，则跳过创建
+        existing=$(curl -fsSL \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+          "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues?state=open&per_page=100" \
+          | jq --arg t "[AI审计] {{ result.rule }} - {{ result.path }}" \
+               '[.[] | select(.title == $t)] | length')
+        if [ "$existing" -gt 0 ]; then
+          echo "SKIP: 已存在同名 open Issue，避免重复创建（alert {{ result.alert_number }}）"
+          exit 0
+        fi
+
+        # 仅当校验阶段判定为真实漏洞（非 NO_VULNERABILITY）时，创建真实 Issue
+        report="{{ result.report }}"
+        if [ "$report" = "NO_VULNERABILITY" ] || [ -z "$report" ]; then
+          echo "SKIP: alert {{ result.alert_number }} 判定为误报，不创建 Issue"
+          exit 0
+        fi
+
+        # 依据校验阶段输出的报告体创建真实 Issue（含漏洞类型/位置/攻击路径/修复建议）
+        # 使用 jq 直接构造 JSON，避免多行 heredoc 破坏 YAML 缩进
+        curl -fsSL \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+          "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues" \
+          -d "$(jq -n \
+                --arg title "[AI审计] {{ result.rule }} - {{ result.path }}" \
+                --arg body "## 漏洞概述\n{{ result.report }}\n\n## 关联 CodeQL 告警\n- 告警编号：{{ result.alert_number }}\n- 规则：{{ result.rule }}\n- 文件：{{ result.path }}\n\n## 修复建议\n- 请参考上方报告中给出的修复建议，在对应文件中修复后关闭本 Issue。" \
+                '{title: $title, body: $body, labels: ["bug", "security", "ai-audit"]}')"
+        echo "CREATED: 已为告警 {{ result.alert_number }} 创建真实 Issue"
+
+  # ---------------------------------------------------------------------------
+  # 6) 知识回流：人工驳回原因回流给 LLM，持续改进
+  # ---------------------------------------------------------------------------
+  - task:
+      must_complete: true
+      repeat_prompt: true
+      over: "outputs.alerts"
+      agents:
+        - ai_audit.personalities.python_auditer
+      user_prompt: |
+        针对告警 {{ result.alert_number }}（规则：{{ result.rule }}，文件：{{ result.path }}），
+        将人工审查时产生的"驳回原因/误报标签"记录到本地知识文件，供后续
+        同类告警的审计参考，形成持续改进闭环。若已在第 5 步创建 Issue，请记录
+        Issue 编号，便于后续追踪。

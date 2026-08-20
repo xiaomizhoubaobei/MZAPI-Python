@@ -1,0 +1,105 @@
+# =============================================================================
+# AI 审计（AI 漏洞分流）— CodeQL 完成后自动运行
+# =============================================================================
+# 用途：在 CodeQL 工作流（.github/workflows/codeql.yml）完成后自动运行
+#       ai-audit/alert_triage_example.yaml，消费本仓库 CodeQL 扫描产生的最
+#       新安全告警，做 AI 自动分流。
+#
+# 触发设计：
+#   - workflow_run：监听 codeql.yml（name: "CodeQL"）的 completed 事件，
+#     在 CodeQL 完成后确定性地触发，保证 AI 审计一定在 CodeQL 扫完后消费
+#     最新告警，替代原先靠 cron「时间差」假设 CodeQL 已完成的不可靠方式。
+#   - workflow_dispatch：保留手动触发，方便首次部署时验证链路。
+#
+# ⚠️ 注意：workflow_run 事件中 GITHUB_TOKEN 为只读权限，但本示例读取告警
+#         （security_events）与创建 Issue（repo/issues 写权限）均走 GH_PAT，
+#         因此权限不受影响。
+#
+# 所需 Secrets（仓库 Settings → Secrets and variables → Actions）：
+#   - AI_API_ENDPOINT 必填，上游 base_url（OpenAI 兼容口，如 https://api.deepseek.com/v1）
+#   - AI_API_TOKEN    必填，对应厂商的 API Key（需支持函数调用）
+#   - GH_PAT          必填，GitHub PAT，需同时含以下权限：
+#                     · security_events 读权限 —— 读取本仓库 CodeQL 告警
+#                     · repo / issues 写权限   —— 为确认的漏洞创建真实 Issue
+#   - MCP_CONFIG      可选，MCP Server（GitHub API）配置
+#
+# ⚠️ 注意：
+#   - 首次使用前请先用 workflow_dispatch 手动跑一次，确认链路正常。
+#   - GITHUB_TOKEN 由 Actions 自动注入，不占上述 secrets（读取告警走 GH_PAT）。
+#   - ⚠️ 本示例会**真实创建 Issue**（仅对判定为真实漏洞的告警，且自动去重）。
+#     如只想看分流结果、不修改仓库，请在 alert_triage_example.yaml 中注释第 5 步
+#     「创建真实 Issue」任务。
+# =============================================================================
+
+name: "AI 审计（CodeQL 完成后自动分流）"
+
+on:
+  workflow_run:
+    # 监听 codeql.yml 的 workflow 名（.github/workflows/codeql.yml 的 name: "CodeQL"）
+    workflows: ["CodeQL"]
+    types: [completed]
+  workflow_dispatch:  # 保留手动触发，便于首次部署时验证链路
+
+permissions:
+  contents: read
+  security-events: write   # 读取 CodeQL 告警
+  issues: write            # 若后续要自动创建 Issue
+
+jobs:
+  ai-audit:
+    name: Run AI Audit Taskflow
+    runs-on: ubuntu-latest
+    env:
+      # LLM 配置（OpenAI 兼容上游：国产厂商 / 本地 vLLM 的 OpenAI 兼容口）
+      # 端点如 https://api.deepseek.com/v1，密钥为对应厂商的 API Key
+      AI_API_ENDPOINT: ${{ secrets.AI_API_ENDPOINT }}
+      AI_API_TOKEN: ${{ secrets.AI_API_TOKEN }}
+      # GitHub PAT：读取 CodeQL 告警 + 创建真实 Issue
+      # 需含 security_events 读权限 + repo/issues 写权限
+      GH_TOKEN: ${{ secrets.GH_PAT }}
+      # MCP Server（GitHub API）配置
+      MCP_CONFIG: ${{ secrets.MCP_CONFIG }}
+
+    steps:
+      - name: Checkout 本项目（含 ai-audit 示例）
+        uses: actions/checkout@v4
+
+      - name: Checkout seclab-taskflow-agent 框架
+        uses: actions/checkout@v4
+        with:
+          repository: GitHubSecurityLab/seclab-taskflow-agent
+          path: seclab-taskflow-agent
+
+      - name: 把 ai-audit 复制进框架 examples/（目录名用下划线）
+        run: |
+          cp -r ai-audit seclab-taskflow-agent/examples/ai_audit
+
+      - name: 安装 hatch
+        run: pip install hatch
+
+      - name: 运行 AI 审计 taskflow（消费最新 CodeQL 告警）
+        working-directory: seclab-taskflow-agent
+        env:
+          # alert_triage_example.yaml 的 alerts 任务从 GitHub Code Scanning API
+          # 实时拉取最新告警，需 PAT 含 security_events 读权限；
+          # 第 5 步「创建真实 Issue」需同一 PAT 含 repo/issues 写权限
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          # 默认审计本仓库，如需改为其它仓库可改这里（owner/repo）
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          # -m 显式指定 model_config（声明模型与 api_type: chat_completions）
+          hatch run main -t ai_audit.alert_triage_example \
+              -m ai_audit.model_config
+
+# ---------------------------------------------------------------------------
+# 说明：本工作流已由 schedule（cron 时间差）改为 workflow_run 触发，
+#       因此不再依赖 cron 表达式。若后续想额外保留定时触发以做兜底，
+#       可在上方 on 下追加 schedule 块，例如：
+#   on:
+#     workflow_run:
+#       workflows: ["CodeQL"]
+#       types: [completed]
+#     schedule:
+#       - cron: "30 0 * * 1"   # 每周一 UTC 00:30（兜底）
+#     workflow_dispatch:
+# ---------------------------------------------------------------------------

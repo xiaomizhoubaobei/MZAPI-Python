@@ -1,0 +1,49 @@
+# Pylint 配置文件
+# 说明：仓库 Python 代码统一使用本配置进行静态检查。
+
+[MASTER]
+# 评分低于该值视为失败
+fail-under=8
+
+[FORMAT]
+# 与项目编码规范一致
+max-line-length=120
+
+[BASIC]
+# 允许缩略命名，减少误报；类方法允许无 docstring（简单 getter/setter）
+no-docstring-rgx=__.*__|^test_|^_[a-z].*
+
+[DESIGN]
+# 放宽复杂度与行数限制，适配工具脚本
+max-args=8
+max-locals=20
+max-branches=15
+max-statements=60
+max-returns=10
+max-public-methods=40
+max-bool-expr=6
+min-public-methods=0
+
+[IMPORTS]
+# 允许任意位置导入，避免循环导入误报
+ignored-modules=
+
+[MESSAGES CONTROL]
+# 禁用过度严格且与项目风格冲突的检查
+disable=
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    too-few-public-methods,
+    duplicate-code,
+    line-too-long,
+    invalid-name,
+    fixme,
+    no-else-return,
+    too-many-locals,
+    too-many-branches,
+    too-many-statements,
+    too-many-arguments,
+    too-many-return-statements,
+    too-many-boolean-expressions,
+    consider-using-f-string

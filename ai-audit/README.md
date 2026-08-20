@@ -37,7 +37,7 @@ LLM + Taskflow Agent 逐个审计
 |------|------|------|
 | 仓库已开启 CodeQL 扫描 | `.github/workflows/codeql.yml` 已存在 | ✅ 已具备 |
 | `seclab-taskflow-agent` 框架 | 需部署框架本体 | ❌ 需部署 |
-| LLM 模型（支持函数调用） | OpenAI 系 / 本地 vLLM 均可 | ❌ 需配置 |
+| LLM 模型（支持函数调用） | 本示例固定为 `deepseek-v4-flash` | ⚠️ 需配置密钥 |
 | GitHub PAT（读告警权限） | 框架读取 CodeQL 告警用 | ❌ 需你提供 |
 | MCP Server（GitHub API） | 框架信息收集用 | ❌ 需配置 |
 
@@ -48,7 +48,7 @@ LLM + Taskflow Agent 逐个审计
 git clone https://github.com/GitHubSecurityLab/seclab-taskflow-agent
 git clone https://github.com/GitHubSecurityLab/seclab-taskflows
 
-# 2. 按官方配置指南配好 LLM 模型 + GitHub PAT + MCP Server
+# 2. 按官方配置指南配好 LLM 模型（本示例固定为 deepseek-v4-flash）+ GitHub PAT + MCP Server
 
 # 3. 运行本示例（将本文件的 taskflow 交给框架执行）
 #    具体命令请参照框架官方 README / GRAMMAR 文档
@@ -65,5 +65,8 @@ git clone https://github.com/GitHubSecurityLab/seclab-taskflows
 
 ---
 
+> 📌 **模型固定说明**：本示例的 LLM 模型已固定为 `deepseek-v4-flash`，
+> 请在框架的模型配置中填入对应的 API Key / Endpoint。
+>
 > 📌 本示例由 CNB NPC CodeBuddy 为 `XMZZUZHI/MZAPI/python` 生成的测试用示例，
 > 供你评估 AI 审计链路。请结合你的实际业务代码调整审计规则。

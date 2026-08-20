@@ -16,6 +16,8 @@ workflow:
   name: "MZAPI Python AI 告警分流（测试示例）"
   description: >-
     对 mzapi/** 的 CodeQL 告警做 AI 分流，剔除误报并生成带引用的漏洞报告。
+  # LLM 模型固定为 deepseek-v4-flash（支持函数调用，用于框架各阶段的 LLM 推理）
+  model: "deepseek-v4-flash"
   # 针对 CodeQL 告警列表逐条套用同一套模板（对应文章的 repeat_prompt 批量循环）
   repeat_prompt: "{{alert}}"
 

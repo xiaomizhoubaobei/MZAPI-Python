@@ -70,9 +70,13 @@ jobs:
           repository: GitHubSecurityLab/seclab-taskflow-agent
           path: seclab-taskflow-agent
 
-      - name: 把 ai-audit 复制进框架 examples/（目录名用下划线）
+      - name: 把 ai-audit 复制进框架根目录 ai_audit（目录名用下划线）
+        # 框架通过 importlib.resources.files(package) 按 Python 模块路径加载
+        # taskflow / personality / model_config。运行命令使用 -t ai_audit.* 引用
+        # 顶层模块 ai_audit，因此必须把目录复制到框架仓库根目录（在 sys.path 上），
+        # 而不能放到 examples/ 下（那样会变成 examples.ai_audit，路径对不上）。
         run: |
-          cp -r ai-audit seclab-taskflow-agent/examples/ai_audit
+          cp -r ai-audit seclab-taskflow-agent/ai_audit
 
       - name: 安装 hatch
         run: pip install hatch

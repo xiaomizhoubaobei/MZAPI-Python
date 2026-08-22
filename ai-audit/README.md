@@ -78,7 +78,7 @@ ai-audit/
 > 框架通过 **Python 模块路径**加载 taskflow / personality（`packagename.filename`）。
 > 因此需要把本目录（含 personalities）放到框架能解析到包路径的地方。
 
-### 方式一：复制到框架 `examples/` 目录（推荐，最省事）
+### 方式一：复制到框架仓库根目录（推荐，最省事）
 
 1. 部署框架与 taskflows：
 
@@ -88,14 +88,21 @@ git clone https://github.com/GitHubSecurityLab/seclab-taskflows
 cd seclab-taskflow-agent
 ```
 
-2. 把本目录复制进框架的 `examples/` 下，**目录名使用下划线 `ai_audit`**（模块路径不能用连字符）：
+2. 把本目录复制到框架仓库**根目录**，**目录名使用下划线 `ai_audit`**（模块路径不能用连字符）：
 
 ```bash
-# 从本项目仓库复制到框架仓库
-cp -r <本项目>/ai-audit examples/ai_audit
-# 得到 examples/ai_audit/alert_triage_example.yaml
-#       examples/ai_audit/personalities/python_auditer.yaml
+# 从本项目仓库复制到框架仓库根目录
+cp -r <本项目>/ai-audit ai_audit
+# 得到 ai_audit/alert_triage_example.yaml
+#       ai_audit/personalities/python_auditer.yaml
 ```
+
+> ⚠️ **为什么是根目录而不是 `examples/`？** 框架通过
+> `importlib.resources.files(package)` 按 **Python 模块路径**加载 taskflow / personality / model_config，
+> 而运行命令使用 `-t ai_audit.alert_triage_example` / `-m ai_audit.model_config` 引用**顶层模块
+> `ai_audit`**。因此目录必须放到框架仓库根目录（该目录在 `sys.path` 上）使其可作为 `ai_audit`
+> 导入；如果放进 `examples/`，会变成 `examples.ai_audit`，模块路径对不上，导致
+> `No module named 'ai_audit'`。若坚持放 `examples/`，则所有引用需改为 `examples.ai_audit.*`。
 
 3. 按官方配置指南配好 LLM 模型 + GitHub PAT + MCP Server。
    示例的 `alerts` 任务会通过 GitHub Code Scanning API 拉取**最新 CodeQL 告警**，

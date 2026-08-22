@@ -119,6 +119,15 @@ cp -r <本项目>/ai-audit ai_audit
    因此需要导出 `GITHUB_TOKEN`（PAT，需含 `security_events` 读权限 + `repo/issues` 写权限，
    后者用于第 ⑤ 步创建真实 Issue）；如需指定其它仓库，可额外设置 `GITHUB_REPOSITORY=owner/repo`。
 
+   > 第 ⑤ 步「创建真实 Issue」现由 **agent 任务**（`agents:` + `user_prompt:`）通过
+   > `seclab_taskflow_agent.toolboxes.github_official`（GitHub MCP，工具集 `repos,issues`）创建，
+   > 因为 `{{ result.xxx }}` 这类占位符只能在 agent 的 `user_prompt` 模板里渲染，`run:`
+   > 纯 shell 任务不会替换模板（旧实现因此曾把模板原文 POST 出去生成垃圾 Issue）。
+   > 需要导出 `GH_TOKEN`（PAT，含 `repo/issues` 写权限）供该 MCP 授权；默认创建到
+   > `globals.repo`（可在文件顶部 `globals:` 修改或命令行 `-g repo=owner/repo` 覆盖）。
+   > 第 ③ 步会把判定为真实漏洞(TP)的报告存入 memcache（key `{{ globals.repo }}_{{ result.alert_number }}`），
+   > 第 ⑤ 步读取该报告并校验非空/非占位符后再创建，从根上避免再发占位符垃圾。
+
 4. 运行（注意模块路径前缀 `ai_audit.`，并通过 `-m` 显式指定模型配置）：
 
 ```bash

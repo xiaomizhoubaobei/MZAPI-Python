@@ -88,7 +88,8 @@ jobs:
         env:
           # alert_triage_example.yaml 的 alerts 任务从 GitHub Code Scanning API
           # 实时拉取最新告警，需 PAT 含 security_events 读权限；
-          # 第 5 步「创建真实 Issue」需同一 PAT 含 repo/issues 写权限
+          # 第 5 步「创建真实 Issue」由 agent 通过 github_official（GitHub MCP）创建，
+          # 用 job 级 GH_TOKEN（即 GH_PAT，含 repo/issues 写权限）授权
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           # 默认审计本仓库，如需改为其它仓库可改这里（owner/repo）
           GITHUB_REPOSITORY: ${{ github.repository }}

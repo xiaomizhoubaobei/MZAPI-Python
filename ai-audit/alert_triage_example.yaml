@@ -28,6 +28,10 @@ seclab-taskflow-agent:
 # 可选：引入模型配置（参照 examples/model_configs/），如无需可删除本行
 # model_config: examples.model_configs.model_config
 
+# 仓库名（owner/repo），用于第 5 步创建真实 Issue；也可通过 -g repo=... 覆盖
+globals:
+  repo: XMZZUZHI/MZAPI/python
+
 taskflow:
   # ---------------------------------------------------------------------------
   # 0) 准备：从 GitHub Code Scanning API 拉取「最新 CodeQL 安全告警」，
@@ -132,6 +136,11 @@ taskflow:
         - 修复建议。
         若全部为误报，则输出 "NO_VULNERABILITY"。
 
+        仅当判定为真实漏洞(TP)并生成了报告时，请调用 memcache_set_state 把报告
+        存入 memcache，key 为 "{{ globals.repo }}_{{ result.alert_number }}"、value 为
+        完整报告正文（供第 5 步创建 Issue 时读取复用）。若为误报(未生成报告)，
+        则不要写入任何 memcache 条目。
+
   # ---------------------------------------------------------------------------
   # 4) 校验：报告不完整/不一致=幻觉，直接驳回
   # ---------------------------------------------------------------------------
@@ -151,50 +160,53 @@ taskflow:
 
   # ---------------------------------------------------------------------------
   # 5) 创建真实 Issue：仅对校验通过（APPROVED）的真实漏洞创建 GitHub Issue。
-  #    通过 GitHub REST API 调用 POST /repos/{owner}/{repo}/issues。
-  #    需要的 GITHUB_TOKEN 必须含 repo（issues: write）权限。
+  #    改为 agent 任务（agents: + user_prompt）：{{ result.xxx }} 这类占位符只能在
+  #    agent 的 user_prompt 模板里渲染，run:（纯 shell）不会替换模板，会把模板原文
+  #    原样 POST 出去（旧实现即此 bug，曾生成一堆字面量占位符垃圾 Issue）。
+  #    本步由 agent 读取第 3 步存入 memcache 的报告，校验非空/非占位符后，
+  #    调用 GitHub MCP（github_official，repos/issues 工具集）创建真实 Issue。
   #    ⚠️ 本步会真实创建 Issue，请在确认链路无误后开启；如需仅输出不改仓库，可注释本步。
+  #    需要 GH_TOKEN（PAT，含 repo / issues 写权限），否则 github_official 工具不可用。
   # ---------------------------------------------------------------------------
   - task:
       must_complete: true
       repeat_prompt: true
       over: "outputs.alerts"
-      run: |
-        # 需要 GITHUB_TOKEN（PAT，含 repo / issues 写权限）来创建 Issue
-        : "${GITHUB_TOKEN:?请设置 GITHUB_TOKEN 环境变量以创建 Issue}"
-        : "${GITHUB_REPOSITORY:=XMZZUZHI/MZAPI/python}"
+      agents:
+        - ai_audit.personalities.python_auditer
+      toolboxes:
+        - seclab_taskflow_agent.toolboxes.github_official
+        - seclab_taskflow_agent.toolboxes.memcache
+      env:
+        GITHUB_MCP_TOOLSETS: repos,issues
+      user_prompt: |
+        针对 CodeQL 告警 {{ result.alert_number }}（规则：{{ result.rule }}，文件：{{ result.path }}），
+        只有当它是经校验的真实漏洞时才创建 GitHub Issue。请严格按以下步骤执行：
 
-        # 防重复：若仓库已存在标题完全相同的 open Issue，则跳过创建
-        existing=$(curl -fsSL \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-          "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues?state=open&per_page=100" \
-          | jq --arg t "[AI审计] {{ result.rule }} - {{ result.path }}" \
-               '[.[] | select(.title == $t)] | length')
-        if [ "$existing" -gt 0 ]; then
-          echo "SKIP: 已存在同名 open Issue，避免重复创建（alert {{ result.alert_number }}）"
-          exit 0
-        fi
+        1. 读取报告：调用 memcache_get_state，key 为 "{{ globals.repo }}_{{ result.alert_number }}"，
+           取得第 3 步为该告警生成的漏洞报告。
+        2. 前置校验，任一不满足则直接跳过（不做任何创建，仅输出 SKIP）：
+           - 报告不存在或为空（说明该告警被判定为误报 / 未生成报告）；
+           - alert_number、rule、path 任一为空；
+           - 待创建的标题/正文中仍含未渲染的占位符 "{{"（说明模板未被替换，
+             禁止创建以免再次生成垃圾 Issue）。
+        3. 防重复：先调用 GitHub 工具检查仓库 {{ globals.repo }} 中是否已存在标题完全
+           相同的 open Issue；若已存在，则跳过（仅输出 SKIP）。
+        4. 用 GitHub 的创建 Issue 工具（issues 工具集）在仓库 {{ globals.repo }} 创建 Issue：
+           - 标题："[AI审计] {{ result.rule }} - {{ result.path }}"
+           - 正文（Markdown）如下，报告内容取自步骤 1 读取的漏洞报告：
+             ## 漏洞概述
+             {报告全文}
 
-        # 仅当校验阶段判定为真实漏洞（非 NO_VULNERABILITY）时，创建真实 Issue
-        report="{{ result.report }}"
-        if [ "$report" = "NO_VULNERABILITY" ] || [ -z "$report" ]; then
-          echo "SKIP: alert {{ result.alert_number }} 判定为误报，不创建 Issue"
-          exit 0
-        fi
+             ## 关联 CodeQL 告警
+             - 告警编号：{{ result.alert_number }}
+             - 规则：{{ result.rule }}
+             - 文件：{{ result.path }}
 
-        # 依据校验阶段输出的报告体创建真实 Issue（含漏洞类型/位置/攻击路径/修复建议）
-        # 使用 jq 直接构造 JSON，避免多行 heredoc 破坏 YAML 缩进
-        curl -fsSL \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-          "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues" \
-          -d "$(jq -n \
-                --arg title "[AI审计] {{ result.rule }} - {{ result.path }}" \
-                --arg body "## 漏洞概述\n{{ result.report }}\n\n## 关联 CodeQL 告警\n- 告警编号：{{ result.alert_number }}\n- 规则：{{ result.rule }}\n- 文件：{{ result.path }}\n\n## 修复建议\n- 请参考上方报告中给出的修复建议，在对应文件中修复后关闭本 Issue。" \
-                '{title: $title, body: $body, labels: ["bug", "security", "ai-audit"]}')"
-        echo "CREATED: 已为告警 {{ result.alert_number }} 创建真实 Issue"
+             ## 修复建议
+             - 请参考上方报告中给出的修复建议，在对应文件中修复后关闭本 Issue。
+           - 标签：["bug", "security", "ai-audit"]
+        5. 创建成功后输出 CREATED，并记录创建好的 Issue 编号，便于第 6 步知识回流追踪。
 
   # ---------------------------------------------------------------------------
   # 6) 知识回流：人工驳回原因回流给 LLM，持续改进

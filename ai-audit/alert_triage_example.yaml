@@ -55,7 +55,14 @@ taskflow:
               path: (.most_recent_instance.location.path // "unknown"),
               message: (.most_recent_instance.message.text // "")
             })
-          '
+          ' > /tmp/alerts.json
+        # 将映射结果写入命名输出 outputs.alerts（后续 repeat_prompt/over 引用）
+        cat /tmp/alerts.json
+        # 无告警时给 stderr 写一条明确提示，避免下游 repeat_prompt 反复输出空迭代告警
+        # （提示写入 stderr，不污染 stdout 的纯 JSON，保证命名输出可被正确解析）
+        if [ "$(jq 'length' /tmp/alerts.json)" -eq 0 ]; then
+          echo "INFO: 仓库 ${GITHUB_REPOSITORY} 当前没有 open 的 CodeQL 告警，无需 AI 分流，任务提前正常结束。" >&2
+        fi
       # 校验生成的 JSON 结构，避免幻觉 / 结构错误传入下游
       outputs:
         type: array

@@ -12,7 +12,8 @@
 #     ai_audit.personalities.python_auditer，而非官方默认的 C 语言人格
 #     c_auditer（详见 personalities/python_auditer.yaml）。
 #   - 引用路径 ai_audit.* 假设已将 ai-audit 目录（重命名为 ai_audit）
-#     复制到框架 examples/ 目录下；详见 README.md 的部署说明。
+#     复制到框架仓库根目录（而非 examples/，那样会变成 examples.ai_audit 导致
+#     模块路径对不上）；详见 README.md 的部署说明。
 #   - 请先阅读同目录下的 README.md 了解运行前提（LLM 配置、GitHub PAT、MCP Server、人格模块路径）。
 #
 # 适配语言：Python

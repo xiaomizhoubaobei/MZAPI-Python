@@ -45,12 +45,22 @@ LLM + Taskflow Agent 逐个审计
 ```
 ai-audit/
 ├── README.md                        # 本说明
+├── __init__.py                      # 使 ai_audit 成为可导入 Python 包（框架 importlib.resources 必需）
 ├── alert_triage_example.yaml        # 6 阶段 AI 审计 taskflow（官方 GRAMMAR 语法）
 ├── model_config.yaml                # OpenAI 兼容上游模型配置（模型名 + api_type: chat_completions）
 ├── model_config.py                  # [参考] model_config.yaml 的说明文档（框架不读取）
 └── personalities/
+    ├── __init__.py                  # 使 personalities 成为可导入子包
     └── python_auditer.yaml          # 项目自带的 Python 审计人格（personality）
 ```
+
+> ⚠️ **为什么必须有 `__init__.py`？** 框架通过
+> `importlib.resources.files(package)` 加载 taskflow / personality / model_config，
+> 它要求目标目录是**可导入的 Python 包**。因此本目录（复制后名为 `ai_audit`）
+> 及其 `personalities/` 子目录都必须包含 `__init__.py`，否则会报
+> `No module named 'ai_audit'`。若目录被当作 PEP 420 命名空间包（无 `__init__.py`）
+> 处理，在不同 Python 环境 / hatch 环境下不一定能稳定被 `importlib.resources` 解析，
+> 显式提供 `__init__.py` 是最稳妥的做法。
 
 **为什么需要自带的 Python 人格？** 官方框架默认自带的安全审计人格是
 `seclab_taskflow_agent.personalities.c_auditer`，它是针对 **C 语言**设计的

@@ -298,4 +298,3 @@ class Config(DaraModel):
         if m.get('tlsMinVersion') is not None:
             self.tls_min_version = m.get('tlsMinVersion')
         return self
-

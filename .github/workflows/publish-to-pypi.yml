@@ -116,9 +116,9 @@ jobs:
       id: extract_version
       run: |
         set -e
-        
+
         echo "🔍 开始从 pyproject.toml 提取版本号..."
-        
+
         # 检查 pyproject.toml 是否存在
         if [ ! -f "pyproject.toml" ]; then
           echo "❌ 错误: pyproject.toml 文件不存在"
@@ -126,10 +126,10 @@ jobs:
           ls -la
           exit 1
         fi
-        
+
         # 使用 grep 从 pyproject.toml 提取版本号
         version=$(grep -E '^version\s*=' pyproject.toml | head -1 | sed -E 's/.*version\s*=\s*["''']?([^"''']+)["''']?.*/\1/')
-        
+
         # 验证是否成功提取版本号
         if [ -z "$version" ]; then
           echo "❌ 错误: 无法从 pyproject.toml 提取版本号"
@@ -137,14 +137,14 @@ jobs:
           cat pyproject.toml
           exit 1
         fi
-        
+
         # 验证版本号格式 (支持 x.y.z 或 x.y.z.a 格式)
         if ! echo "$version" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
           echo "❌ 错误: 提取的版本号格式无效: '$version'"
           echo "💡 版本号应为 x.y.z 或 x.y.z.a 格式"
           exit 1
         fi
-        
+
         echo "✅ 成功提取版本号: $version"
         echo "version=$version" >> $GITHUB_ENV
 

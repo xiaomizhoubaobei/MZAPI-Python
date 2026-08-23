@@ -10,16 +10,16 @@ body:
     attributes:
       value: |
         > ⚠️ **重要安全提示**
-        > 
+        >
         > **请不要在公开 Issue 中披露敏感的安全漏洞详情！**
-        > 
+        >
         > 如果您发现了严重的安全漏洞，请通过以下**私有方式**联系我们：
-        > 
+        >
         > 1. **邮件报告**：qixiaoxin@stu.sqxy.edu.cn
         > 2. **GitHub 私人报告**：点击 "Report a vulnerability" 按钮
-        > 
+        >
         > 我们会在收到报告后 48 小时内回复，并与您协调修复和披露时间表。
-        > 
+        >
         > 感谢您帮助我们维护项目安全！
 
   - type: checkboxes
@@ -113,12 +113,12 @@ body:
         ```python
         # 复现代码（已脱敏）
         from mzapi import GeneralBasicOCR
-        
+
         ocr = GeneralBasicOCR(
             secret_id="AKIDxxxxxxxx",  # 已隐藏完整密钥
             secret_key="xxxxxxxx"      # 已隐藏完整密钥
         )
-        
+
         # 在某些情况下会触发漏洞
         result = ocr.recognize("image.jpg", debug=True)
         ```
@@ -150,7 +150,7 @@ body:
         - 从日志中移除所有密钥和凭证
         - 使用环境变量存储敏感信息
         - 实施日志过滤机制
-        
+
         **方案 2：增强密钥保护**
         - 使用密钥轮换机制
         - 实施密钥加密存储
@@ -198,9 +198,9 @@ body:
     attributes:
       value: |
         ---
-        
+
         **感谢您的负责任披露！**
-        
+
         我们会：
         - 在 48 小时内确认收到您的报告
         - 与您协调修复和披露时间表

@@ -529,7 +529,7 @@ class Utils(object):
     def __get_default_agent():
         return f'AlibabaCloud ({platform.system()}; {platform.machine()}) ' \
                f'Python/{platform.python_version()} Core/{Tea.__version__} TeaDSL/2'
-               
+
     @staticmethod
     def get_user_agent(
         user_agent: str,
@@ -561,13 +561,13 @@ class Utils(object):
         else:
             result = result.replace("<network>", "-"+network)
         return result
-    
-    
+
+
     @staticmethod
     def get_throttling_time_left(headers: Dict[str, str]) -> int:
         """
         Get throttling time left based on the response headers
-        
+
         @param headers: The response headers
         @return: Remaining time in milliseconds before the throttle is lifted
         """
@@ -583,7 +583,7 @@ class Utils(object):
     def _get_time_left(rate_limit: str) -> int:
         """
         Extract time left from rate limit string
-        
+
         @param rate_limit: Rate limit string from headers
         @return: Time left in milliseconds
         """
@@ -599,7 +599,7 @@ class Utils(object):
     def flat_map(params: Dict[str, Any], prefix: str = '') -> Dict[str, str]:
         """
         Flatten the dictionary with a given prefix
-        
+
         @param params: Dictionary to flatten
         @param prefix: Prefix for keys in the flattened dictionary
         @return: A flattened dictionary
@@ -626,20 +626,20 @@ class Utils(object):
         """
         Transform a map to a flat style map where keys are prefixed with length info.
         Map keys are transformed from "key" to "#length#key" format.
-        
+
         @param input: Input to convert
         @return: A flat representation of the input
         """
         if input is None:
             return input
-        
+
         # Handle list
         if isinstance(input, list):
             result = []
             for item in input:
                 result.append(Utils.map_to_flat_style(item))
             return result
-        
+
         # Handle DaraModel - modify original object's fields
         if isinstance(input, DaraModel):
             # Use reflection to modify fields directly
@@ -652,7 +652,7 @@ class Utils(object):
                     # Skip methods and non-data attributes
                     if callable(attr_value):
                         continue
-                    
+
                     # If attribute is a dict, apply flat style to its keys
                     if isinstance(attr_value, dict):
                         flat_map = {}
@@ -667,7 +667,7 @@ class Utils(object):
                     # Skip attributes that can't be accessed or set
                     continue
             return input  # Return the modified original object
-        
+
         # Handle plain dict - transform ALL keys
         if isinstance(input, dict):
             result = {}
@@ -675,6 +675,6 @@ class Utils(object):
                 flat_key = f"#{len(key)}#{key}"
                 result[flat_key] = Utils.map_to_flat_style(value)
             return result
-        
+
         # For primitive types, return as-is
         return input

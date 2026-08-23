@@ -245,5 +245,3 @@ class RuntimeOptions(TeaModel):
             temp_model = ExtendsParameters()
             self.extends_parameters = temp_model.from_map(m['extendsParameters'])
         return self
-
-

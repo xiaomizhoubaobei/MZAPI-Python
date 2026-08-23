@@ -38,7 +38,7 @@ class Url:
 
     def __init__(self, url_str):
         self._url = urlparse(url_str)
-    
+
     @staticmethod
     def new_url(url_str):
         """根据 URL 字符串创建 Url 对象。

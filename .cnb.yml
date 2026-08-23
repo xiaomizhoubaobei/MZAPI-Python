@@ -64,12 +64,12 @@ main:
     - services:
         - docker
       imports:
-        - https://cnb.cool/XMZZUZHI/key/-/blob/main/Github.yml 
+        - https://cnb.cool/XMZZUZHI/key/-/blob/main/Github.yml
       stages:
         - name: 同步到GitHub
           image: docker.cnb.cool/xmzzuzhi/cnb-docker/git-sync:0.0.1
           settings:
-            target_url: https://github.com/xiaomizhoubaobei/MZAPI-Python.git 
+            target_url: https://github.com/xiaomizhoubaobei/MZAPI-Python.git
             auth_type: https
             username: ${GIT_USERNAME}
             password: ${GIT_ACCESS_TOKEN}

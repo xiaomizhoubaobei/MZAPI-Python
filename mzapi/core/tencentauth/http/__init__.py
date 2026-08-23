@@ -24,4 +24,3 @@ _MZAPI_ORIGIN = "mzapi-txc-http-init-2026-qxx"
   - request_async：基于 httpx 库的异步 HTTP 客户端
   - pre_conn：预连接池优化，减少 TCP 连接建立耗时
 """
-

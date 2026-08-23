@@ -77,7 +77,7 @@ class TLSVersion(Enum):
     TLSv1 = 'TLSv1'
     TLSv1_1 = 'TLSv1.1'
     TLSv1_2 = 'TLSv1.2'
-    TLSv1_3 = 'TLSv1.3'    
+    TLSv1_3 = 'TLSv1.3'
 
 class _TLSAdapter(adapters.HTTPAdapter):
     """使用指定 TLS 版本的 requests HTTPAdapter。"""
@@ -173,7 +173,7 @@ class DaraCore:
             elif tls_min_version == 'TLSv1.3':
                 context.minimum_version = ssl.TLSVersion.TLSv1_3
         return context
-    
+
     @staticmethod
     def get_adapter(prefix, tls_min_version: str = None, pool_size: int = None):
         """根据协议前缀创建 HTTP/HTTPS 适配器，并加载 CA 证书。
@@ -586,7 +586,7 @@ class DaraCore:
         )
 
         session = aiohttp.ClientSession(connector=connector)
-        
+
         body = b''
         if isinstance(request.body, BaseStream):
             for content in request.body:
@@ -600,7 +600,7 @@ class DaraCore:
             headers = request.headers.copy()
             ssl_param: Union[bool, ssl.SSLContext] = ssl_context if ssl_context is not None else bool(verify)
             response = await session.request(
-                request.method, 
+                request.method,
                 url,
                 data=body,
                 headers=headers,
@@ -614,7 +614,7 @@ class DaraCore:
             tea_resp.headers = dict({k.lower(): v for k, v in response.headers.items()})
             tea_resp.body = SSEResponseWrapper(session, response)
             return tea_resp
-                        
+
         except IOError as e:
             await session.close()
             raise RetryError(str(e))
@@ -714,7 +714,7 @@ class DaraCore:
         response.status_code = resp.status_code
         response.headers = {k.lower(): v for k, v in resp.headers.items()}
         response.body = SyncSSEResponseWrapper(session, resp)
-        
+
         return response
     @staticmethod
     def get_response_body(resp) -> str:
@@ -749,7 +749,7 @@ class DaraCore:
             retry = 0 if dic.get("maxAttempts") is None else int(
                 dic.get("maxAttempts"))
         return retry >= retry_times
-    
+
     @staticmethod
     def should_retry(options: RetryOptions, ctx: RetryPolicyContext) -> bool:
         """根据重试策略判断当前请求是否应当重试。
@@ -777,7 +777,7 @@ class DaraCore:
         for condition in options.retry_condition:
             if getattr(ex, 'name', None) not in condition.exception and getattr(ex, 'code', None) not in condition.error_code:
                 continue
-            
+
             if retries_attempted >= condition.max_attempts:
                 return False
             return True
@@ -867,7 +867,7 @@ class DaraCore:
             为 None 返回 True。
         """
         return value is None
-    
+
     @staticmethod
     def to_readable_stream(data):
         """将字符串或字节数据转换为可读的 IO 流。

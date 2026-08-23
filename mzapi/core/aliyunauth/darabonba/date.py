@@ -43,7 +43,7 @@ class Date:
             "%Y-%m-%dT%H:%M:%S",
             "%Y-%m-%dT%H:%M:%S.%f",
         ]
-        
+
         self.date = None
         for format in formats:
             try:
@@ -51,7 +51,7 @@ class Date:
                 break
             except ValueError:
                 continue
-        
+
         if self.date is None:
             raise ValueError(f"unable to parse date: {date_input}")
 
@@ -74,7 +74,7 @@ class Date:
         layout = layout.replace("EEEE", "%A")
         layout = layout.replace("E", "%a")
         return self.date.strftime(layout)
-    
+
     def timestamp(self):
         """返回当前日期的 Unix 时间戳（秒）。
 
@@ -82,7 +82,7 @@ class Date:
             整数形式的时间戳。
         """
         return int(self.date.timestamp())
-    
+
     def sub(self, unit, amount):
         """从当前日期减去指定单位的时间量。
 
@@ -107,7 +107,7 @@ class Date:
             return Date((self.date.replace(month=self.date.month - amount)).isoformat())
         elif unit in ["year", "years"]:
             return Date((self.date.replace(year=self.date.year - amount)).isoformat())
-    
+
     def add(self, unit, amount):
         """在当前日期上加上指定单位的时间量。
 
@@ -141,12 +141,12 @@ class Date:
                     new_day = min(self.date.day, [31, 30][new_month % 2])
             else:
                 new_day = self.date.day
-                
+
             new_date = self.date.replace(year=new_year, month=new_month, day=new_day)
             return Date(new_date.isoformat())
         elif unit in ["year", "years"]:
             return Date((self.date.replace(year=self.date.year + amount)).isoformat())
-    
+
     def diff(self, unit, diff_date):
         """计算当前日期与目标日期的差值。
 
@@ -171,7 +171,7 @@ class Date:
             return (self.date.year - diff_date.date.year) * 12 + (self.date.month - diff_date.date.month)
         elif unit in ["year", "years"]:
             return self.date.year - diff_date.date.year
-    
+
     def hour(self):
         """返回小时数（0-23）。"""
         return self.date.hour

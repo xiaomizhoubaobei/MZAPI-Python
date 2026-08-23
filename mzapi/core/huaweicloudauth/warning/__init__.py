@@ -15,4 +15,3 @@ _MZAPI_ORIGIN = "mzapi-hwc-warning-init-2026-qxx"
 """华为云警告子模块
 
 提供 SDK 警告类型定义。"""
-

@@ -35,15 +35,16 @@ jobs:
 
         echo "🔍 检查 pyproject.toml 中版本号是否发生变更..."
 
-        # 提取当前版本号
-        current_version=$(grep -E '^version\s*=' pyproject.toml | head -1 | sed -E 's/.*version\s*=\s*["''']?([^"''']+)["''']?.*/\1/')
+        # 提取当前版本号（兼容 version = "x" 与 version="x" 两种写法，并剥离两侧引号）
+        current_version=$(grep -E '^[[:space:]]*version[[:space:]]*=' pyproject.toml | head -1 | sed -E 's/.*=[[:space:]]*[\"'\'']?([^\"'\'']+)[\"'\'']?.*/\1/' | tr -d '[:space:]')
         echo "当前版本号: $current_version"
 
-        # 提取上一次提交中的版本号
-        prev_version=$(git show HEAD~1:pyproject.toml 2>/dev/null | grep -E '^version\s*=' | head -1 | sed -E 's/.*version\s*=\s*["''']?([^"''']+)["''']?.*/\1/') || true
+        # 提取上一次提交中的版本号（首次提交时 git show HEAD~1 会失败，此时 prev_version 为空）
+        prev_version=$(git show HEAD~1:pyproject.toml 2>/dev/null | grep -E '^[[:space:]]*version[[:space:]]*=' | head -1 | sed -E 's/.*=[[:space:]]*[\"'\'']?([^\"'\'']+)[\"'\'']?.*/\1/' | tr -d '[:space:]') || true
         echo "上一次版本号: $prev_version"
 
-        if [ "$current_version" = "$prev_version" ]; then
+        # 若未取到上一次版本号，视为未发生变更，避免误触发发布
+        if [ -z "$prev_version" ] || [ "$current_version" = "$prev_version" ]; then
           echo "ℹ️ 版本号未变更（$current_version），跳过发布"
           echo "version_changed=false" >> $GITHUB_OUTPUT
         else
@@ -127,8 +128,8 @@ jobs:
           exit 1
         fi
 
-        # 使用 grep 从 pyproject.toml 提取版本号
-        version=$(grep -E '^version\s*=' pyproject.toml | head -1 | sed -E 's/.*version\s*=\s*["''']?([^"''']+)["''']?.*/\1/')
+        # 使用 grep 从 pyproject.toml 提取版本号（兼容 version = "x" 与 version="x" 写法，剥离两侧引号）
+        version=$(grep -E '^[[:space:]]*version[[:space:]]*=' pyproject.toml | head -1 | sed -E 's/.*=[[:space:]]*[\"'\'']?([^\"'\'']+)[\"'\'']?.*/\1/' | tr -d '[:space:]')
 
         # 验证是否成功提取版本号
         if [ -z "$version" ]; then

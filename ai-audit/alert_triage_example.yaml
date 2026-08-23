@@ -200,9 +200,11 @@ taskflow:
            - alert_number、rule、path 任一为空；
            - 待创建的标题/正文中仍含未渲染的占位符 "{{"（说明模板未被替换，
              禁止创建以免再次生成垃圾 Issue）。
-        3. 防重复：先调用 GitHub 工具检查仓库 {{ globals.repo }} 中是否已存在标题完全
-           相同的 open Issue；若已存在，则跳过（仅输出 SKIP）。
-        4. 用 GitHub 的创建 Issue 工具（issues 工具集）在仓库 {{ globals.repo }} 创建 Issue：
+        3. 防重复：先调用 GitHub MCP 工具（issues 工具集）检查仓库 {{ globals.repo }} 中是否
+           已存在标题完全相同的 open Issue；若已存在，则跳过（仅输出 SKIP）。
+        4. 通过 GitHub MCP 的 issues.create 工具（github_official toolbox，issues 工具集）
+           在仓库 {{ globals.repo }} 创建 Issue，禁止直接调用 HTTP API / curl：
+           - 通过 GitHub MCP 工具接口调用，而不是直接发起 HTTP 请求；
            - 标题："[AI审计] {{ result.rule }} - {{ result.path }}"
            - 正文（Markdown）如下，报告内容取自步骤 1 读取的漏洞报告：
              ## 漏洞概述

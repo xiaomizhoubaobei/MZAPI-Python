@@ -1,6 +1,7 @@
 /.arts/launch.json
 .env
 /huaweicloudsdkocr
+CLAUDE.md
 
 # Python 编译文件
 *.py[cod]

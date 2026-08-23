@@ -148,16 +148,6 @@ jobs:
         echo "✅ 成功提取版本号: $version"
         echo "version=$version" >> $GITHUB_ENV
 
-    - name: 配置 GPG 签名环境
-      run: |
-        echo "🔑 准备 GPG 签名环境..."
-        if [ -n "${{ secrets.GPG_PRIVATE_KEY }}" ]; then
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
-          echo "✅ GPG 私钥导入成功"
-        else
-          echo "⚠️ 未配置 GPG_PRIVATE_KEY，将跳过签名"
-        fi
-
     - name: 将发布分发包发布到PyPI
       uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # release/v1
       with:
@@ -166,9 +156,6 @@ jobs:
         skip-existing: true
         verbose: true
         print-hash: true
-        signatures: true
-        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-        gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
     - name: Generate CI Evidence Pack
       if: always()

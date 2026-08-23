@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mz-sdk"
+name = "mzapi"
 version = "0.0.1"
 authors = [
     {name = "祁潇潇", email = "qixiaoxin@stu.sqxy.edu.cn"}
 ]
-description = "MZAPI的python的SDK"
+description = "MZAPI - 集成多家云服务商 API 的多云统一接口库 (Python SDK)"
 readme = "README.md"
 license = {text = "MPL-2.0"}
 requires-python = ">=3.10"
@@ -24,7 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
 ]
-keywords = ["API", "SDK", "MZAPI", "PYTHON"]
+keywords = ["API", "SDK", "MZAPI", "PYTHON", "MULTICLOUD", "ALIYUN", "TENCENTCLOUD", "HUAWEICLOUD", "OCR"]
 dependencies = [
     "requests>=2.33.0",
     "pytz~=2026.1",
@@ -45,8 +45,8 @@ dev = [
 [project.urls]
 "Bug Reports" = "https://github.com/xiaomizhoubaobei/MZAPI-Python/issues"
 "Source" = "https://github.com/xiaomizhoubaobei/MZAPI-Python"
-"Homepage" = "https://pypi.org/project/mz-sdk"
-"Download" = "https://pypi.org/project/mz-sdk/#files"
+"Homepage" = "https://pypi.org/project/mzapi"
+"Download" = "https://pypi.org/project/mzapi/#files"
 "Changelog" = "https://github.com/xiaomizhoubaobei/MZAPI-Python/CHANGELOG.md"
 "Documentation" = "https://docs.mizhoubaobei.top"
 "GitHub" = "https://github.com/xiaomizhoubaobei/MZAPI-Python"

@@ -78,7 +78,7 @@ body:
         - 操作系统: 例如 Ubuntu 20.04, Windows 10, macOS 12
         - Python 版本: 例如 3.10.0, 3.11.5
         - MZAPI SDK 版本: 例如 0.0.1
-        - 安装方式: pip install mz-sdk
+        - 安装方式: pip install mzapi
         - 使用的云服务: 例如 腾讯云 OCR, 华为云 OBS
       render: yaml
     validations:

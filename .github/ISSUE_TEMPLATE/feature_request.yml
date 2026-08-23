@@ -45,7 +45,7 @@ body:
       placeholder: |
         **场景 1：**
         用户需要从发票中提取表格数据
-        
+
         **场景 2：**
         用户需要处理大量包含表格的文档
     validations:
@@ -61,16 +61,16 @@ body:
         - 云服务商：例如 华为云
         - API名称：例如 通用文字识别 API
         - API文档链接：例如 https://support.huaweicloud.com/api-ocr/ocr_03_0042.html
-        
+
         **期望的SDK接口设计：**
         ```python
         from mzapi import NewFeature
-        
+
         # 您期望的使用方式
         client = NewFeature(secret_id, secret_key)
         result = client.do_something(params)
         ```
-        
+
         **需要包含的功能：**
         - 功能点1
         - 功能点2
@@ -85,13 +85,13 @@ body:
       placeholder: |
         ```python
         from mzapi import TableRecognition
-        
+
         # 初始化
         recognizer = TableRecognition(
             secret_id="your_secret_id",
             secret_key="your_secret_key"
         )
-        
+
         # 识别表格
         result = recognizer.recognize("invoice.jpg")
         print(result.tables)
@@ -108,7 +108,7 @@ body:
       placeholder: |
         **方案 1：** 使用现有的通用 OCR 接口
         - 缺点：需要额外处理表格结构，开发复杂度高
-        
+
         **方案 2：** 调用多个云服务接口
         - 缺点：需要维护多个密钥，成本高
     validations:
@@ -137,7 +137,7 @@ body:
         - 封装腾讯云表格识别 API
         - 添加参数验证和错误处理
         - 提供多种输出格式（JSON、CSV、Excel）
-        
+
         **潜在风险：**
         - API 限流
         - 大文件处理性能

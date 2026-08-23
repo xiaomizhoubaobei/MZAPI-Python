@@ -26,4 +26,3 @@ def get_timestamp_utc():
 
 def get_timestamp_from_str(s, fmt):
     return time.mktime(time.strptime(s, fmt))
-

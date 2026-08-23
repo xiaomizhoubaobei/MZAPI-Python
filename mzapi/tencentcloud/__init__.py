@@ -29,4 +29,3 @@ _MZAPI_ORIGIN = "mzapi-txc-cloud-init-2026-qxx"
     >>> client = GeneralBasicOCR(secret_id="your_id", secret_key="your_key")
     >>> result = client.recognize(image_base64="base64_encoded_image")
 """
-

@@ -283,7 +283,7 @@ class Stream:
             return stream
         else:
             return bytes(stream, encoding='utf-8')
-    
+
     @staticmethod
     async def read_as_bytes_async(stream) -> bytes:
         """
@@ -297,7 +297,7 @@ class Stream:
             return bytes(stream, encoding='utf-8')
         else:
             return await stream.read()
-    
+
     @staticmethod
     def read_as_json(stream) -> Any:
         """
@@ -328,7 +328,7 @@ class Stream:
         """
         buff = Stream.read_as_bytes(stream)
         return Stream.__to_string(buff)
-    
+
     @staticmethod
     async def read_as_string_async(stream) -> str:
         """
@@ -338,7 +338,7 @@ class Stream:
         """
         buff = await Stream.read_as_bytes_async(stream)
         return Stream.__to_string(buff)
-    
+
     @staticmethod
     def read_as_sse(stream) -> Generator[Event, None, None]:
         """
@@ -444,7 +444,7 @@ class Stream:
             if not chunk:
                 break
             output_stream.write(chunk)
-    
+
     @staticmethod
     def to_readable(
         value: Any,
@@ -478,7 +478,7 @@ class Stream:
         elif not isinstance(value, WRITABLE):
             raise ValueError(f'The value is not a writeable')
         return value
-    
+
     @staticmethod
     async def _parse_sse_stream(wrapper: SSEResponseWrapper) -> AsyncGenerator[Dict[str, Any], None]:
         """
@@ -486,27 +486,27 @@ class Stream:
         """
         buffer = ""
         current_event = Event()
-        
+
         MAX_BUFFER_SIZE = 1024 * 1024  # 1MB
         dec = codecs.getincrementaldecoder('utf-8')()
-        
+
         async for chunk in wrapper:
             try:
                 chunk_str = dec.decode(chunk)
             except UnicodeDecodeError:
                 chunk_str = chunk.decode('utf-8', errors='replace')
-            
+
             if len(buffer) + len(chunk_str) > MAX_BUFFER_SIZE:
                 import logging
                 logging.warning("SSE stream data too large, skipping chunk")
                 continue
-                
+
             buffer += chunk_str
 
             while '\n' in buffer:
                 line, buffer = buffer.split('\n', 1)
                 line = line.rstrip('\r')  # Remove \r
-                
+
                 if not line.strip():
                     if current_event.data is not None:
                         yield {
@@ -517,16 +517,16 @@ class Stream:
                         }
                         current_event = Event()
                     continue
-                
+
                 if line.startswith(':'):
                     continue
-                
+
                 if ':' in line:
                     match = sse_line_pattern.match(line)
                     if match:
                         name = match.group('name').strip()
                         value = match.group('value').strip()
-                        
+
                         if name == 'event':
                             current_event.event = value
                         elif name == 'id':
@@ -573,13 +573,13 @@ class Stream:
                 chunk_str = chunk.decode('utf-8')
             except UnicodeDecodeError:
                 continue
-            
+
             buffer += chunk_str
-            
+
             while '\n' in buffer:
                 line, buffer = buffer.split('\n', 1)
                 line = line.rstrip('\r')
-                
+
                 if not line.strip():
                     if current_event.data is not None:
                         yield {
@@ -590,16 +590,16 @@ class Stream:
                         }
                         current_event = Event()
                     continue
-                
+
                 if line.startswith(':'):
                     continue
-                
+
                 if ':' in line:
                     match = sse_line_pattern.match(line)
                     if match:
                         name = match.group('name').strip()
                         value = match.group('value').strip()
-                        
+
                         if name == 'event':
                             current_event.event = value
                         elif name == 'id':
@@ -627,7 +627,7 @@ class Stream:
                 'data': current_event.data,
                 'retry': current_event.retry
             }
-    
+
     @staticmethod
     def _parse_sse_stream_sync(wrapper: SyncSSEResponseWrapper) -> Generator[Dict[str, Any], None, None]:
         """
@@ -643,14 +643,14 @@ class Stream:
             except UnicodeDecodeError:
                 # If decoding fails, skip this chunk
                 continue
-            
+
             buffer += chunk_str
-            
+
             # Split processing by row
             while '\n' in buffer:
                 line, buffer = buffer.split('\n', 1)
                 line = line.rstrip('\r')  # Remove \r
-                
+
                 if not line.strip():
                     if current_event.data is not None:
                         yield {
@@ -661,17 +661,17 @@ class Stream:
                         }
                         current_event = Event()
                     continue
-                
+
                 # Skip comment lines
                 if line.startswith(':'):
                     continue
-                
+
                 if ':' in line:
                     match = sse_line_pattern.match(line)
                     if match:
                         name = match.group('name').strip()
                         value = match.group('value').strip()
-                        
+
                         if name == 'event':
                             current_event.event = value
                         elif name == 'id':
@@ -713,13 +713,13 @@ class Stream:
                 chunk_str = chunk.decode('utf-8')
             except UnicodeDecodeError:
                 continue
-            
+
             buffer += chunk_str
-            
+
             while '\n' in buffer:
                 line, buffer = buffer.split('\n', 1)
                 line = line.rstrip('\r')
-                
+
                 if not line.strip():
                     if current_event.data is not None:
                         yield {
@@ -730,16 +730,16 @@ class Stream:
                         }
                         current_event = Event()
                     continue
-                
+
                 if line.startswith(':'):
                     continue
-                
+
                 if ':' in line:
                     match = sse_line_pattern.match(line)
                     if match:
                         name = match.group('name').strip()
                         value = match.group('value').strip()
-                        
+
                         if name == 'event':
                             current_event.event = value
                         elif name == 'id':

@@ -33,7 +33,7 @@ class Params(DaraModel):
     """API 请求参数模型，描述一次 API 调用的请求元数据。"""
 
     def __init__(
-        self, 
+        self,
         action: str = None,
         version: str = None,
         protocol: str = None,
@@ -121,4 +121,3 @@ class Params(DaraModel):
         if m.get('style') is not None:
             self.style = m.get('style')
         return self
-

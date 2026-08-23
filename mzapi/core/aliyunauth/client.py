@@ -137,7 +137,7 @@ class Client:
     """
      * @remarks
      * Encapsulate the request and invoke the network
-     * 
+     *
      * @param action - api name
      * @param version - product version
      * @param protocol - http or https
@@ -573,7 +573,7 @@ class Client:
     """
      * @remarks
      * Encapsulate the request and invoke the network
-     * 
+     *
      * @param action - api name
      * @param version - product version
      * @param protocol - http or https
@@ -988,7 +988,7 @@ class Client:
     """
      * @remarks
      * Encapsulate the request and invoke the network with form body
-     * 
+     *
      * @param action - api name
      * @param version - product version
      * @param protocol - http or https
@@ -1403,7 +1403,7 @@ class Client:
     """
      * @remarks
      * Encapsulate the request and invoke the network
-     * 
+     *
      * @param action - api name
      * @param version - product version
      * @param protocol - http or https
@@ -1869,7 +1869,7 @@ class Client:
     """
      * @remarks
      * Encapsulate the request and invoke the network
-     * 
+     *
      * @param action - api name
      * @param version - product version
      * @param protocol - http or https

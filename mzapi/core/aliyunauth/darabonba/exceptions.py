@@ -64,7 +64,7 @@ class ResponseException(DaraException):
             'detail': detail,
             'accessDeniedDetail': access_denied_detail
         })
-        
+
         self.name = 'ResponseException'
         self.status_code = status_code
         self.retry_after = retry_after
@@ -88,9 +88,9 @@ class RetryError(Exception):
     """可重试错误，用于网络等临时性故障场景。"""
 
     def __init__(self, message):
-        
+
         super().__init__({"message":message})
-        
+
         self.message = message
         self.data = None
         self.name = 'RetryError'
@@ -109,7 +109,7 @@ class UnretryableException(Exception):
         self.http_request = _context.http_request
         self.name = 'UnretryableException'
         super().__init__(str(self.inner_exception) if self.inner_exception else 'Unretryable exception')
-        
+
 
     def __str__(self):
         return str(self.inner_exception)

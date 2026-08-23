@@ -31,27 +31,27 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: |
             👋 感谢您提交的 Issue！
-            
+
             由于此 Issue 已超过 60 天没有活动，我将其标记为「陈旧」。
-            
+
             如果您仍然遇到此问题或有新的信息要分享，请随时回复，我会重新激活它。
-            
+
             ⚠️ 如果在 30 天内没有进一步活动，此 Issue 将被自动关闭。
           stale-pr-message: |
             👋 感谢您的贡献！
-            
+
             由于此 Pull Request 已超过 60 天没有活动，我将其标记为「陈旧」。
-            
+
             如果您仍然希望合并此 PR，请回复或更新代码，我会重新激活它。
-            
+
             ⚠️ 如果在 30 天内没有进一步活动，此 PR 将被自动关闭。
           close-issue-message: |
             🔒 此 Issue 由于长时间未活动已被自动关闭。
-            
+
             如果您仍然需要帮助或有新的信息，请随时创建新的 Issue 并引用此问题。
           close-pr-message: |
             🔒 此 Pull Request 由于长时间未活动已被自动关闭。
-            
+
             如果您仍然希望合并此代码，请随时重新提交 PR。
           stale-issue-label: 'no-issue-activity'
           stale-pr-label: 'no-pr-activity'

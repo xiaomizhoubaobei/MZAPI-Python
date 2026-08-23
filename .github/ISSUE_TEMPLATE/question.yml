@@ -48,7 +48,7 @@ body:
       placeholder: |
         ```python
         from mzapi import GeneralBasicOCR
-        
+
         # 您的代码
         ocr = GeneralBasicOCR(secret_id, secret_key)
         result = ocr.recognize("image.jpg")

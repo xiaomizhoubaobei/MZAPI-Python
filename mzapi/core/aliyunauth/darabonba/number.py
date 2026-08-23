@@ -40,7 +40,7 @@ class Number:
             转换后的浮点数。
         """
         if isinstance(value, bool):
-            return 1 if value else 0 
+            return 1 if value else 0
         elif value is None:
             return 0
         elif isinstance(value, (int, float)):

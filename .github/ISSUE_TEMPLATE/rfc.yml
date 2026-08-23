@@ -71,23 +71,23 @@ body:
         ```python
         # 同步 API（保持不变）
         from mzapi import GeneralBasicOCR
-        
+
         ocr = GeneralBasicOCR(secret_id, secret_key)
         result = ocr.recognize("image.jpg")
-        
+
         # 异步 API（新增）
         from mzapi.async_ import AsyncGeneralBasicOCR
-        
+
         async def main():
             ocr = AsyncGeneralBasicOCR(secret_id, secret_key)
             result = await ocr.recognize("image.jpg")
         ```
-        
+
         **技术实现：**
         - 使用 aiohttp 替代 requests
         - 提供 Async* 类与同步类对应
         - 共享认证和配置逻辑
-        
+
         **影响范围：**
         - 新增 mzapi/async_ 模块
         - 不修改现有同步代码
@@ -104,11 +104,11 @@ body:
         **方案 1：使用同步 API + 线程池**
         - 优点：无需修改 SDK，用户自行实现
         - 缺点：增加用户负担，性能不如原生异步
-        
+
         **方案 2：完全重写为异步，同步使用 run_in_executor**
         - 优点：代码统一
         - 缺点：破坏性变更，迁移成本高
-        
+
         **选择方案 3 的原因：**
         - 提供更好的用户体验
         - 保持向后兼容
@@ -126,13 +126,13 @@ body:
         - ✅ 不影响现有同步 API 用户
         - ✅ 现有代码无需修改
         - ✅ 可以在同一个项目中混合使用
-        
+
         **迁移路径：**
         1. 安装新的 SDK 版本
         2. 修改 import 语句（同步 → 异步）
         3. 添加 async/await 关键字
         4. 使用异步框架的入口函数
-        
+
         **弃用计划：**
         - 无弃用计划（同步 API 继续维护）
       render: markdown
@@ -166,14 +166,14 @@ body:
         **技术风险：**
         1. **性能风险**：aiohttp 性能可能不如预期
            - 应对：进行基准测试，优化连接池配置
-           
+
         2. **兼容性风险**：不同 Python 版本的异步支持差异
            - 应对：只支持 Python 3.10+，明确版本要求
-           
+
         **维护风险：**
         1. 双份代码增加维护成本
            - 应对：共享认证和配置逻辑，使用工具辅助同步
-           
+
         **用户风险：**
         1. 用户对异步编程不熟悉
            - 应对：提供详细文档和迁移指南
@@ -191,7 +191,7 @@ body:
         2. 是否提供批量异步处理方法？
         3. 如何处理同步和异步 API 的文档组织？
         4. 是否需要在示例代码中提供异步版本？
-        
+
         **期望的反馈：**
         - 对 API 设计的意见
         - 对实施优先级的建议
@@ -208,11 +208,11 @@ body:
         **相关 Issue：**
         - #123: 请求添加异步支持
         - #45: 性能优化讨论
-        
+
         **相关文档：**
         - [PEP 492 - Coroutines with async and await syntax](https://peps.python.org/pep-0492/)
         - [aiohttp 文档](https://docs.aiohttp.org/)
-        
+
         **参考实现：**
         - [openai-python](https://github.com/openai/openai-python) - 支持同步和异步
         - [boto3](https://github.com/boto/boto3) - 同步 SDK（对比参考）

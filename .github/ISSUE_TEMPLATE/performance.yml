@@ -52,9 +52,9 @@ body:
         ```python
         from mzapi import GeneralBasicOCR
         import time
-        
+
         ocr = GeneralBasicOCR(secret_id, secret_key)
-        
+
         # 性能测试代码
         start = time.time()
         for i in range(100):
@@ -129,7 +129,7 @@ body:
         ncalls  tottime  percall  cumtime  percall filename:lineno(function)
         1000    0.123    0.000    1.234    0.001 example.py:10(process_image)
         ```
-        
+
         **memory_profiler 输出：**
         ```
         Line #    Mem usage    Increment  Occurrences   Line Contents
@@ -149,7 +149,7 @@ body:
         1. **使用连接池**
            - 方法：使用 requests.Session()
            - 效果：响应时间从 500ms 降到 450ms
-           
+
         2. **增加超时时间**
            - 方法：将 timeout 从 10s 增加到 30s
            - 效果：减少了超时错误，但响应时间未改善

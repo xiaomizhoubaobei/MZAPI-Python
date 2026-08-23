@@ -33,7 +33,7 @@ class OpenApiRequest(DaraModel):
     """开放 API 请求模型，表示一次开放 API 调用的请求参数集合。"""
 
     def __init__(
-        self, 
+        self,
         headers: Dict[str, str] = None,
         query: Dict[str, str] = None,
         body: Any = None,
@@ -96,4 +96,3 @@ class OpenApiRequest(DaraModel):
         if m.get('endpointOverride') is not None:
             self.endpoint_override = m.get('endpointOverride')
         return self
-

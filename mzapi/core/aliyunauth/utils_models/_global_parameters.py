@@ -33,7 +33,7 @@ class GlobalParameters(DaraModel):
     """全局参数模型，表示附加到请求的全局请求头与查询参数。"""
 
     def __init__(
-        self, 
+        self,
         headers: Dict[str, str] = None,
         queries: Dict[str, str] = None,
     ):
@@ -72,4 +72,3 @@ class GlobalParameters(DaraModel):
         if m.get('queries') is not None:
             self.queries = m.get('queries')
         return self
-

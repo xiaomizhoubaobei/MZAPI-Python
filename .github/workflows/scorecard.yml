@@ -81,6 +81,6 @@ jobs:
       # 5. 将结果上传到 GitHub 的代码扫描仪表板（可选）
       # 注释掉将禁用结果上传到仓库的代码扫描仪表板
       - name: "Upload to code-scanning"
-        uses: github/codeql-action/upload-sarif@f205ea1c3313d32999d8d6a48b4f6530d4437b38 # v4.37.4
+        uses: github/codeql-action/upload-sarif@ff2f1c621b7f889edc0d3c761ac2e6a3f8cdb0dd # v4.37.7
         with:
           sarif_file: results.sarif

@@ -23,6 +23,9 @@
 #                     · repo / issues 写权限   —— 为确认的漏洞创建真实 Issue
 #   - MCP_CONFIG      可选，MCP Server（GitHub API）配置
 #
+# 创建 Issue 方式：第 5 步「创建真实 Issue」通过 GitHub MCP（github_official
+# toolbox，repos/issues 工具集）的 issues.create 工具创建，不直接调用 HTTP API / curl。
+#
 # ⚠️ 注意：
 #   - 首次使用前请先用 workflow_dispatch 手动跑一次，确认链路正常。
 #   - GITHUB_TOKEN 由 Actions 自动注入，不占上述 secrets（读取告警走 GH_PAT）。

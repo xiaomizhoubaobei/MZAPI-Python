@@ -35,3 +35,4 @@ task: |
 toolboxes:
   - seclab_taskflow_agent.toolboxes.memcache
   - seclab_taskflow_agent.toolboxes.codeql
+  - seclab_taskflow_agent.toolboxes.github_official

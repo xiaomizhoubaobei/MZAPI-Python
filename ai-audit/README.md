@@ -133,6 +133,10 @@ cp -r <本项目>/ai-audit ai_audit
    > `globals.repo`（可在文件顶部 `globals:` 修改或命令行 `-g repo=owner/repo` 覆盖）。
    > 第 ③ 步会把判定为真实漏洞(TP)的报告存入 memcache（key `{{ globals.repo }}_{{ result.alert_number }}`），
    > 第 ⑤ 步读取该报告并校验非空/非占位符后再创建，从根上避免再发占位符垃圾。
+   > 同时，`python_auditer.yaml` personality 的 `toolboxes` 也已加入
+   > `seclab_taskflow_agent.toolboxes.github_official`，确保 agent 在审计/创建 Issue 全程
+   > 均通过 **GitHub MCP**（而非直接 HTTP API / curl）与 GitHub 交互，创建 Issue 时
+   > 使用 `issues.create` 工具接口。
 
 4. 运行（注意模块路径前缀 `ai_audit.`，并通过 `-m` 显式指定模型配置）：
 

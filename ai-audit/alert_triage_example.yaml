@@ -88,6 +88,8 @@ taskflow:
   # ---------------------------------------------------------------------------
   - task:
       must_complete: true
+      # 无 open 告警时跳过，避免对空迭代反复输出「repeat_prompt iterable is empty!」噪音
+      if: "outputs.alerts | length > 0"
       repeat_prompt: true
       over: "outputs.alerts"
       agents:
@@ -107,6 +109,8 @@ taskflow:
   # ---------------------------------------------------------------------------
   - task:
       must_complete: true
+      # 无 open 告警时跳过
+      if: "outputs.alerts | length > 0"
       repeat_prompt: true
       over: "outputs.alerts"
       agents:
@@ -123,6 +127,8 @@ taskflow:
   # ---------------------------------------------------------------------------
   - task:
       must_complete: true
+      # 无 open 告警时跳过
+      if: "outputs.alerts | length > 0"
       repeat_prompt: true
       over: "outputs.alerts"
       agents:
@@ -146,6 +152,8 @@ taskflow:
   # ---------------------------------------------------------------------------
   - task:
       must_complete: true
+      # 无 open 告警时跳过
+      if: "outputs.alerts | length > 0"
       repeat_prompt: true
       over: "outputs.alerts"
       agents:
@@ -170,6 +178,8 @@ taskflow:
   # ---------------------------------------------------------------------------
   - task:
       must_complete: true
+      # 无 open 告警时跳过（不消费 outputs.alerts 的迭代，也避免空迭代噪音）
+      if: "outputs.alerts | length > 0"
       repeat_prompt: true
       over: "outputs.alerts"
       agents:
@@ -213,6 +223,8 @@ taskflow:
   # ---------------------------------------------------------------------------
   - task:
       must_complete: true
+      # 无 open 告警时跳过
+      if: "outputs.alerts | length > 0"
       repeat_prompt: true
       over: "outputs.alerts"
       agents:

@@ -38,6 +38,12 @@ LLM + Taskflow Agent 逐个审计
 > ⚠️ 第 ⑤ 步会**真实创建 Issue**。若你只想看分流结果、不修改仓库，
 > 请把 `alert_triage_example.yaml` 中第 ⑤ 步「创建真实 Issue」任务整体注释掉。
 
+> 💡 **无告警自动跳过**：当仓库当前**没有 open 的 CodeQL 告警**时，
+> `alerts` 任务（第 0 步）拉取到的列表为空，后续 6 个 `repeat_prompt` 任务
+> 都加了 `if: "outputs.alerts | length > 0"` 条件，会被**整体跳过**（记录为
+> skipped），不再像旧版那样对空迭代反复输出 `repeat_prompt iterable is empty!`
+> 噪音，也不会有任何 LLM / Issue 副作用。有告警时行为完全不变。
+
 ---
 
 ## 二、目录结构

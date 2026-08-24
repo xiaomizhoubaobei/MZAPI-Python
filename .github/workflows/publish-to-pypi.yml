@@ -104,6 +104,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: release-build
 
+    # 该 job 需要创建 GitHub release，因此必须将 contents 权限提升为 write。
+    # 顶层 permissions 声明为 contents: read，会限制整个工作流的 GITHUB_TOKEN；
+    # 这里单独为 pypi-publish job 提升权限，即可让 step-security/action-gh-release 创建 release。
+    permissions:
+      contents: write
+
     environment:
       name: pypi
       url: https://pypi.org/project/mzapi-multicloud-sdk

@@ -67,13 +67,14 @@ jobs:
         fi
 
   release-build:
+    # 注意：该包是纯 Python 实现，构建出的 wheel 为通用标签 py3-none-any（平台无关、版本无关），
+    # 因此无需在多个 OS / Python 版本的矩阵中分别构建。
+    # 若保留矩阵，多个 job 会产出完全同名的 mzapi_multicloud_sdk-<版本>-py3-none-any.whl，
+    # 在 pypi-publish 阶段用 merge-multiple 合并工件时同名文件会被并发覆盖而损坏，
+    # 导致 twine check 报 “BadZipFile: 中央目录的错误魔术数字”。这里改为单一构建即可根治。
     needs: check-version
     if: needs.check-version.outputs.version_changed == 'true'
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    runs-on: ubuntu-latest
 
     steps:
     - name: Harden the runner (Audit all outbound calls)
@@ -86,7 +87,7 @@ jobs:
     - name: 设置Python环境
       uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.12'
 
     - name: 构建发布分发包
       run: |
@@ -96,7 +97,7 @@ jobs:
     - name: 上传分发包作为工件
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
       with:
-        name: release-dists-${{ matrix.os }}-${{ matrix.python-version }}
+        name: release-dists
         path: dist/
 
   pypi-publish:
@@ -115,21 +116,34 @@ jobs:
 
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-    - name: 检索所有发布分发包
+    - name: 检索发布分发包
       uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
       with:
         # 只下载构建产物，避免把历次 ci-evidence-pack 生成的 evidence-bundle 一并拉下来
-        pattern: release-dists-*
+        name: release-dists
         path: all-dists/
-        merge-multiple: true
 
-    - name: 合并所有分发包到 dist 目录
+    - name: 合并分发包到 dist 目录并校验完整性
       run: |
+        set -e
         mkdir -p dist
         # 仅拷贝 SDK 自身的 wheel 与 sdist，防止 evidence-bundle 等非发行文件混入 dist/
         # （否则 twine 会将其当作 sdist 校验并报 InvalidDistribution: 顶层成员过多）
         find all-dists -name "mzapi_multicloud_sdk-*.whl" -exec cp {} dist/ \;
         find all-dists -name "mzapi_multicloud_sdk-*.tar.gz" -exec cp {} dist/ \;
+
+        # 校验 wheel（本质为 zip）完整性，确保未被并发覆盖/截断导致中央目录损坏
+        echo "🔍 校验 dist/ 中 wheel 与 sdist 的完整性..."
+        for whl in dist/*.whl; do
+          [ -e "$whl" ] || continue
+          python -m zipfile -t "$whl" && echo "✅ 校验通过: $whl"
+        done
+        for tgz in dist/*.tar.gz; do
+          [ -e "$tgz" ] || continue
+          tar -tzf "$tgz" >/dev/null && echo "✅ 校验通过: $tgz"
+        done
+        echo "--- dist/ 最终内容 ---"
+        ls -la dist/
 
     - name: 提取版本号
       id: extract_version

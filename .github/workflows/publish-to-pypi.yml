@@ -43,12 +43,25 @@ jobs:
         prev_version=$(git show HEAD~1:pyproject.toml 2>/dev/null | grep -E '^[[:space:]]*version[[:space:]]*=' | head -1 | sed -E 's/.*=[[:space:]]*[\"'\'']?([^\"'\'']+)[\"'\'']?.*/\1/' | tr -d '[:space:]') || true
         echo "上一次版本号: $prev_version"
 
-        # 若未取到上一次版本号，视为未发生变更，避免误触发发布
-        if [ -z "$prev_version" ] || [ "$current_version" = "$prev_version" ]; then
-          echo "ℹ️ 版本号未变更（$current_version），跳过发布"
+        # 判断版本号是否发生变更：上次提交版本为空(首次) 或 与当前不同
+        if [ -n "$prev_version" ] && [ "$current_version" != "$prev_version" ]; then
+          echo "✅ 版本号已变更: $prev_version -> $current_version"
+          echo "version_changed=true" >> $GITHUB_OUTPUT
+          echo "version=$current_version" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        # 版本号未变更（或首次提交），进一步检查 PyPI 上是否已存在该版本
+        # 若 PyPI 上不存在该版本，说明是首次发布/发布被跳过，应触发发布
+        echo "ℹ️ 版本号未变更（$current_version），检查 PyPI 上是否已发布..."
+        pypi_http_code=$(curl -s -o /dev/null -w '%{http_code}' "https://pypi.org/pypi/mzapi/$current_version/json" || true)
+        echo "PyPI 查询该版本的 HTTP 状态码: $pypi_http_code"
+
+        if [ "$pypi_http_code" = "200" ]; then
+          echo "✅ 该版本（$current_version）已在 PyPI 上存在，跳过发布"
           echo "version_changed=false" >> $GITHUB_OUTPUT
         else
-          echo "✅ 版本号已变更: $prev_version -> $current_version"
+          echo "🚀 该版本（$current_version）尚未发布到 PyPI，触发发布"
           echo "version_changed=true" >> $GITHUB_OUTPUT
           echo "version=$current_version" >> $GITHUB_OUTPUT
         fi

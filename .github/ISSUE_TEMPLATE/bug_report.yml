@@ -32,7 +32,7 @@ body:
       label: 复现步骤
       description: 请提供能够复现问题的详细步骤
       placeholder: |
-        1. 安装 MZAPI SDK: pip install MZAPI-Python
+        1. 安装 MZAPI SDK: pip install mzapi-multicloud-sdk
         2. 创建配置文件
         3. 运行以下代码:
         4. 观察到的错误
@@ -94,7 +94,7 @@ body:
         - 操作系统: 例如 Ubuntu 20.04, Windows 10, macOS 12
         - Python 版本: 例如 3.10.0, 3.11.5
         - MZAPI SDK 版本: 例如 0.0.1
-        - 安装方式: pip install MZAPI-Python
+        - 安装方式: pip install mzapi-multicloud-sdk
         - 使用的服务: 例如 腾讯云 OCR, 华为云 OBS
       render: yaml
     validations:

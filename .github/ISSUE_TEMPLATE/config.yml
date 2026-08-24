@@ -11,7 +11,7 @@ contact_links:
     about: 请先查阅项目文档，可能已经有相关说明
 
   - name: 🐍 PyPI 页面
-    url: https://pypi.org/project/MZAPI-Python/
+    url: https://pypi.org/project/mzapi-multicloud-sdk/
     about: 查看最新版本和安装说明
 
   - name: 💬 讨论区

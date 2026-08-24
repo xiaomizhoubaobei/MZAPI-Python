@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "MZAPI-Python"
-version = "0.0.2"
+name = "mzapi-multicloud-sdk"
+version = "0.0.1"
 authors = [
     {name = "祁潇潇", email = "qixiaoxin@stu.sqxy.edu.cn"}
 ]
@@ -45,8 +45,8 @@ dev = [
 [project.urls]
 "Bug Reports" = "https://github.com/xiaomizhoubaobei/MZAPI-Python/issues"
 "Source" = "https://github.com/xiaomizhoubaobei/MZAPI-Python"
-"Homepage" = "https://pypi.org/project/MZAPI-Python"
-"Download" = "https://pypi.org/project/MZAPI-Python/#files"
+"Homepage" = "https://pypi.org/project/mzapi-multicloud-sdk"
+"Download" = "https://pypi.org/project/mzapi-multicloud-sdk/#files"
 "Changelog" = "https://github.com/xiaomizhoubaobei/MZAPI-Python/CHANGELOG.md"
 "Documentation" = "https://docs.mizhoubaobei.top"
 "GitHub" = "https://github.com/xiaomizhoubaobei/MZAPI-Python"

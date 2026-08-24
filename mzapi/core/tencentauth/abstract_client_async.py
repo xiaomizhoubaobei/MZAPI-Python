@@ -28,7 +28,7 @@ from typing import Dict, Type, Union, List, Callable, Awaitable, Optional
 
 import httpx
 
-MZAPI_VERSION = "0.0.1"
+MZAPI_VERSION = "0.0.2"
 from mzapi.utlis.tencentauth.abstract_client import logger, urlparse, urlencode
 from mzapi.utlis.tencentauth.abstract_model import AbstractModel
 from mzapi.utlis.tencentauth.circuit_breaker import CircuitBreaker

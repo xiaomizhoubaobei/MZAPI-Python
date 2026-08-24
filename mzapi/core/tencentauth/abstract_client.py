@@ -32,7 +32,7 @@ except ImportError:
     from urllib import urlencode
     from urlparse import urlparse
 
-MZAPI_VERSION = "0.0.1"
+MZAPI_VERSION = "0.0.2"
 from mzapi.utlis.tencentauth.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
 from mzapi.utlis.tencentauth.exception import TencentCloudSDKException as SDKError
 from mzapi.utlis.tencentauth.http.request import ApiRequest, ResponsePrettyFormatter

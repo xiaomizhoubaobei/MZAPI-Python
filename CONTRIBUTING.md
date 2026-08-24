@@ -381,7 +381,7 @@ feat: 添加新功能
 ### 社区资源
 
 - [项目主页](https://github.com/xiaomizhoubaobei/MZAPI-Python)
-- [PyPI 页面](https://pypi.org/project/mzapi)
+- [PyPI 页面](https://pypi.org/project/MZAPI-Python)
 - [文档网站](https://docs.mizhoubaobei.top)
 
 ## 许可证

@@ -54,7 +54,7 @@ jobs:
         # 版本号未变更（或首次提交），进一步检查 PyPI 上是否已存在该版本
         # 若 PyPI 上不存在该版本，说明是首次发布/发布被跳过，应触发发布
         echo "ℹ️ 版本号未变更（$current_version），检查 PyPI 上是否已发布..."
-        pypi_http_code=$(curl -s -o /dev/null -w '%{http_code}' "https://pypi.org/pypi/mzapi/$current_version/json" || true)
+        pypi_http_code=$(curl -s -o /dev/null -w '%{http_code}' "https://pypi.org/pypi/MZAPI-Python/$current_version/json" || true)
         echo "PyPI 查询该版本的 HTTP 状态码: $pypi_http_code"
 
         if [ "$pypi_http_code" = "200" ]; then
@@ -105,7 +105,7 @@ jobs:
 
     environment:
       name: pypi
-      url: https://pypi.org/project/mzapi
+      url: https://pypi.org/project/MZAPI-Python
 
     steps:
     - name: Harden the runner (Audit all outbound calls)
